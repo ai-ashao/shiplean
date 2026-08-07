@@ -110,8 +110,24 @@ try {
   assert(dashboard.response.status === 200, 'Starter dashboard must return 200.')
   assert(dashboard.text.includes('Agent-ready workspace'), 'Starter dashboard content is missing.')
   assert(dashboard.text.includes('maker@shiplean.local'), 'Dashboard session must render on SSR.')
+  assert(dashboard.text.includes('Exit local demo'), 'Dashboard logout control is missing.')
 
-  console.log('E2E smoke passed: public metadata, security, bilingual routes, and local session.')
+  const logout = await request('/api/sandbox/session', {
+    method: 'DELETE',
+    headers: { cookie },
+  })
+  assert(logout.response.status === 200, 'Sandbox logout failed.')
+  assert(
+    logout.response.headers.get('set-cookie')?.includes('Max-Age=0'),
+    'Sandbox logout must expire the session cookie.',
+  )
+
+  const loggedOut = await request('/api/sandbox/session')
+  assert(loggedOut.response.status === 401, 'Logged-out session must be anonymous.')
+
+  console.log(
+    'E2E smoke passed: public metadata, security, bilingual routes, and local session lifecycle.',
+  )
 } finally {
   server.kill('SIGTERM')
   await Promise.race([

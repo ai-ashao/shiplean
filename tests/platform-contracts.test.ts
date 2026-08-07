@@ -3,7 +3,11 @@ import { describe, expect, it } from 'vitest'
 import { createGtagQueue } from '../src/components/privacy-controls'
 import { disabledEmailAdapter } from '../src/lib/adapters/email'
 import { disabledStorageAdapter } from '../src/lib/adapters/storage'
-import { hasSandboxSession, sandboxSessionCookie } from '../src/lib/auth/sandbox-session'
+import {
+  expiredSandboxSessionCookie,
+  hasSandboxSession,
+  sandboxSessionCookie,
+} from '../src/lib/auth/sandbox-session'
 import { parsePublicEnv } from '../src/lib/config/env'
 import { isSandboxEnabled } from '../src/lib/config/runtime'
 import { FixedWindowRateLimiter } from '../src/lib/security/rate-limit'
@@ -36,6 +40,8 @@ describe('platform contracts', () => {
     expect(hasSandboxSession(request)).toBe(true)
     expect(hasSandboxSession(new Request('http://local.test'))).toBe(false)
     expect(sandboxSessionCookie({ secure: true })).toContain('; Secure')
+    expect(expiredSandboxSessionCookie()).toContain('Max-Age=0')
+    expect(expiredSandboxSessionCookie({ secure: true })).toContain('; Secure')
   })
 
   it('queues native gtag arguments instead of a rest-parameter array', () => {

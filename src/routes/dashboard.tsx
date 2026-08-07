@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { SandboxLogout } from '@/components/sandbox-logout'
 import { StarterDashboard } from '@/components/starter-dashboard'
 import { requireSandboxSession } from '@/lib/auth/sandbox-guards'
 import { pageHead } from '@/lib/seo'
@@ -30,6 +31,7 @@ function DashboardPage() {
             open it in your coding agent, and invoke the bundled Skill to make it your product.
           </p>
         </div>
+        <SandboxLogout />
       </header>
       <StarterDashboard session={session} />
     </section>

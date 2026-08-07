@@ -871,6 +871,17 @@ textarea:focus {
 .dashboard-header h1 {
   font-size: clamp(44px, 6vw, 78px);
 }
+.dashboard-session-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+.dashboard-session-error {
+  max-width: 280px;
+  text-align: right;
+}
 .dashboard-grid {
   display: grid;
   grid-template-columns: 0.7fr 1.3fr;
@@ -1293,6 +1304,12 @@ textarea:focus {
   .dashboard-header {
     align-items: start;
     flex-direction: column;
+  }
+  .dashboard-session-actions {
+    align-items: flex-start;
+  }
+  .dashboard-session-error {
+    text-align: left;
   }
   .site-footer {
     grid-template-columns: 1fr;
