@@ -1331,6 +1331,17 @@ textarea:focus {
   .shipping-note {
     transform: none;
   }
+  .shipping-note::before {
+    left: -12px;
+  }
+  .shipping-note::after {
+    right: -12px;
+  }
+  .big-number {
+    position: static;
+    right: auto;
+    opacity: 1;
+  }
   .section-heading {
     margin-bottom: 45px;
   }
