@@ -8,9 +8,9 @@ Scope revised on 2026-08-06: ShipLean is an Agent-ready TanStack Start SaaS scaf
 | Download-to-Agent workflow | Repository includes `.agents/skills/shiplean-quick-start/SKILL.md`, `AGENTS.md`, architecture, and a module task contract | Passed |
 | Invokable project Skill | Official `quick_validate.py` passes with PyYAML 6.0.3; repository tests assert the Skill name, project-contract read, and `pnpm verify` completion instruction | Passed |
 | English and Chinese product pages | `/` and `/zh` explain download → Agent → Skill → MVP and expose a language switch | Passed |
-| Protected application shell | Local login creates an eight-hour HttpOnly, SameSite=Lax cookie and opens the starter dashboard; anonymous session readback returns 401 | Passed |
+| Protected application shell | Local login creates an eight-hour HttpOnly, SameSite=Lax cookie (`Secure` over HTTPS); anonymous dashboard requests redirect before protected HTML renders and session responses are not cached | Passed |
 | Public-site infrastructure | SSR assertions cover canonical, JSON-LD, Chinese document language, reciprocal hreflang, robots, and a sitemap without deferred tool routes | Passed |
-| Security and privacy foundations | Response readback proves CSP, frame denial, nosniff, permissions and referrer policy; analytics is consent-gated and fonts are self-hosted | Passed |
+| Security and privacy foundations | Response readback proves CSP, frame denial, nosniff, permissions and referrer policy; analytics is consent-gated, its Google Tag queue preserves native `arguments`, and fonts are self-hosted | Passed |
 | One-command verification | `pnpm verify` covers Biome, platform/Skill tests, Workers production bundle, strict TypeScript, and fresh-server HTTP smoke | Passed |
 | Cloudflare production target is honest | Official Cloudflare Vite plugin and Wrangler entry generate a Workers bundle locally | Locally passed; account deploy intentionally unclaimed |
 

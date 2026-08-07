@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { sandboxUiAvailable } from '@/lib/config/runtime'
 import { pageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/pricing')({
@@ -51,16 +52,20 @@ function PricingPage() {
           <div className="price-top">
             <p>STARTER PREVIEW</p>
             <strong>$0</strong>
-            <span>MIT license</span>
+            <span>local demo access</span>
           </div>
           <ul>
             {core.map((item) => (
               <li key={item}>↳ {item}</li>
             ))}
           </ul>
-          <Link className="button button-plain full" to="/login">
-            Open the starter demo
-          </Link>
+          {sandboxUiAvailable ? (
+            <Link className="button button-plain full" to="/login">
+              Open the starter demo
+            </Link>
+          ) : (
+            <span className="button button-disabled full">Available after local install</span>
+          )}
         </article>
         <article className="price-card featured">
           <div className="price-flag">FOUNDING RUN / LIMITED</div>

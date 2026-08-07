@@ -78,6 +78,20 @@ try {
 
   const unauthorized = await request('/api/sandbox/session')
   assert(unauthorized.response.status === 401, 'Session API must reject an anonymous request.')
+  assert(
+    unauthorized.response.headers.get('cache-control') === 'no-store',
+    'Session responses must not be cached.',
+  )
+
+  const anonymousDashboard = await request('/dashboard', { redirect: 'manual' })
+  assert(
+    anonymousDashboard.response.status >= 300 && anonymousDashboard.response.status < 400,
+    'Anonymous dashboard requests must redirect before rendering protected content.',
+  )
+  assert(
+    anonymousDashboard.response.headers.get('location') === '/login',
+    'Anonymous dashboard requests must redirect to the local login.',
+  )
 
   const login = await request('/api/sandbox/session', {
     method: 'POST',
@@ -95,6 +109,7 @@ try {
   const dashboard = await request('/dashboard', { headers: { cookie } })
   assert(dashboard.response.status === 200, 'Starter dashboard must return 200.')
   assert(dashboard.text.includes('Agent-ready workspace'), 'Starter dashboard content is missing.')
+  assert(dashboard.text.includes('maker@shiplean.local'), 'Dashboard session must render on SSR.')
 
   console.log('E2E smoke passed: public metadata, security, bilingual routes, and local session.')
 } finally {

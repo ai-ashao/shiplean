@@ -9,6 +9,7 @@ import {
 import type { ReactNode } from 'react'
 import { PrivacyControls } from '@/components/privacy-controls'
 import { publicEnv } from '@/lib/config/env'
+import { sandboxUiAvailable } from '@/lib/config/runtime'
 import { site } from '@/lib/site'
 import styles from '@/styles.css?url'
 
@@ -47,7 +48,7 @@ function RootComponent() {
           aria-label={isChinese ? 'ShipLean 首页' : 'ShipLean home'}
         >
           <span className="brand-mark" aria-hidden="true">
-            SC
+            SL
           </span>
           <span>SHIPLEAN</span>
         </Link>
@@ -60,9 +61,15 @@ function RootComponent() {
               <Link className="nav-locale" to="/" aria-label="Switch to English">
                 EN
               </Link>
-              <Link className="nav-cta" to="/login">
-                体验脚手架
-              </Link>
+              {sandboxUiAvailable ? (
+                <Link className="nav-cta" to="/login">
+                  体验脚手架
+                </Link>
+              ) : (
+                <a className="nav-cta" href="/zh#pricing">
+                  查看定价
+                </a>
+              )}
             </>
           ) : (
             <>
@@ -76,8 +83,8 @@ function RootComponent() {
               <Link className="nav-locale" to="/zh" aria-label="切换到中文版">
                 中文
               </Link>
-              <Link className="nav-cta" to="/login">
-                Starter demo
+              <Link className="nav-cta" to={sandboxUiAvailable ? '/login' : '/pricing'}>
+                {sandboxUiAvailable ? 'Starter demo' : 'View pricing'}
               </Link>
             </>
           )}

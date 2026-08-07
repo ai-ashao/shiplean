@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { AgentWorkflow } from '@/components/agent-workflow'
+import { sandboxUiAvailable } from '@/lib/config/runtime'
 import { pageHead } from '@/lib/seo'
 
 const workflowId = 'workflow'
@@ -53,7 +54,7 @@ function HomePage() {
         </div>
         <aside className="shipping-note" aria-label="Product summary">
           <div className="note-top">
-            <span>SHIP / CHEAP</span>
+            <span>SHIP / LEAN</span>
             <span>REF 0066</span>
           </div>
           <div className="barcode" aria-hidden="true" />
@@ -65,7 +66,7 @@ function HomePage() {
             <dt>Mode</dt>
             <dd>Agent → MVP</dd>
             <dt>License</dt>
-            <dd>MIT + Commercial</dd>
+            <dd>Commercial</dd>
           </dl>
           <div className="note-stamp">
             KEEP
@@ -129,8 +130,8 @@ function HomePage() {
             you almost overpaid for.
           </h2>
         </div>
-        <Link className="button button-light" to="/login">
-          Open the starter demo
+        <Link className="button button-light" to={sandboxUiAvailable ? '/login' : '/pricing'}>
+          {sandboxUiAvailable ? 'Open the starter demo' : 'View scaffold pricing'}
         </Link>
       </section>
     </>

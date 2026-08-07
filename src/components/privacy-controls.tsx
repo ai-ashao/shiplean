@@ -3,6 +3,13 @@ import { publicEnv } from '@/lib/config/env'
 
 const CONSENT_KEY = 'shiplean_analytics_consent'
 
+export function createGtagQueue(dataLayer: unknown[]) {
+  return function gtag(..._args: unknown[]) {
+    // biome-ignore lint/complexity/noArguments: Google Tag requires its native arguments object.
+    dataLayer.push(arguments)
+  }
+}
+
 export function PrivacyControls({ locale = 'en' }: Readonly<{ locale?: 'en' | 'zh-CN' }>) {
   const [granted, setGranted] = useState(false)
 
@@ -13,7 +20,7 @@ export function PrivacyControls({ locale = 'en' }: Readonly<{ locale?: 'en' | 'z
   useEffect(() => {
     if (!publicEnv.ga4Id) return
     window.dataLayer = window.dataLayer || []
-    window.gtag = window.gtag || ((...args: unknown[]) => window.dataLayer?.push(args))
+    window.gtag = window.gtag || createGtagQueue(window.dataLayer)
     window.gtag('consent', 'default', { analytics_storage: 'denied' })
 
     if (!granted) {

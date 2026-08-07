@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react'
-
 type Session = {
-  authenticated: boolean
+  authenticated: true
   user: { email: string }
 }
 
@@ -12,24 +10,7 @@ const checks = [
   'Run pnpm verify before deployment',
 ]
 
-export function StarterDashboard() {
-  const [session, setSession] = useState<Session>()
-
-  useEffect(() => {
-    void fetch('/api/sandbox/session')
-      .then(async (response) => {
-        if (response.status === 401) {
-          window.location.replace('/login')
-          return undefined
-        }
-        if (!response.ok) throw new Error('Could not load the local starter session.')
-        return (await response.json()) as Session
-      })
-      .then((data) => {
-        if (data) setSession(data)
-      })
-  }, [])
-
+export function StarterDashboard({ session }: Readonly<{ session: Session }>) {
   return (
     <div className="dashboard-grid starter-grid">
       <section className="balance-card starter-status">
@@ -38,7 +19,7 @@ export function StarterDashboard() {
         </div>
         <p>MVP workspace</p>
         <strong>READY</strong>
-        <small>{session?.user.email ?? 'Loading local session…'}</small>
+        <small>{session.user.email}</small>
       </section>
       <section className="sandbox-console starter-command-card">
         <div className="panel-label">

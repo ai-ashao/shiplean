@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Upgraded Vite to `7.3.6` to remove known development-server vulnerabilities.
+- Enforced the sandbox session before rendering the dashboard and disabled caching on session responses.
+- Added `Secure` to sandbox cookies over HTTPS and fixed the native Google Tag command queue shape.
+- Removed remaining ShipCheap-era marks and unsupported MIT license claims from the scaffold UI.
+- Increased the GitHub verification job timeout so Runner queue time does not cancel the job before execution.
+
 ## 0.2.0 - 2026-08-06
 
 - Repositioned the MVP as an Agent-ready TanStack Start SaaS scaffold.

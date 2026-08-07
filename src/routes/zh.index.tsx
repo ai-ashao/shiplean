@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { AgentWorkflow } from '@/components/agent-workflow'
+import { sandboxUiAvailable } from '@/lib/config/runtime'
 import { pageHead } from '@/lib/seo'
 
 const sectionIds = {
@@ -57,7 +58,7 @@ function ChineseHome() {
         </div>
         <aside className="shipping-note" aria-label="产品摘要">
           <div className="note-top">
-            <span>SHIP / CHEAP</span>
+            <span>SHIP / LEAN</span>
             <span>编号 0066</span>
           </div>
           <div className="barcode" aria-hidden="true" />
@@ -69,7 +70,7 @@ function ChineseHome() {
             <dt>产品路径</dt>
             <dd>Agent → MVP</dd>
             <dt>授权方式</dt>
-            <dd>MIT + 商业授权</dd>
+            <dd>商业授权</dd>
           </dl>
           <div className="note-stamp">
             把
@@ -138,9 +139,15 @@ function ChineseHome() {
             那套模板便宜得多。
           </h2>
         </div>
-        <Link className="button button-light" to="/login">
-          体验脚手架
-        </Link>
+        {sandboxUiAvailable ? (
+          <Link className="button button-light" to="/login">
+            体验脚手架
+          </Link>
+        ) : (
+          <a className="button button-light" href="#pricing">
+            查看授权定价
+          </a>
+        )}
       </section>
     </>
   )

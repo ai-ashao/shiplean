@@ -25,6 +25,7 @@ pnpm dev
 ```
 
 No external secret is required. `/login` and `/dashboard` form a visibly labeled local identity demo. They do not create a production account or charge a card.
+Production builds hide and reject these sandbox routes unless both sandbox flags are explicitly enabled.
 
 ## Verify
 

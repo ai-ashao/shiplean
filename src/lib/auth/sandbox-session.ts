@@ -14,10 +14,18 @@ export function hasSandboxSession(request: Request) {
     .some((part) => part.trim() === `${SANDBOX_SESSION_COOKIE}=${SANDBOX_SESSION_VALUE}`)
 }
 
-export function sandboxSessionCookie(maxAge = 60 * 60 * 8) {
-  return `${SANDBOX_SESSION_COOKIE}=${SANDBOX_SESSION_VALUE}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}`
+type SandboxCookieOptions = {
+  maxAge?: number
+  secure?: boolean
 }
 
-export function expiredSandboxSessionCookie() {
-  return `${SANDBOX_SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`
+export function sandboxSessionCookie({
+  maxAge = 60 * 60 * 8,
+  secure = false,
+}: SandboxCookieOptions = {}) {
+  return `${SANDBOX_SESSION_COOKIE}=${SANDBOX_SESSION_VALUE}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure ? '; Secure' : ''}`
+}
+
+export function expiredSandboxSessionCookie({ secure = false }: SandboxCookieOptions = {}) {
+  return `${SANDBOX_SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure ? '; Secure' : ''}`
 }

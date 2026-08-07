@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { createGtagQueue } from '../src/components/privacy-controls'
 import { disabledEmailAdapter } from '../src/lib/adapters/email'
 import { disabledStorageAdapter } from '../src/lib/adapters/storage'
 import { hasSandboxSession, sandboxSessionCookie } from '../src/lib/auth/sandbox-session'
@@ -34,6 +35,19 @@ describe('platform contracts', () => {
     expect(cookie).toContain('SameSite=Lax')
     expect(hasSandboxSession(request)).toBe(true)
     expect(hasSandboxSession(new Request('http://local.test'))).toBe(false)
+    expect(sandboxSessionCookie({ secure: true })).toContain('; Secure')
+  })
+
+  it('queues native gtag arguments instead of a rest-parameter array', () => {
+    const dataLayer: unknown[] = []
+    const gtag = createGtagQueue(dataLayer)
+    gtag('consent', 'default', { analytics_storage: 'denied' })
+    expect(Array.isArray(dataLayer[0])).toBe(false)
+    expect(Array.from(dataLayer[0] as IArguments)).toEqual([
+      'consent',
+      'default',
+      { analytics_storage: 'denied' },
+    ])
   })
 
   it('enforces a fixed request window and resets after it expires', () => {

@@ -1,8 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { StarterDashboard } from '@/components/starter-dashboard'
+import { requireSandboxSession } from '@/lib/auth/sandbox-guards'
 import { pageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/dashboard')({
+  loader: () => requireSandboxSession(),
   head: () =>
     pageHead({
       title: 'SaaS Starter Dashboard',
@@ -14,6 +16,7 @@ export const Route = createFileRoute('/dashboard')({
 })
 
 function DashboardPage() {
+  const session = Route.useLoaderData()
   return (
     <section className="dashboard-page section-pad">
       <header className="dashboard-header">
@@ -28,7 +31,7 @@ function DashboardPage() {
           </p>
         </div>
       </header>
-      <StarterDashboard />
+      <StarterDashboard session={session} />
     </section>
   )
 }
