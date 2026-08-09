@@ -1,5 +1,7 @@
 # ShipLean
 
+[简体中文](README.zh-CN.md)
+
 An Agent-ready TanStack Start SaaS scaffold for turning a focused product idea into a verified MVP without paying for a heavyweight boilerplate.
 
 ## Use the downloaded template
