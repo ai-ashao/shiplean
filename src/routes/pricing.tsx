@@ -1,4 +1,16 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { Check } from 'lucide-react'
+import type { ReactNode } from 'react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { sandboxUiAvailable } from '@/lib/config/runtime'
 import { pageHead } from '@/lib/seo'
 
@@ -32,74 +44,95 @@ const pro = [
 
 function PricingPage() {
   return (
-    <section className="pricing-page section-pad">
-      <header className="page-intro centered">
-        <p className="eyebrow">
-          <span>PAY ONCE</span> KEEP BUILDING
-        </p>
-        <h1>
-          Starter-kit pricing
-          <br />
-          for small-product math.
+    <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+      <header className="mx-auto max-w-3xl text-center">
+        <Badge variant="outline" className="font-mono text-[10px] uppercase tracking-widest">
+          Pay once · Keep building
+        </Badge>
+        <h1 className="mt-6 text-balance text-4xl font-semibold tracking-[-0.045em] sm:text-6xl">
+          Straightforward pricing for small-product math.
         </h1>
-        <p>
+        <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
           No subscription for code you run yourself. Download the scaffold, open it in your coding
           agent, and invoke the bundled Skill to build your MVP.
         </p>
       </header>
-      <div className="pricing-grid">
-        <article className="price-card">
-          <div className="price-top">
-            <p>STARTER PREVIEW</p>
-            <strong>$0</strong>
-            <span>local demo access</span>
-          </div>
-          <ul>
-            {core.map((item) => (
-              <li key={item}>↳ {item}</li>
-            ))}
-          </ul>
+      <div className="mt-14 grid gap-5 lg:grid-cols-3">
+        <PriceCard name="Starter preview" price="$0" note="local demo access" features={core}>
           {sandboxUiAvailable ? (
-            <Link className="button button-plain full" to="/login">
-              Open the starter demo
-            </Link>
+            <Button asChild variant="outline" className="w-full">
+              <Link to="/login">Open the starter demo</Link>
+            </Button>
           ) : (
-            <span className="button button-disabled full">Available after local install</span>
+            <Button variant="outline" className="w-full" disabled>
+              Available after local install
+            </Button>
           )}
-        </article>
-        <article className="price-card featured">
-          <div className="price-flag">FOUNDING RUN / LIMITED</div>
-          <div className="price-top">
-            <p>PRO</p>
-            <strong>$66</strong>
-            <span>one-time commercial license</span>
-          </div>
-          <ul>
-            {pro.map((item) => (
-              <li key={item}>↳ {item}</li>
-            ))}
-          </ul>
-          <span className="button button-disabled full">Download sale opens later</span>
-        </article>
-        <article className="price-card">
-          <div className="price-top">
-            <p>STANDARD</p>
-            <strong>$99</strong>
-            <span>after founding period</span>
-          </div>
-          <ul>
-            {pro.map((item) => (
-              <li key={item}>↳ {item}</li>
-            ))}
-          </ul>
-          <span className="button button-disabled full">Not on sale yet</span>
-        </article>
+        </PriceCard>
+        <PriceCard
+          name="Pro"
+          price="$66"
+          note="one-time commercial license"
+          features={pro}
+          featured
+        >
+          <Button className="w-full" disabled>
+            Download sale opens later
+          </Button>
+        </PriceCard>
+        <PriceCard name="Standard" price="$99" note="after founding period" features={pro}>
+          <Button variant="outline" className="w-full" disabled>
+            Not on sale yet
+          </Button>
+        </PriceCard>
       </div>
-      <p className="renewal-note">
+      <p className="mx-auto mt-10 max-w-3xl text-center text-sm leading-6 text-muted-foreground">
         Optional updates after year one: <strong>$39/year</strong>. Your existing code keeps working
         whether you renew or not. Payment and credits modules for products built with ShipLean are
         planned for phase two and are not included in the current MVP.
       </p>
     </section>
+  )
+}
+
+function PriceCard({
+  name,
+  price,
+  note,
+  features,
+  featured = false,
+  children,
+}: Readonly<{
+  name: string
+  price: string
+  note: string
+  features: readonly string[]
+  featured?: boolean
+  children: ReactNode
+}>) {
+  return (
+    <Card
+      className={
+        featured ? 'relative border-foreground shadow-lg shadow-foreground/5' : 'shadow-none'
+      }
+    >
+      {featured ? <Badge className="absolute -top-3 left-6">Founding offer</Badge> : null}
+      <CardHeader>
+        <CardDescription>{name}</CardDescription>
+        <CardTitle className="text-5xl tracking-[-0.05em]">{price}</CardTitle>
+        <CardDescription>{note}</CardDescription>
+      </CardHeader>
+      <CardContent className="flex-1">
+        <ul className="space-y-3 text-sm">
+          {features.map((item) => (
+            <li className="flex gap-2.5" key={item}>
+              <Check className="mt-0.5 size-4 shrink-0" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+      <CardFooter>{children}</CardFooter>
+    </Card>
   )
 }

@@ -1,4 +1,6 @@
+import { LogOut } from 'lucide-react'
 import { useState } from 'react'
+import { Button } from '@/components/ui/button'
 
 export function SandboxLogout() {
   const [busy, setBusy] = useState(false)
@@ -18,11 +20,14 @@ export function SandboxLogout() {
   }
 
   return (
-    <div className="dashboard-session-actions">
-      <button type="button" className="button button-light" disabled={busy} onClick={logout}>
+    <div className="flex flex-col items-end gap-2">
+      <Button type="button" variant="outline" disabled={busy} onClick={logout}>
+        <LogOut />
         {busy ? 'Closing demo…' : 'Exit local demo'}
-      </button>
-      {error ? <output className="form-error dashboard-session-error">{error}</output> : null}
+      </Button>
+      {error ? (
+        <output className="max-w-72 text-right text-xs text-destructive">{error}</output>
+      ) : null}
     </div>
   )
 }

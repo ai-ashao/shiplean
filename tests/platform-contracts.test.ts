@@ -89,4 +89,17 @@ describe('platform contracts', () => {
     expect(skill).toContain('Read `AGENTS.md` completely.')
     expect(skill).toContain('Run `pnpm verify`.')
   })
+
+  it('documents the actual TanStack Agent handoff', () => {
+    const readme = readFileSync('README.md', 'utf8')
+    const tutorial = readFileSync('docs/getting-started.md', 'utf8')
+    const configuration = readFileSync('docs/configuration.md', 'utf8')
+
+    expect(readme).toContain('[Build your first ShipLean MVP](./docs/getting-started.md)')
+    expect(readme).toContain('TanStack Start only')
+    expect(tutorial).toContain('$shiplean-quick-start` is an Agent Skill invocation')
+    expect(tutorial).toContain('pnpm verify')
+    expect(configuration).toContain('VITE_SITE_URL')
+    expect(configuration).toContain('SHIPLEAN_SANDBOX=false')
+  })
 })

@@ -47,28 +47,34 @@ const workflow = {
 
 export function AgentWorkflow({ locale = 'en' }: Readonly<{ locale?: 'en' | 'zh-CN' }>) {
   return (
-    <div className="agent-workflow">
+    <div className="grid overflow-hidden rounded-xl border bg-border shadow-sm lg:grid-cols-[0.7fr_1.3fr] lg:gap-px">
       <section
-        className="agent-command"
+        className="flex min-h-72 flex-col justify-center bg-zinc-950 p-6 text-zinc-100 sm:p-10 lg:min-h-[430px]"
         aria-label={locale === 'zh-CN' ? 'Skill 调用示例' : 'Skill invocation example'}
       >
-        <span>{locale === 'zh-CN' ? '在 Agent 中输入' : 'TYPE IN YOUR AGENT'}</span>
-        <code>$shiplean-quick-start</code>
-        <p>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+          {locale === 'zh-CN' ? '在 Agent 中输入' : 'Type in your agent'}
+        </span>
+        <code className="my-8 overflow-wrap-anywhere font-mono text-lg sm:text-2xl">
+          $shiplean-quick-start
+        </code>
+        <p className="border-t border-white/10 pt-5 text-sm leading-6 text-zinc-400">
           {locale === 'zh-CN'
             ? '把这个模板改成我的产品：……'
             : 'Turn this template into my product: …'}
         </p>
       </section>
-      <ol className="agent-steps">
+      <ol className="grid list-none gap-px bg-border p-0 sm:grid-cols-2">
         {workflow[locale].map((step, index) => (
-          <li key={step.code}>
-            <div className="agent-step-code">
-              <span>{String(index + 1).padStart(2, '0')}</span>
+          <li className="flex min-h-52 flex-col bg-background p-6" key={step.code}>
+            <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              <span className="rounded border px-1.5 py-0.5">
+                {String(index + 1).padStart(2, '0')}
+              </span>
               {step.code}
             </div>
-            <h3>{step.title}</h3>
-            <p>{step.text}</p>
+            <h3 className="mt-auto text-lg font-semibold tracking-tight">{step.title}</h3>
+            <p className="mb-0 mt-3 text-sm leading-6 text-muted-foreground">{step.text}</p>
           </li>
         ))}
       </ol>

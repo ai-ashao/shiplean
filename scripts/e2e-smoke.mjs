@@ -108,7 +108,7 @@ try {
 
   const dashboard = await request('/dashboard', { headers: { cookie } })
   assert(dashboard.response.status === 200, 'Starter dashboard must return 200.')
-  assert(dashboard.text.includes('Agent-ready workspace'), 'Starter dashboard content is missing.')
+  assert(dashboard.text.includes('data-starter-dashboard'), 'Starter dashboard content is missing.')
   assert(dashboard.text.includes('maker@shiplean.local'), 'Dashboard session must render on SSR.')
   assert(dashboard.text.includes('Exit local demo'), 'Dashboard logout control is missing.')
 

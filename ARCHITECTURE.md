@@ -18,8 +18,12 @@ public product surface → local session boundary → protected app shell
 
 - `.agents/skills/shiplean-quick-start/SKILL.md`: turns a product idea into an implementation workflow;
 - `AGENTS.md`: product boundary, safety rules, and completion command;
+- `docs/getting-started.md`: tutorial from private checkout to Agent-built, verified MVP;
+- `docs/configuration.md`: environment and sandbox configuration reference;
 - `TASKS/`: explicit contracts for substantial modules;
 - `src/routes`: public, session, and application surfaces;
+- `src/components/ui`: local shadcn/ui primitives owned by the downloaded project;
+- `components.json` and `src/styles.css`: shadcn aliases, Tailwind entrypoint, and neutral design tokens;
 - `src/lib/auth`: visibly local identity boundary;
 - `src/modules/manifests.ts`: machine-readable module ownership and acceptance;
 - `src/start.ts`: global security headers;
