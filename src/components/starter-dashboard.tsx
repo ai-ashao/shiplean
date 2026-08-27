@@ -1,17 +1,21 @@
-import { Check, FileCode2, FolderKanban, ShieldCheck, TerminalSquare } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
+import {
+  Check,
+  CircleHelp,
+  FileCheck2,
+  FileCode2,
+  FolderKanban,
+  Gauge,
+  ShieldCheck,
+  Sparkles,
+  TerminalSquare,
+} from 'lucide-react'
 
-type Session = {
-  authenticated: true
-  user: { email: string }
-}
+type Session = { authenticated: true; user: { email: string } }
 
 const checks = [
   'Describe the first user and one job to be done',
   'Invoke $shiplean-quick-start in your coding agent',
-  'Review the routes and product states the agent changes',
+  'Review every route and state the agent changes',
   'Run pnpm verify before deployment',
 ]
 
@@ -22,25 +26,49 @@ const contracts = [
 ] as const
 
 export function StarterDashboard({ session }: Readonly<{ session: Session }>) {
+  const metrics = [
+    ['Runtime', 'TanStack Start', 'Single supported framework', FileCode2],
+    ['Deploy target', 'Cloudflare', 'First-class configuration', Gauge],
+    ['Verification', 'Ready', 'One complete command', FileCheck2],
+    ['Agent Skill', 'Bundled', 'Project-aware workflow', Sparkles],
+  ] as const
+
   return (
-    <div data-starter-dashboard className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-      <Card className="gap-0 overflow-hidden py-0 shadow-none">
-        <CardHeader className="border-b p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <CardDescription>First product task</CardDescription>
-              <CardTitle className="mt-2 text-xl">Turn the starter into one focused MVP</CardTitle>
+    <div data-starter-dashboard>
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {metrics.map(([label, value, note, Icon]) => (
+          <article className="metric-card" key={label}>
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              {label}
+              <Icon />
             </div>
-            <Badge variant="secondary">
-              <span className="size-1.5 rounded-full bg-emerald-500" /> Ready
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardContent className="p-6">
-          <ol className="space-y-0">
+            <strong>{value}</strong>
+            <p>{note}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="mt-3 grid gap-3 lg:grid-cols-[1fr_320px]">
+        <section className="min-h-[430px] rounded-xl border bg-white p-5 sm:p-7">
+          <header className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs text-muted-foreground">First product task</p>
+              <h2 className="mt-2 text-xl font-semibold">Turn the starter into one focused MVP</h2>
+            </div>
+            <span className="rounded-md border bg-[#f4f8f1] px-3 py-2 text-[11px] font-medium text-[#5d9229]">
+              Ready
+            </span>
+          </header>
+          <ol className="mt-7 divide-y rounded-lg border">
             {checks.map((check, index) => (
-              <li className="flex gap-4 border-b py-4 last:border-0" key={check}>
-                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-secondary text-xs font-medium">
+              <li className="flex items-center gap-4 px-4 py-4" key={check}>
+                <span
+                  className={
+                    index < 3
+                      ? 'grid size-7 place-items-center rounded-full bg-[#edf5e7] text-[#5d9229]'
+                      : 'grid size-7 place-items-center rounded-full border text-xs'
+                  }
+                >
                   {index < 3 ? <Check className="size-3.5" /> : index + 1}
                 </span>
                 <span
@@ -48,44 +76,38 @@ export function StarterDashboard({ session }: Readonly<{ session: Session }>) {
                 >
                   {check}
                 </span>
+                <CircleHelp className="ml-auto size-3.5 text-muted-foreground" />
               </li>
             ))}
           </ol>
-        </CardContent>
-      </Card>
-      <div className="grid gap-4">
-        <Card className="gap-4 bg-zinc-950 text-zinc-100 shadow-none">
-          <CardHeader>
-            <TerminalSquare className="size-5 text-zinc-500" />
-            <CardDescription className="text-zinc-500">Start with context</CardDescription>
-            <CardTitle className="font-mono text-sm">$shiplean-quick-start</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="font-mono text-xs leading-6 text-zinc-400">
+        </section>
+        <div className="grid gap-3">
+          <section className="rounded-xl border bg-[#191a18] p-6 text-white">
+            <div className="flex items-center justify-between">
+              <TerminalSquare className="size-5 text-[#8fc452]" />
+              <span className="font-mono text-[10px] text-white/40">AGENT PROMPT</span>
+            </div>
+            <code className="mt-9 block text-sm">$shiplean-quick-start</code>
+            <p className="mb-0 mt-5 font-mono text-xs leading-6 text-white/50">
               Turn this template into my SaaS MVP. My first user is …
             </p>
-          </CardContent>
-        </Card>
-        <Card className="gap-4 shadow-none">
-          <CardHeader>
-            <CardDescription>Included contracts</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            {contracts.map(({ icon: Icon, label, value }) => (
-              <div key={label}>
-                <div className="flex items-center gap-3">
+          </section>
+          <section className="rounded-xl border bg-white p-6">
+            <p className="text-xs text-muted-foreground">Included contracts</p>
+            <div className="mt-3 divide-y">
+              {contracts.map(({ icon: Icon, label, value }) => (
+                <div className="flex items-center gap-3 py-3 text-xs" key={label}>
                   <Icon className="size-4 text-muted-foreground" />
                   <span>{label}</span>
-                  <code className="ml-auto text-xs text-muted-foreground">{value}</code>
+                  <code className="ml-auto text-[10px] text-muted-foreground">{value}</code>
                 </div>
-                <Separator className="mt-3" />
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+              ))}
+            </div>
+          </section>
+        </div>
       </div>
-      <p className="text-xs text-muted-foreground lg:col-span-2">
-        Local session: {session.user.email}
+      <p className="mb-0 mt-4 text-[11px] text-muted-foreground">
+        Local sandbox session · {session.user.email}
       </p>
     </div>
   )

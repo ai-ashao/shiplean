@@ -44,20 +44,23 @@ const pro = [
 
 function PricingPage() {
   return (
-    <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
-      <header className="mx-auto max-w-3xl text-center">
-        <Badge variant="outline" className="font-mono text-[10px] uppercase tracking-widest">
+    <section className="mx-auto max-w-[1180px] px-4 py-10 sm:px-6 sm:py-16">
+      <header className="max-w-3xl">
+        <Badge
+          variant="outline"
+          className="border-[#dce8d4] bg-[#f4f8f1] font-mono text-[10px] uppercase tracking-widest text-[#5d9229]"
+        >
           Pay once · Keep building
         </Badge>
-        <h1 className="mt-6 text-balance text-4xl font-semibold tracking-[-0.045em] sm:text-6xl">
+        <h1 className="mt-5 text-balance text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
           Straightforward pricing for small-product math.
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
+        <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
           No subscription for code you run yourself. Download the scaffold, open it in your coding
           agent, and invoke the bundled Skill to build your MVP.
         </p>
       </header>
-      <div className="mt-14 grid gap-5 lg:grid-cols-3">
+      <div className="mt-10 grid gap-3 lg:grid-cols-3">
         <PriceCard name="Starter preview" price="$0" note="local demo access" features={core}>
           {sandboxUiAvailable ? (
             <Button asChild variant="outline" className="w-full">
@@ -86,7 +89,7 @@ function PricingPage() {
           </Button>
         </PriceCard>
       </div>
-      <p className="mx-auto mt-10 max-w-3xl text-center text-sm leading-6 text-muted-foreground">
+      <p className="mt-8 max-w-3xl text-xs leading-6 text-muted-foreground">
         Optional updates after year one: <strong>$39/year</strong>. Your existing code keeps working
         whether you renew or not. Payment and credits modules for products built with ShipLean are
         planned for phase two and are not included in the current MVP.
@@ -112,14 +115,14 @@ function PriceCard({
 }>) {
   return (
     <Card
-      className={
-        featured ? 'relative border-foreground shadow-lg shadow-foreground/5' : 'shadow-none'
-      }
+      className={featured ? 'relative border-[#85b754] bg-[#fcfefb] shadow-none' : 'shadow-none'}
     >
-      {featured ? <Badge className="absolute -top-3 left-6">Founding offer</Badge> : null}
+      {featured ? (
+        <Badge className="absolute -top-3 left-6 bg-[#5f922c]">Founding offer</Badge>
+      ) : null}
       <CardHeader>
         <CardDescription>{name}</CardDescription>
-        <CardTitle className="text-5xl tracking-[-0.05em]">{price}</CardTitle>
+        <CardTitle className="text-4xl tracking-[-0.05em]">{price}</CardTitle>
         <CardDescription>{note}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1">

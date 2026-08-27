@@ -35,28 +35,28 @@
 
 :root {
   --radius: 0.625rem;
-  --background: #fcfcf9;
-  --foreground: #0d0d0c;
-  --card: #ffffff;
-  --card-foreground: #0d0d0c;
-  --primary: #0d0d0c;
-  --primary-foreground: #fcfcf9;
-  --secondary: #f2f3ec;
-  --secondary-foreground: #0d0d0c;
-  --muted-surface: #f2f3ec;
-  --muted-foreground: #6f706a;
-  --accent: #efffc8;
-  --accent-foreground: #0d0d0c;
-  --destructive: #dc2626;
-  --border: #e7e8e1;
-  --input: #dedfd8;
-  --ring: #8fc41f;
+  --background: #fbf4e3;
+  --foreground: #26231f;
+  --card: #fffaf0;
+  --card-foreground: #26231f;
+  --primary: #ff7658;
+  --primary-foreground: #fffaf4;
+  --secondary: #f6ead2;
+  --secondary-foreground: #3d372f;
+  --muted-surface: #f5ecd9;
+  --muted-foreground: #857c6e;
+  --accent: #ffe4d8;
+  --accent-foreground: #b84e37;
+  --destructive: #d94d3f;
+  --border: #eadbbc;
+  --input: #ddcda9;
+  --ring: #ff7658;
   --ink: var(--foreground);
   --paper: var(--background);
   --white: var(--card);
-  --lime: #b9f43a;
-  --coral: #fee2e2;
-  --blue: #dbeafe;
+  --lime: #5eae73;
+  --coral: #ff7658;
+  --blue: #6396dc;
   --muted: var(--muted-foreground);
   --line: var(--border);
   --mono: "DM Mono", ui-monospace, monospace;
@@ -76,7 +76,7 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  background: #dededc;
+  background: var(--background);
 }
 body::before {
   display: none;
@@ -97,8 +97,61 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 :focus-visible {
-  outline: 3px solid var(--blue);
-  outline-offset: 3px;
+  outline: 3px solid rgba(255, 118, 88, 0.34);
+  outline-offset: 2px;
+}
+
+.side-nav-link {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 12px;
+  border-radius: 7px;
+  padding: 0 12px;
+  color: var(--muted-foreground);
+  font-size: 13px;
+  font-weight: 500;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+.side-nav-link svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 1.7;
+}
+.side-nav-link:hover,
+.side-nav-link-active {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+.metric-card {
+  min-height: 126px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 18px;
+}
+.metric-card svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.7;
+}
+.metric-card strong {
+  display: block;
+  margin-top: 18px;
+  font-size: clamp(18px, 2vw, 23px);
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+.section-kicker {
+  margin: 0;
+  color: var(--primary);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .site-shell {
@@ -191,6 +244,12 @@ h2,
 h3,
 p {
   margin-top: 0;
+}
+.metric-card p {
+  margin: 7px 0 0;
+  color: var(--muted-foreground);
+  font-size: 10px;
+  line-height: 1.5;
 }
 .button-row {
   display: flex;

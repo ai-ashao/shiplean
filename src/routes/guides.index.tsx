@@ -15,27 +15,30 @@ export const Route = createFileRoute('/guides/')({
 
 function GuidesPage() {
   return (
-    <section className="guides-page section-pad">
-      <header className="page-intro">
-        <p className="eyebrow">
-          <span>FIELD NOTES</span> NO FILLER
-        </p>
-        <h1>
-          Build notes from
-          <br />
-          the launch floor.
+    <section className="mx-auto max-w-[1180px] px-4 py-10 sm:px-6 sm:py-16">
+      <header className="max-w-3xl">
+        <p className="section-kicker">Field notes / No filler</p>
+        <h1 className="mt-4 text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
+          Build notes from the launch floor.
         </h1>
-        <p>Compact explanations for the decisions that make a small product cheaper to own.</p>
+        <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+          Compact explanations for the decisions that make a small product cheaper to own.
+        </p>
       </header>
-      <div className="guide-list">
+      <div className="mt-10 overflow-hidden rounded-xl border bg-white">
         {guides.map((guide) => (
-          <Link key={guide.slug} to="/guides/$slug" params={{ slug: guide.slug }}>
-            <span className="guide-number">{guide.number}</span>
+          <Link
+            className="grid gap-4 border-b px-5 py-6 last:border-0 hover:bg-[#fafcf8] sm:grid-cols-[52px_1fr_auto] sm:items-center"
+            key={guide.slug}
+            to="/guides/$slug"
+            params={{ slug: guide.slug }}
+          >
+            <span className="font-mono text-[10px] text-[#679a32]">{guide.number}</span>
             <div>
-              <h2>{guide.title}</h2>
-              <p>{guide.summary}</p>
+              <h2 className="text-base font-semibold">{guide.title}</h2>
+              <p className="mb-0 mt-2 text-xs leading-5 text-muted-foreground">{guide.summary}</p>
             </div>
-            <span className="guide-time">{guide.time} ↗</span>
+            <span className="text-[11px] text-muted-foreground">{guide.time} ↗</span>
           </Link>
         ))}
       </div>

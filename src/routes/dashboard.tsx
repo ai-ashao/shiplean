@@ -19,16 +19,14 @@ export const Route = createFileRoute('/dashboard')({
 function DashboardPage() {
   const session = Route.useLoaderData()
   return (
-    <section className="mx-auto min-h-[80vh] max-w-7xl px-5 py-12 sm:px-8 sm:py-16 lg:px-10">
-      <header className="mb-10 flex flex-col justify-between gap-6 border-b pb-8 sm:flex-row sm:items-end">
+    <section className="mx-auto min-h-[80vh] max-w-[1180px] px-4 py-7 sm:px-6 sm:py-10">
+      <header className="mb-7 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-            Local starter · Application shell
-          </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+          <p className="text-xs text-muted-foreground">Local starter / Application shell</p>
+          <h1 className="mt-2 text-2xl font-semibold tracking-[-0.03em] sm:text-3xl">
             Good afternoon, maker.
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+          <p className="mt-2 max-w-2xl text-xs leading-5 text-muted-foreground">
             This protected route is ready to become your product workspace. Start with one useful
             user task.
           </p>

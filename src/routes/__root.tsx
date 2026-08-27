@@ -6,6 +6,7 @@ import {
   Scripts,
   useRouterState,
 } from '@tanstack/react-router'
+import { BookOpen, Box, Cloud, LayoutDashboard, MonitorPlay, Tags, Workflow } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { PrivacyControls } from '@/components/privacy-controls'
 import { Button } from '@/components/ui/button'
@@ -20,12 +21,7 @@ export const Route = createRootRoute({
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { title: site.name },
       ...(publicEnv.googleSiteVerification
-        ? [
-            {
-              name: 'google-site-verification',
-              content: publicEnv.googleSiteVerification,
-            },
-          ]
+        ? [{ name: 'google-site-verification', content: publicEnv.googleSiteVerification }]
         : []),
     ],
     links: [{ rel: 'stylesheet', href: styles }],
@@ -38,114 +34,125 @@ export const Route = createRootRoute({
 function RootComponent() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
   const isChinese = pathname === '/zh' || pathname.startsWith('/zh/')
-  const isHome = pathname === '/' || pathname === '/zh' || pathname === '/zh/'
+
+  const nav = isChinese
+    ? [
+        { label: '首页', to: '/zh', icon: LayoutDashboard },
+        { label: '使用流程', href: '/zh#workflow', icon: Workflow },
+        { label: '指南', to: '/guides', icon: BookOpen },
+        { label: '定价', to: '/pricing', icon: Tags },
+      ]
+    : [
+        { label: 'Home', to: '/', icon: LayoutDashboard },
+        { label: 'Workflow', href: '/#workflow', icon: Workflow },
+        { label: 'Guides', to: '/guides', icon: BookOpen },
+        { label: 'Pricing', to: '/pricing', icon: Tags },
+      ]
 
   return (
-    <div className="min-h-screen bg-[#dededc] text-foreground">
-      <header className="relative z-50 mx-3 mt-3 rounded-t-[2rem] bg-[#fcfcf9] sm:rounded-t-[2.75rem]">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
-          <Link
-            className="flex items-center gap-2.5 font-semibold tracking-tight"
-            to={isChinese ? '/zh' : '/'}
-            aria-label={isChinese ? 'ShipLean 首页' : 'ShipLean home'}
-          >
-            <span
-              className="relative grid size-8 place-items-center rounded-lg bg-primary font-mono text-[10px] text-primary-foreground shadow-sm"
-              aria-hidden="true"
-            >
-              SL
-              <i className="absolute -right-0.5 -top-0.5 size-2 rounded-full border-2 border-[#fcfcf9] bg-[#b9f43a]" />
-            </span>
-            <span>ShipLean</span>
-          </Link>
-          <nav
-            className="flex items-center gap-1"
-            aria-label={isChinese ? '主导航' : 'Primary navigation'}
-          >
-            {isChinese ? (
-              <>
-                <a
-                  className="hidden rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground sm:block"
-                  href="/zh#workflow"
-                >
-                  使用流程
-                </a>
-                <Link
-                  className="hidden rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground sm:block"
-                  to="/pricing"
-                >
-                  定价
-                </Link>
-                <Link
-                  className="rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
-                  to="/"
-                  aria-label="Switch to English"
-                >
-                  EN
-                </Link>
-              </>
+    <div className="min-h-screen bg-background text-foreground lg:pl-64">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r bg-card lg:flex">
+        <div className="flex h-16 items-center border-b px-5">
+          <Brand isChinese={isChinese} />
+        </div>
+        <nav
+          className="flex-1 space-y-1 p-4"
+          aria-label={isChinese ? '主导航' : 'Primary navigation'}
+        >
+          {nav.map(({ label, to, href, icon: Icon }) =>
+            href ? (
+              <a className="side-nav-link" href={href} key={label}>
+                <Icon /> {label}
+              </a>
             ) : (
-              <>
-                <a
-                  className="hidden rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground sm:block"
-                  href="/#workflow"
-                >
-                  Workflow
-                </a>
-                <Link
-                  className="hidden rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground sm:block"
-                  to="/guides"
-                  activeProps={{ className: 'bg-accent text-foreground' }}
-                >
-                  Guides
-                </Link>
-                <Link
-                  className="hidden rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground sm:block"
-                  to="/pricing"
-                  activeProps={{ className: 'bg-accent text-foreground' }}
-                >
-                  Pricing
-                </Link>
-                <Link
-                  className="rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
-                  to="/zh"
-                  aria-label="切换到中文版"
-                >
-                  中文
-                </Link>
-              </>
-            )}
-          </nav>
+              <Link
+                className="side-nav-link"
+                activeProps={{ className: 'side-nav-link side-nav-link-active' }}
+                to={to}
+                key={label}
+              >
+                <Icon /> {label}
+              </Link>
+            ),
+          )}
+        </nav>
+        <div className="space-y-3 border-t p-4">
+          <div className="rounded-lg border bg-background p-3">
+            <p className="m-0 flex items-center gap-2 text-xs font-medium">
+              <Cloud className="size-3.5 text-[#5eae73]" /> Cloudflare-first
+            </p>
+            <p className="mb-0 mt-1 text-[11px] leading-5 text-muted-foreground">
+              TanStack Start only. One runtime, one verification contract.
+            </p>
+          </div>
+          <PrivacyControls locale={isChinese ? 'zh-CN' : 'en'} />
+        </div>
+      </aside>
+
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-card/95 px-4 backdrop-blur sm:px-6">
+        <div className="lg:hidden">
+          <Brand isChinese={isChinese} />
+        </div>
+        <p className="hidden items-center gap-2 text-xs text-muted-foreground lg:flex">
+          <Box className="size-3.5" /> Agent-ready product scaffold
+        </p>
+        <div className="flex items-center gap-2">
+          <span className="hidden rounded-full bg-accent px-3 py-1.5 text-[11px] font-medium text-accent-foreground sm:inline-flex">
+            <span className="mr-1.5 size-1.5 rounded-full bg-primary" /> Preview mode
+          </span>
+          <Link
+            className="grid size-8 place-items-center rounded-full border bg-background text-[11px] font-semibold"
+            to={isChinese ? '/' : '/zh'}
+            aria-label={isChinese ? 'Switch to English' : '切换到中文版'}
+          >
+            {isChinese ? 'EN' : '中'}
+          </Link>
+          <Link
+            className="grid size-8 place-items-center rounded-full border bg-card text-muted-foreground hover:text-foreground"
+            to="/login"
+            aria-label={isChinese ? '打开模板演示' : 'Open starter demo'}
+          >
+            <MonitorPlay className="size-4" />
+          </Link>
         </div>
       </header>
-      <main
-        className={
-          isHome
-            ? undefined
-            : 'mx-3 overflow-hidden rounded-b-[2rem] bg-[#fcfcf9] sm:rounded-b-[2.75rem]'
-        }
-      >
+
+      <div className="border-b border-[#f0c7b5] bg-[#ffe7da] px-4 py-2 text-center text-xs text-[#b4513b] sm:px-6">
+        {isChinese
+          ? '预览环境已启用 · 不会连接付款、数据库或生产认证服务'
+          : 'Preview environment enabled · No payment, database, or production auth service is connected'}
+      </div>
+
+      <main>
         <Outlet />
       </main>
-      <footer className="mx-3 mt-3 rounded-[2rem] bg-[#fcfcf9] sm:rounded-[2.75rem]">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-10 text-sm text-muted-foreground sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
-          <div className="flex items-center gap-2">
-            <span className="size-2 rounded-full bg-emerald-500" />
-            {isChinese ? 'TanStack Start · Cloudflare 优先' : 'TanStack Start · Cloudflare-first'}
-          </div>
-          <p className="m-0">{isChinese ? '小步构建，保持掌控。' : 'Build small. Keep control.'}</p>
-          <div className="flex items-center gap-4">
-            <Link className="hover:text-foreground" to="/guides">
-              Guides
-            </Link>
-            <Link className="hover:text-foreground" to="/pricing">
-              License
-            </Link>
-            <PrivacyControls locale={isChinese ? 'zh-CN' : 'en'} />
+      <footer className="border-t bg-card px-5 py-8 sm:px-8">
+        <div className="mx-auto flex max-w-[1180px] flex-col gap-4 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <p className="m-0">© ShipLean · Build small. Keep control.</p>
+          <div className="flex items-center gap-5">
+            <Link to="/guides">Guides</Link>
+            <Link to="/pricing">License</Link>
+            <span>TanStack Start · Cloudflare</span>
           </div>
         </div>
       </footer>
     </div>
+  )
+}
+
+function Brand({ isChinese }: Readonly<{ isChinese: boolean }>) {
+  return (
+    <Link
+      className="flex items-center gap-2.5 font-semibold tracking-[-0.02em]"
+      to={isChinese ? '/zh' : '/'}
+      aria-label={isChinese ? 'ShipLean 首页' : 'ShipLean home'}
+    >
+      <span className="relative grid size-8 place-items-center rounded-lg bg-primary font-mono text-[10px] text-primary-foreground">
+        SL
+        <i className="absolute -right-0.5 -top-0.5 size-2 rounded-full border-2 border-card bg-[#5eae73]" />
+      </span>
+      <span>ShipLean</span>
+    </Link>
   )
 }
 
