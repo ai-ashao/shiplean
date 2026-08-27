@@ -9,6 +9,8 @@ downloaded template
         ↓
 coding Agent + shiplean-quick-start Skill
         ↓
+independent private product repository
+        ↓
 public product surface → local session boundary → protected app shell
         ↓
                     pnpm verify
@@ -16,7 +18,7 @@ public product surface → local session boundary → protected app shell
 
 ## Repository entry points
 
-- `.agents/skills/shiplean-quick-start/SKILL.md`: turns a product idea into an implementation workflow;
+- `.agents/skills/shiplean-quick-start/SKILL.md`: establishes an independent product repository and turns a product idea into an implementation workflow;
 - `AGENTS.md`: product boundary, safety rules, and completion command;
 - `docs/getting-started.md`: tutorial from private checkout to Agent-built, verified MVP;
 - `docs/configuration.md`: environment and sandbox configuration reference;

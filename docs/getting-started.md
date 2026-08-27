@@ -13,7 +13,7 @@ ShipLean currently supports **TanStack Start only**. It does not include a Next.
 
 No database, payment account, auth provider, or third-party secret is required for the first local run.
 
-## Step 1: Create the local project
+## Step 1: Create the local template checkout
 
 Clone the private repository into a new product folder:
 
@@ -23,6 +23,8 @@ cd my-saas
 ```
 
 If you received a ZIP archive, unpack it and open the extracted directory in your terminal instead.
+
+At this point a Git clone still points at the ShipLean template repository. Do not commit or push product work to that remote. The bundled Skill creates and binds the independent product repository before it changes the product.
 
 ## Step 2: Install and run the scaffold
 
@@ -50,6 +52,8 @@ Keep production auth, payments, and teams out of this MVP.
 
 `$shiplean-quick-start` is an Agent Skill invocation. It is **not** a command to type in the terminal.
 
+An explicit request to create or start a new product authorizes the Skill to create a private GitHub repository using the authenticated GitHub account. It derives the repository name from the product name, keeps the ShipLean remote fetch-only as `template`, binds the new repository as `origin`, and pushes only after `pnpm verify` passes. It asks for input only when the product name or owner is ambiguous, GitHub is not authenticated, or a repository-name collision needs a decision.
+
 If the Agent does not discover project Skills automatically, use this prompt instead:
 
 ```text
@@ -76,6 +80,8 @@ Do not add [explicit non-goals] yet.
 ```
 
 The Skill instructs the Agent to read `AGENTS.md`, `ARCHITECTURE.md`, relevant routes, and the repository state before changing the product. It then preserves the TanStack Start and Cloudflare-first boundaries while it implements the first workflow.
+
+Before accepting any product commit or push, the Skill verifies that `origin` is the independent product repository and never `ai-ashao/shiplean`.
 
 ## Step 5: Review the result
 
@@ -123,6 +129,10 @@ Ask it to read `.agents/skills/shiplean-quick-start/SKILL.md` directly. The work
 
 Read the `packageManager` field in `package.json` and activate that pnpm version with your normal package-manager setup before installing dependencies.
 
+### GitHub repository creation is blocked
+
+Confirm that GitHub tooling is authenticated for the intended owner and that the derived private repository name is available. The Skill must leave the ShipLean template remote push-disabled and report the repository step as incomplete; it must not push product code back to ShipLean.
+
 ### The dashboard redirects to `/login`
 
 That is the expected protected-route behavior. Use the visibly labeled local login during development. Do not treat it as production auth.
@@ -133,7 +143,7 @@ That is intentional. Production sandbox routes remain disabled unless their expl
 
 ## What you built
 
-You now have a locally running TanStack Start product, a product brief that the repository Skill can execute, and a repeatable acceptance command. Continue with:
+You now have an independently owned GitHub product repository, a locally running TanStack Start product, a product brief that the repository Skill can execute, and a repeatable acceptance command. Continue with:
 
 - [Configuration reference](./configuration.md)
 - [ShipLean architecture](../ARCHITECTURE.md)

@@ -87,7 +87,12 @@ describe('platform contracts', () => {
     const skill = readFileSync('.agents/skills/shiplean-quick-start/SKILL.md', 'utf8')
     expect(skill).toContain('name: shiplean-quick-start')
     expect(skill).toContain('Read `AGENTS.md` completely.')
+    expect(skill).toContain('git remote -v')
+    expect(skill).toContain('rename that remote to `template`')
+    expect(skill).toContain('private visibility by default')
+    expect(skill).toContain('must never target `ai-ashao/shiplean`')
     expect(skill).toContain('Run `pnpm verify`.')
+    expect(skill).toContain('read back the remote branch SHA')
   })
 
   it('documents the actual TanStack Agent handoff', () => {
@@ -97,7 +102,9 @@ describe('platform contracts', () => {
 
     expect(readme).toContain('[Build your first ShipLean MVP](./docs/getting-started.md)')
     expect(readme).toContain('TanStack Start only')
+    expect(readme).toContain('independent private GitHub repository')
     expect(tutorial).toContain('$shiplean-quick-start` is an Agent Skill invocation')
+    expect(tutorial).toContain('never `ai-ashao/shiplean`')
     expect(tutorial).toContain('pnpm verify')
     expect(configuration).toContain('VITE_SITE_URL')
     expect(configuration).toContain('SHIPLEAN_SANDBOX=false')

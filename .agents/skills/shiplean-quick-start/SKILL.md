@@ -1,18 +1,30 @@
 ---
 name: shiplean-quick-start
-description: Turn a downloaded ShipLean TanStack Start template into a specific product with an AI coding agent. Use when starting a new ShipLean project, adapting its routes and branding, adding product features, or preparing the project for a verified Cloudflare-first release.
+description: Turn a downloaded ShipLean TanStack Start template into an independently owned product repository with an AI coding agent. Use when starting a new ShipLean project, adapting its routes and branding, adding product features, or preparing the project for a verified Cloudflare-first release.
 ---
 
 # ShipLean Quick Start
 
-Build the user's product inside the downloaded ShipLean repository while preserving its tested boundaries.
+Build the user's product from the downloaded ShipLean template while preserving its tested boundaries and giving the product an independent Git identity.
 
 ## Orient
 
 1. Read `AGENTS.md` completely.
 2. Read `ARCHITECTURE.md` for module ownership and state boundaries.
-3. Inspect `README.md`, `package.json`, the relevant routes, and `git status` when Git is present.
+3. Inspect `README.md`, `package.json`, the relevant routes, `git status`, the current branch, and `git remote -v` when Git is present.
 4. Translate the user's product idea into a concrete first user task, public routes, required state, and explicit non-goals. Ask only when a missing choice would materially change the product.
+
+## Establish project identity
+
+Treat an explicit request to use this Skill to create or start a new product as authorization to create and bind an independent private GitHub repository for that product. Do not require the user to perform Git setup manually.
+
+1. Derive a repository slug from the product name. Use the authenticated GitHub owner and private visibility by default. Ask only when the product name or owner cannot be inferred safely; never default to public visibility.
+2. If the checkout still points at the canonical ShipLean repository, rename that remote to `template`, disable its push URL, and remove any branch upstream that targets it. Keep it available for fetch-only template comparison.
+3. If the downloaded archive has no Git metadata, initialize a repository with `main` as its initial branch. Preserve any existing product repository whose origin is not the ShipLean template instead of creating a duplicate.
+4. Use authenticated GitHub tooling to create the independent repository without overwriting or repurposing an existing remote repository. Bind the new repository as `origin` and read it back before editing product code.
+5. If GitHub authentication, ownership, or a repository-name collision prevents safe creation, stop the external mutation and report the single concrete gate. Never fall back to the ShipLean repository.
+
+The hard invariant is that product-specific commits and pushes must never target `ai-ashao/shiplean`. Before every commit or push, verify that `origin` is the independently created product repository and that the `template` push URL remains disabled. Preserve and exclude unrelated pre-existing working-tree changes.
 
 ## Build
 
@@ -37,7 +49,9 @@ Treat Better Auth, PostgreSQL/Drizzle, Stripe, Resend, R2, and account-backed Cl
 
 1. Run `pnpm verify`.
 2. Fix failures caused by the work and rerun the complete command.
-3. Report the product behavior delivered, verification evidence, files changed, and any production boundary still deferred.
+3. Recheck `git status`, the active branch, `git remote -v`, and the target repository. Do not proceed if `origin` resolves to the ShipLean template.
+4. For a new product repository created by this workflow, commit only the intended product files, push the verified branch to `origin`, and read back the remote branch SHA.
+5. Report the product behavior delivered, repository URL and pushed SHA, verification evidence, files changed, and any production boundary still deferred. If repository creation or push was blocked, report it as incomplete rather than implying delivery.
 
 ## Example invocation
 
