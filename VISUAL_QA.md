@@ -1,14 +1,14 @@
 # Visual QA
 
-Verified on 2026-08-15 against the local TanStack Start development server.
+Verified on 2026-08-27 against the local TanStack Start development server.
 
 | Surface | Viewport | Result |
 | --- | --- | --- |
-| English home | 1440 × 1000 | Fixed sidebar, five-column metrics, workflow panels, no horizontal overflow |
-| English home | 390 × 844 | Sidebar hidden, two-column metrics, stacked calls to action, no horizontal overflow |
-| Local sandbox login | 390 × 844 | Login action completed and navigated to protected dashboard |
-| Protected dashboard | 390 × 844 | Four metrics in two columns, task panel stacked, no horizontal overflow |
+| English home | 1440 × 1000 | Compact top navigation and a single vertical reading axis: hero copy, Quick Start panel, repository evidence, workflow, and product boundaries |
+| Chinese home | 1440 × 1000 | Chinese document language and localized hero content rendered without console errors |
+| English home | 390 × 844 | The same top-to-bottom sequence is preserved with no horizontal overflow |
+| Local sandbox login | 1280 × 900 | Login action completed and navigated to the protected dashboard |
 
-Browser console was free of application warnings and errors on the initial desktop load. A later mobile reload reported a hydration mismatch caused by the installed translation extension adding `data-immersive-translate-page-theme` to the server-rendered `<html>` element; the differing attribute is external to this repository.
+Browser console was free of application warnings and errors on the English desktop, Chinese desktop, mobile, login, and protected dashboard checks.
 
-Repository verification: `pnpm verify` passed all 10 tests, both client and server production builds, strict TypeScript, and the fresh-server smoke test.
+Repository verification: `pnpm verify` passed all 10 tests, client and server production builds, strict TypeScript, and the fresh-server smoke test.

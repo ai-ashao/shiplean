@@ -97,9 +97,9 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
   const zh = locale === 'zh-CN'
 
   return (
-    <div className="mx-auto max-w-[1180px] px-4 py-7 sm:px-6 sm:py-10">
-      <section className="grid gap-8 py-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-12">
-        <div>
+    <div className="marketing-shell mx-auto max-w-[1180px] px-4 sm:px-6">
+      <section className="starter-hero">
+        <div className="starter-hero-copy">
           <p className="mb-5 flex items-center gap-2 text-xs font-medium text-accent-foreground">
             <span className="grid size-6 place-items-center rounded-md bg-accent">
               <Sparkles className="size-3.5" />
@@ -112,7 +112,7 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
           <p className="mt-6 max-w-2xl text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
             {c.lede}
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Button asChild size="lg" className="group px-6">
               <a href={`#${workflowId}`}>
                 {c.primary}
@@ -125,14 +125,14 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
               </Link>
             </Button>
           </div>
-          <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[11px] text-muted-foreground">
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-[11px] text-muted-foreground">
             {[
               zh ? '无需数据库' : 'No database required',
               zh ? '内置 Agent Skill' : 'Bundled Agent Skill',
               'pnpm verify',
             ].map((item) => (
               <span className="flex items-center gap-1.5" key={item}>
-                <Check className="size-3 text-[#5eae73]" />
+                <Check className="size-3 text-[#22a06b]" />
                 {item}
               </span>
             ))}
@@ -141,18 +141,18 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
         <QuickStartPanel locale={locale} />
       </section>
 
-      <section className="mt-7 rounded-xl border border-[#f0c7b5] bg-[#ffe7da] px-5 py-4 sm:flex sm:items-center sm:justify-between">
+      <section className="starter-notice mt-7 rounded-xl border px-5 py-4 sm:flex sm:items-center sm:justify-between">
         <div className="flex gap-3">
-          <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-[#ffd4c3] text-[#c6533b]">
+          <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full border bg-white text-foreground">
             <CheckCircle2 className="size-4" />
           </span>
           <div>
             <h2 className="text-sm font-semibold">{c.noticeTitle}</h2>
-            <p className="mb-0 mt-1 text-xs text-[#9f6254]">{c.noticeBody}</p>
+            <p className="mb-0 mt-1 text-xs text-muted-foreground">{c.noticeBody}</p>
           </div>
         </div>
         <Link
-          className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-[#b4513b] sm:mt-0"
+          className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-foreground sm:mt-0"
           to="/guides"
         >
           {zh ? '查看配置边界' : 'Review the boundaries'} <ChevronRight className="size-3.5" />
@@ -185,14 +185,14 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
         ))}
       </div>
 
-      <section className="mt-6 grid gap-3 lg:grid-cols-[1fr_310px]">
+      <section className="mt-6 space-y-3">
         <article className="min-h-[430px] rounded-xl border bg-card p-5 sm:p-7">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-xs font-medium text-muted-foreground">{c.overview}</p>
               <h2 className="mt-2 text-xl font-semibold tracking-tight">{c.overviewBody}</h2>
             </div>
-            <span className="rounded-md border bg-[#e7f3e7] px-3 py-2 text-[11px] font-medium text-[#4f8b60]">
+            <span className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-[11px] font-medium text-emerald-700">
               {c.status}
             </span>
           </div>
@@ -204,9 +204,9 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
             <ShieldCheck className="size-4 text-muted-foreground" />
           </div>
           <p className="mt-2 text-xs leading-5 text-muted-foreground">{c.coverageHint}</p>
-          <div className="mt-6 divide-y">
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
             {contracts.map(({ icon: Icon, name, label }) => (
-              <div className="flex gap-3 py-4 first:pt-0" key={name}>
+              <div className="flex gap-3 rounded-lg border bg-background p-4" key={name}>
                 <span className="grid size-8 shrink-0 place-items-center rounded-md border bg-background">
                   <Icon className="size-4" />
                 </span>
@@ -230,13 +230,13 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
         <AgentWorkflow locale={locale} />
       </section>
 
-      <section className="grid overflow-hidden rounded-xl border bg-card lg:grid-cols-2">
+      <section className="overflow-hidden rounded-xl border bg-card">
         <div className="p-7 sm:p-10">
           <p className="section-kicker">{c.boundary}</p>
           <h2 className="mt-4 text-3xl font-semibold tracking-[-0.035em]">{c.boundaryTitle}</h2>
           <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground">{c.boundaryBody}</p>
         </div>
-        <div className="grid grid-cols-2 gap-px bg-border p-px">
+        <div className="grid grid-cols-2 gap-px border-t bg-border p-px lg:grid-cols-4">
           {[
             [Database, zh ? '数据库' : 'Database'],
             [LockKeyhole, zh ? '生产认证' : 'Production auth'],
@@ -260,7 +260,7 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
         </div>
       </section>
 
-      <section className="py-20 text-center sm:py-28">
+      <section className="starter-final py-20 text-center sm:py-28">
         <h2 className="mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
           {c.finalTitle}
         </h2>
@@ -285,23 +285,23 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
 function QuickStartPanel({ locale }: Readonly<{ locale: Locale }>) {
   const zh = locale === 'zh-CN'
   return (
-    <div className="overflow-hidden rounded-xl border bg-card shadow-[0_18px_60px_rgba(85,61,24,0.08)]">
+    <div className="quick-start-panel overflow-hidden rounded-xl border bg-card">
       <div className="flex items-center justify-between border-b px-4 py-3 text-xs">
         <span className="flex items-center gap-2 font-medium">
           <Terminal className="size-4" /> Quick start
         </span>
-        <span className="rounded-full bg-[#e7f3e7] px-2 py-1 text-[10px] text-[#4f8b60]">
+        <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-[10px] text-emerald-700">
           READY
         </span>
       </div>
-      <div className="bg-[#191a18] p-5 font-mono text-xs leading-7 text-[#d7d9d3]">
-        <p className="text-[#7f837a]">
+      <div className="bg-[#0f172a] p-5 font-mono text-xs leading-7 text-[#e2e8f0]">
+        <p className="text-[#64748b]">
           # {zh ? '在编程 Agent 中调用' : 'invoke in your coding agent'}
         </p>
         <p className="mt-3 text-white">
-          <span className="text-[#ff8b70]">$</span> shiplean-quick-start
+          <span className="text-[#a99df8]">$</span> shiplean-quick-start
         </p>
-        <p className="mt-5 text-[#a4a79f]">
+        <p className="mt-5 text-[#94a3b8]">
           {zh ? '把这个模板改成我的产品：……' : 'Turn this template into my product: …'}
         </p>
       </div>
@@ -361,7 +361,7 @@ function RepositoryMap({ locale }: Readonly<{ locale: Locale }>) {
                 <code className="text-xs font-medium">{name as string}</code>
                 <p className="mb-0 mt-1 text-[11px] text-muted-foreground">{note as string}</p>
               </div>
-              <span className="font-mono text-[10px] text-[#4f8b60]">{value as string}</span>
+              <span className="font-mono text-[10px] text-emerald-700">{value as string}</span>
             </div>
           )
         })}

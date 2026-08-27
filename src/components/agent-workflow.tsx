@@ -47,9 +47,9 @@ const workflow = {
 
 export function AgentWorkflow({ locale = 'en' }: Readonly<{ locale?: 'en' | 'zh-CN' }>) {
   return (
-    <div className="grid overflow-hidden rounded-xl border bg-border shadow-sm lg:grid-cols-[0.7fr_1.3fr] lg:gap-px">
+    <div className="overflow-hidden rounded-xl border bg-border shadow-sm">
       <section
-        className="flex min-h-72 flex-col justify-center bg-zinc-950 p-6 text-zinc-100 sm:p-10 lg:min-h-[430px]"
+        className="flex min-h-64 flex-col justify-center bg-zinc-950 p-6 text-zinc-100 sm:p-10"
         aria-label={locale === 'zh-CN' ? 'Skill 调用示例' : 'Skill invocation example'}
       >
         <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
@@ -64,7 +64,7 @@ export function AgentWorkflow({ locale = 'en' }: Readonly<{ locale?: 'en' | 'zh-
             : 'Turn this template into my product: …'}
         </p>
       </section>
-      <ol className="grid list-none gap-px bg-border p-0 sm:grid-cols-2">
+      <ol className="grid list-none gap-px border-t bg-border p-0 sm:grid-cols-2 lg:grid-cols-4">
         {workflow[locale].map((step, index) => (
           <li className="flex min-h-52 flex-col bg-background p-6" key={step.code}>
             <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
