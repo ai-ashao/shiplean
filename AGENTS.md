@@ -11,6 +11,7 @@ ShipLean is a TanStack Start–only, Cloudflare-first product starter. Do not in
 - A future payment event must be verified by its adapter before applying entitlements in production.
 - Future credits must use an append-only ledger rather than a mutable balance as the source of truth.
 - Sandbox behavior must remain visually and technically distinguishable from real payment/auth.
+- File-based tool-site landing pages must use a vertical first-viewport structure and fully show the upload area. After valid files are selected, navigate to a separate editor/workbench route; do not place the editor workbench on the landing page.
 - New public routes need title, description, canonical, and sitemap consideration.
 - Preserve keyboard focus, narrow-screen layout, and reduced-motion behavior.
 

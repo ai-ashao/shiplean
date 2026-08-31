@@ -31,10 +31,11 @@ The hard invariant is that product-specific commits and pushes must never target
 1. Reuse the existing TanStack Start and Cloudflare-first structure. Do not introduce Next.js or multi-framework abstractions.
 2. Keep the anonymous core useful without auth, a database, or secrets unless the requested feature genuinely requires them.
 3. For every new public route, add a title, description, canonical URL, and sitemap consideration.
-4. Keep sandbox auth and billing visibly separate from production integrations.
-5. Keep provider payloads in adapters. Require verified payment events before production entitlements. Preserve the append-only credits ledger as the source of truth.
-6. Preserve keyboard focus, narrow-screen behavior, and reduced-motion behavior when changing UI.
-7. Use `TASKS/add-module.md` as the contract when adding a substantial module.
+4. For a file-based tool site, read `docs/tool-landing-standard-v0.1.md` and use its upload-first route and interaction-state contracts. Stack the concise intro above the complete upload area, keep both within the first viewport, implement and verify the required upload states, and navigate accepted files to a separate editor/workbench route. Do not render the editor workbench on the landing page. When live relevant tools exist, place a compact related-tools section immediately after the upload-first region without letting it displace the upload area from the first viewport.
+5. Keep sandbox auth and billing visibly separate from production integrations.
+6. Keep provider payloads in adapters. Require verified payment events before production entitlements. Preserve the append-only credits ledger as the source of truth.
+7. Preserve keyboard focus, narrow-screen behavior, and reduced-motion behavior when changing UI.
+8. Use `TASKS/add-module.md` as the contract when adding a substantial module.
 
 ## Handle production integrations
 

@@ -70,7 +70,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) and [docs/mvp-acceptance.md](./docs/mvp
 - [Build your first ShipLean MVP](./docs/getting-started.md): download, run, open the coding Agent, invoke the bundled Skill, and verify the result.
 - [Configuration reference](./docs/configuration.md): public variables, server-only variables, sandbox behavior, and Cloudflare settings.
 - [Architecture](./ARCHITECTURE.md): runtime shape, trust boundaries, and module ownership.
-- [Tool Landing Standard v0.1](./docs/tool-landing-standard-v0.1.md): experimental, tool-first page order and the evidence required before shared recipe code is promoted.
+- [Tool Landing Standard v0.1](./docs/tool-landing-standard-v0.1.md): experimental, upload-first landing-to-editor structure and the evidence required before shared recipe code is promoted.
 - [Current feature status](./docs/FEATURE_STATUS.md): rolling implementation and deferral matrix.
 - [Cloudflare deployment boundary](./docs/deployment.md): production setup and final-origin checks.
 - [MVP acceptance evidence](./docs/mvp-acceptance.md): what the current repository proves and what remains deferred.
