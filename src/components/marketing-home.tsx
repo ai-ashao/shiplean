@@ -112,7 +112,7 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
           <p className="mt-6 max-w-2xl text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
             {c.lede}
           </p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <div className="starter-hero-actions mt-8 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg" className="group px-6">
               <a href={`#${workflowId}`}>
                 {c.primary}
@@ -125,7 +125,7 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
               </Link>
             </Button>
           </div>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-[11px] text-muted-foreground">
+          <div className="starter-hero-trust mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[11px] text-muted-foreground">
             {[
               zh ? '无需数据库' : 'No database required',
               zh ? '内置 Agent Skill' : 'Bundled Agent Skill',
@@ -285,7 +285,11 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
 function QuickStartPanel({ locale }: Readonly<{ locale: Locale }>) {
   const zh = locale === 'zh-CN'
   return (
-    <div className="quick-start-panel overflow-hidden rounded-xl border bg-card">
+    <section
+      aria-label={zh ? '核心快速启动工作台' : 'Core quick-start workbench'}
+      className="quick-start-panel overflow-hidden rounded-xl border bg-card"
+      data-core-workbench
+    >
       <div className="flex items-center justify-between border-b px-4 py-3 text-xs">
         <span className="flex items-center gap-2 font-medium">
           <Terminal className="size-4" /> Quick start
@@ -310,7 +314,7 @@ function QuickStartPanel({ locale }: Readonly<{ locale: Locale }>) {
         <span className="py-3">BUILD</span>
         <span className="py-3">VERIFY</span>
       </div>
-    </div>
+    </section>
   )
 }
 

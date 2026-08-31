@@ -1670,8 +1670,12 @@ p {
 .starter-hero {
   position: relative;
   isolation: isolate;
-  min-height: 720px;
-  padding: 88px 42px;
+  min-height: calc(100svh - 98px);
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(400px, 0.96fr);
+  align-items: center;
+  gap: clamp(36px, 5vw, 72px);
+  padding: 56px 42px;
   overflow: hidden;
   border-right: 1px solid rgba(226, 232, 240, 0.65);
   border-left: 1px solid rgba(226, 232, 240, 0.65);
@@ -1692,14 +1696,7 @@ p {
 }
 
 .starter-hero-copy {
-  max-width: 900px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.starter-hero-copy > p {
-  margin-right: auto;
-  margin-left: auto;
+  max-width: 650px;
 }
 
 .starter-hero h1 {
@@ -1727,8 +1724,8 @@ p {
 }
 
 .quick-start-panel {
-  width: min(860px, 100%);
-  margin: 48px auto 0;
+  width: 100%;
+  margin: 0;
   border-color: #e2e8f0;
   border-radius: 16px;
   box-shadow: 0 22px 55px -35px rgba(15, 23, 42, 0.45);
@@ -1828,7 +1825,9 @@ p {
 
   .starter-hero {
     min-height: auto;
-    padding: 72px 30px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    padding: 44px 30px;
   }
 
   .ship-footer-inner {
@@ -1871,13 +1870,52 @@ p {
   .starter-hero {
     margin-right: -14px;
     margin-left: -14px;
-    padding: 58px 18px 64px;
+    gap: 20px;
+    padding: 30px 18px 34px;
     border-right: 0;
     border-left: 0;
   }
 
   .starter-hero h1 {
-    font-size: clamp(40px, 12vw, 52px);
+    font-size: clamp(34px, 10vw, 42px);
+    line-height: 1.03;
+  }
+
+  .starter-hero-copy > p:first-child {
+    margin-bottom: 12px;
+  }
+
+  .starter-hero-copy > h1 + p {
+    margin-top: 14px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .starter-hero-actions {
+    margin-top: 18px;
+  }
+
+  .starter-hero-trust {
+    display: none;
+  }
+
+  .quick-start-panel > div:first-child {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .quick-start-panel > div:nth-child(2) {
+    padding: 12px 16px;
+    line-height: 1.65;
+  }
+
+  .quick-start-panel > div:nth-child(2) p {
+    margin-top: 6px;
+  }
+
+  .quick-start-panel > div:last-child span {
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 
   .starter-final {
