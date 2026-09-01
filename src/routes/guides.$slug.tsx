@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router'
+import { guidePageId } from '@/i18n/routes'
 import { type GuideSlug, guideBodies, guides } from '@/lib/guides'
-import { pageHead } from '@/lib/seo'
+import { localizedPageHead, pageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/guides/$slug')({
   loader: ({ params }) => {
@@ -8,12 +9,21 @@ export const Route = createFileRoute('/guides/$slug')({
     if (!guide) throw notFound()
     return { guide, body: guideBodies[guide.slug as GuideSlug] }
   },
-  head: ({ loaderData }) =>
-    pageHead({
-      title: loaderData?.guide.title || 'Guide',
-      description: loaderData?.guide.summary || 'ShipLean build guide.',
-      path: `/guides/${loaderData?.guide.slug || ''}`,
-    }),
+  head: ({ loaderData }) => {
+    if (!loaderData) {
+      return pageHead({
+        title: 'Guide',
+        description: 'ShipLean build guide.',
+        path: '/guides',
+      })
+    }
+    return localizedPageHead({
+      pageId: guidePageId(loaderData.guide.slug),
+      locale: 'en',
+      title: loaderData.guide.title,
+      description: loaderData.guide.summary,
+    })
+  },
   component: GuidePage,
 })
 

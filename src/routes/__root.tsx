@@ -10,6 +10,9 @@ import { MonitorPlay } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { PrivacyControls } from '@/components/privacy-controls'
 import { Button } from '@/components/ui/button'
+import { type Locale, localeConfig, localeFromPathname } from '@/i18n/config'
+import { shellMessages } from '@/i18n/messages'
+import { localeAlternatesForPath, localizedPathOrDefault } from '@/i18n/routes'
 import { publicEnv } from '@/lib/config/env'
 import { site } from '@/lib/site'
 import styles from '@/styles.css?url'
@@ -33,58 +36,51 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
-  const isChinese = pathname === '/zh' || pathname.startsWith('/zh/')
-
-  const nav = isChinese
-    ? [
-        { label: '首页', to: '/zh' },
-        { label: '使用流程', href: '/zh#workflow' },
-        { label: '指南', to: '/guides' },
-        { label: '定价', to: '/pricing' },
-      ]
-    : [
-        { label: 'Home', to: '/' },
-        { label: 'Workflow', href: '/#workflow' },
-        { label: 'Guides', to: '/guides' },
-        { label: 'Pricing', to: '/pricing' },
-      ]
+  const locale = localeFromPathname(pathname)
+  const copy = shellMessages[locale]
+  const homePath = localizedPathOrDefault('home', locale)
+  const nav = [
+    { label: copy.nav.home, href: homePath },
+    { label: copy.nav.workflow, href: `${homePath}#workflow` },
+    { label: copy.nav.guides, href: localizedPathOrDefault('guides', locale) },
+    { label: copy.nav.pricing, href: localizedPathOrDefault('pricing', locale) },
+  ]
+  const localeAlternates = localeAlternatesForPath(pathname)
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="ship-header">
         <div className="ship-header-inner">
-          <Brand isChinese={isChinese} />
-          <nav className="ship-main-nav" aria-label={isChinese ? '主导航' : 'Primary navigation'}>
-            {nav.map(({ label, to, href }) =>
-              href ? (
-                <a href={href} key={label}>
-                  {label}
-                </a>
-              ) : (
-                <Link to={to} key={label}>
-                  {label}
-                </Link>
-              ),
-            )}
+          <Brand locale={locale} />
+          <nav className="ship-main-nav" aria-label={copy.primaryNavigation}>
+            {nav.map(({ label, href }) => (
+              <a href={href} key={label}>
+                {label}
+              </a>
+            ))}
           </nav>
           <div className="ship-header-actions">
             <span className="preview-pill">
-              <span /> {isChinese ? '预览模式' : 'Preview mode'}
+              <span /> {copy.previewMode}
             </span>
-            <Link
-              className="locale-switch"
-              to={isChinese ? '/' : '/zh'}
-              aria-label={isChinese ? 'Switch to English' : '切换到中文版'}
-            >
-              {isChinese ? 'EN' : '中'}
-            </Link>
-            <Link
-              className="demo-link"
-              to="/login"
-              aria-label={isChinese ? '打开模板演示' : 'Open starter demo'}
-            >
+            {localeAlternates.map((alternate) => (
+              <a
+                aria-label={
+                  locale === 'zh-CN' ? `切换到${alternate.label}` : `Switch to ${alternate.label}`
+                }
+                className="locale-switch"
+                data-locale-switch
+                href={alternate.path}
+                hrefLang={alternate.locale}
+                key={alternate.locale}
+                lang={alternate.locale}
+              >
+                {alternate.shortLabel}
+              </a>
+            ))}
+            <Link className="demo-link" to="/login" aria-label={copy.openDemoLabel}>
               <MonitorPlay />
-              <span>{isChinese ? '打开演示' : 'Open demo'}</span>
+              <span>{copy.openDemo}</span>
             </Link>
           </div>
         </div>
@@ -92,11 +88,7 @@ function RootComponent() {
 
       <div className="preview-banner">
         <span className="preview-banner-dot" />
-        <span>
-          {isChinese
-            ? '预览环境已启用 · 不会连接付款、数据库或生产认证服务'
-            : 'Preview environment enabled · No payment, database, or production auth service is connected'}
-        </span>
+        <span>{copy.previewNotice}</span>
       </div>
 
       <main>
@@ -105,14 +97,14 @@ function RootComponent() {
       <footer className="ship-footer">
         <div className="ship-footer-inner">
           <div>
-            <Brand isChinese={isChinese} />
+            <Brand locale={locale} />
             <p>© ShipLean · Build small. Keep control.</p>
           </div>
           <div className="ship-footer-links">
-            <Link to="/guides">Guides</Link>
-            <Link to="/pricing">License</Link>
+            <a href={localizedPathOrDefault('guides', locale)}>{copy.footer.guides}</a>
+            <a href={localizedPathOrDefault('pricing', locale)}>{copy.footer.license}</a>
             <span>TanStack Start · Cloudflare</span>
-            <PrivacyControls locale={isChinese ? 'zh-CN' : 'en'} />
+            <PrivacyControls locale={locale} />
           </div>
         </div>
       </footer>
@@ -120,34 +112,36 @@ function RootComponent() {
   )
 }
 
-function Brand({ isChinese }: Readonly<{ isChinese: boolean }>) {
+function Brand({ locale }: Readonly<{ locale: Locale }>) {
+  const copy = shellMessages[locale]
   return (
-    <Link
+    <a
       className="ship-brand"
-      to={isChinese ? '/zh' : '/'}
-      aria-label={isChinese ? 'ShipLean 首页' : 'ShipLean home'}
+      href={localizedPathOrDefault('home', locale)}
+      aria-label={`ShipLean ${copy.nav.home}`}
     >
       <span className="ship-brand-mark">
         SL
         <i />
       </span>
       <span>ShipLean</span>
-    </Link>
+    </a>
   )
 }
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
-  const language = pathname === '/zh' || pathname.startsWith('/zh/') ? 'zh-CN' : 'en'
+  const locale = localeFromPathname(pathname)
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: site.name,
     url: site.url,
     description: site.description,
+    inLanguage: localeConfig[locale].htmlLang,
   }
   return (
-    <html lang={language}>
+    <html lang={localeConfig[locale].htmlLang}>
       <head>
         <HeadContent />
       </head>
@@ -161,17 +155,18 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 }
 
 function NotFound() {
+  const pathname = useRouterState({ select: (state) => state.location.pathname })
+  const locale = localeFromPathname(pathname)
+  const copy = shellMessages[locale].notFound
   return (
     <section className="grid min-h-[70vh] place-items-center px-5 text-center">
       <div>
         <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-          404 / Not found
+          {copy.kicker}
         </p>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight">
-          This route is not part of the starter.
-        </h1>
+        <h1 className="mt-4 text-4xl font-semibold tracking-tight">{copy.title}</h1>
         <Button asChild className="mt-7">
-          <Link to="/">Return home</Link>
+          <a href={localizedPathOrDefault('home', locale)}>{copy.returnHome}</a>
         </Button>
       </div>
     </section>

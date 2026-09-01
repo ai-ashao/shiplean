@@ -12,15 +12,16 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { sandboxUiAvailable } from '@/lib/config/runtime'
-import { pageHead } from '@/lib/seo'
+import { localizedPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/pricing')({
   head: () =>
-    pageHead({
+    localizedPageHead({
+      pageId: 'pricing',
+      locale: 'en',
       title: 'Pricing',
       description:
         'Preview the ShipLean TanStack Start SaaS scaffold or buy the Agent-ready template once for $66 during founding.',
-      path: '/pricing',
     }),
   component: PricingPage,
 })

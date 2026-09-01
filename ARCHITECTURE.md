@@ -24,6 +24,7 @@ public product surface → local session boundary → protected app shell
 - `docs/configuration.md`: environment and sandbox configuration reference;
 - `TASKS/`: explicit contracts for substantial modules;
 - `src/routes`: public, session, and application surfaces;
+- `src/i18n`: locale configuration, shell messages, and the stable Page ID → localized path registry used by navigation and SEO;
 - `src/components/ui`: local shadcn/ui primitives owned by the downloaded project;
 - `components.json` and `src/styles.css`: shadcn aliases, Tailwind entrypoint, and neutral design tokens;
 - `src/lib/auth`: visibly local identity boundary;
@@ -42,6 +43,10 @@ When a real MVP needs accounts, replace the server adapter while keeping provide
 Payments, orders, provider webhooks, entitlements, and credits are not part of the current MVP. When introduced, provider signatures must be verified before domain events are accepted, and credits must use an append-only ledger rather than a mutable balance as the source of truth.
 
 Productized SEO tools are also out of scope. Public routes still retain baseline title, description, canonical, hreflang, robots, and sitemap behavior because those are website infrastructure rather than a product feature.
+
+Localized public pages are matched by stable page identity rather than by rewriting URL strings. Canonical paths, language switches, reciprocal `hreflang`, and sitemap entries come from the same registry. A missing locale path means that translation does not exist: the shell may fall back to the default-locale destination for ordinary navigation, but it must not advertise a false equivalent page.
+
+Locale route files are intentionally thin: equivalent routes render one shared page component, while user-facing copy lives in typed dictionaries under `src/i18n`. The default-locale dictionary defines the required structure, so adding a field or supported locale fails strict TypeScript until the corresponding shipped translations are complete.
 
 ## Deployment status
 

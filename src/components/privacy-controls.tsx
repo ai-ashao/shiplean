@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import type { Locale } from '@/i18n/config'
 import { publicEnv } from '@/lib/config/env'
 
 const CONSENT_KEY = 'shiplean_analytics_consent'
@@ -10,7 +11,7 @@ export function createGtagQueue(dataLayer: unknown[]) {
   }
 }
 
-export function PrivacyControls({ locale = 'en' }: Readonly<{ locale?: 'en' | 'zh-CN' }>) {
+export function PrivacyControls({ locale = 'en' }: Readonly<{ locale?: Locale }>) {
   const [granted, setGranted] = useState(false)
 
   useEffect(() => {

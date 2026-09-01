@@ -1,7 +1,8 @@
 import { spawn } from 'node:child_process'
+import { createServer } from 'node:net'
 import process from 'node:process'
 
-const port = 41739
+const port = await findAvailablePort()
 const baseUrl = `http://127.0.0.1:${port}`
 const output = []
 const server = spawn(
@@ -16,6 +17,22 @@ const server = spawn(
 
 server.stdout.on('data', (chunk) => output.push(chunk.toString()))
 server.stderr.on('data', (chunk) => output.push(chunk.toString()))
+
+function findAvailablePort() {
+  return new Promise((resolve, reject) => {
+    const probe = createServer()
+    probe.once('error', reject)
+    probe.listen(0, '127.0.0.1', () => {
+      const address = probe.address()
+      if (!address || typeof address === 'string') {
+        probe.close()
+        reject(new Error('Could not allocate an E2E server port.'))
+        return
+      }
+      probe.close((error) => (error ? reject(error) : resolve(address.port)))
+    })
+  })
+}
 
 function assert(condition, message) {
   if (!condition) throw new Error(message)
@@ -47,6 +64,13 @@ try {
   assert(home.response.status === 200, 'Home route must return 200.')
   assert(home.text.includes(`rel="canonical" href="${baseUrl}/"`), 'Home canonical is missing.')
   assert(home.text.includes('application/ld+json'), 'Home JSON-LD is missing.')
+  assert(/hrefLang="en"/i.test(home.text), 'English hreflang is missing.')
+  assert(/hrefLang="zh-CN"/i.test(home.text), 'Chinese hreflang is missing.')
+  assert(/hrefLang="x-default"/i.test(home.text), 'Home x-default hreflang is missing.')
+  assert(
+    /data-locale-switch[^>]+href="\/zh"/i.test(home.text),
+    'Home locale switch must target the equivalent Chinese route.',
+  )
   assert(
     home.response.headers.get('x-content-type-options') === 'nosniff',
     'Security headers are missing.',
@@ -58,8 +82,24 @@ try {
 
   const zh = await request('/zh')
   assert(zh.text.includes('<html lang="zh-CN">'), 'Chinese route must set the document language.')
+  assert(/hrefLang="en"/i.test(zh.text), 'English reciprocal hreflang is missing.')
   assert(/hrefLang="zh-CN"/i.test(zh.text), 'Chinese hreflang is missing.')
   assert(/hrefLang="x-default"/i.test(zh.text), 'x-default hreflang is missing.')
+  assert(
+    /data-locale-switch[^>]+href="\/"/i.test(zh.text),
+    'Chinese locale switch must target the equivalent English route.',
+  )
+
+  const pricing = await request('/pricing')
+  assert(pricing.response.status === 200, 'Pricing route must return 200.')
+  assert(
+    !pricing.text.includes('data-locale-switch'),
+    'A single-locale page must not offer a false locale switch.',
+  )
+  assert(
+    !/rel="alternate"[^>]+hrefLang=/i.test(pricing.text),
+    'A single-locale page must not publish false hreflang alternates.',
+  )
 
   const robots = await request('/robots.txt')
   assert(
@@ -126,7 +166,7 @@ try {
   assert(loggedOut.response.status === 401, 'Logged-out session must be anonymous.')
 
   console.log(
-    'E2E smoke passed: public metadata, security, bilingual routes, and local session lifecycle.',
+    'E2E smoke passed: locale-aware metadata and switching, security, and local session lifecycle.',
   )
 } finally {
   server.kill('SIGTERM')

@@ -1,14 +1,15 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { guides } from '@/lib/guides'
-import { pageHead } from '@/lib/seo'
+import { localizedPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/guides/')({
   head: () =>
-    pageHead({
+    localizedPageHead({
+      pageId: 'guides',
+      locale: 'en',
       title: 'Build Guides',
       description:
         'Short, practical notes on using the ShipLean Skill, replacing the local auth boundary, and shipping a Cloudflare-first TanStack Start MVP.',
-      path: '/guides',
     }),
   component: GuidesPage,
 })

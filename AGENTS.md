@@ -13,6 +13,8 @@ ShipLean is a TanStack Start–only, Cloudflare-first product starter. Do not in
 - Sandbox behavior must remain visually and technically distinguishable from real payment/auth.
 - File-based tool-site landing pages must use a vertical first-viewport structure and fully show the upload area. After valid files are selected, navigate to a separate editor/workbench route; do not place the editor workbench on the landing page.
 - New public routes need title, description, canonical, and sitemap consideration.
+- Register localized public routes by stable page identity. Only real translated equivalents may produce a language switch or `hreflang`; derive sitemap entries from the same registry.
+- Localized variants of one page must render the same shared page component. Keep user-facing copy in typed locale dictionaries; do not duplicate substantial JSX across locale route files.
 - Preserve keyboard focus, narrow-screen layout, and reduced-motion behavior.
 
 ## Completion command

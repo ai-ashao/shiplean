@@ -54,7 +54,9 @@ Included now:
 - `AGENTS.md`, architecture, module task contract, and one-command verification;
 - local HttpOnly identity demo with no external auth dependency;
 - Cloudflare-first build and deployment path;
-- baseline metadata, canonical, hreflang, robots, and sitemap required by the public site.
+- locale-aware Page ID route registry for canonical paths, honest language switching, hreflang, and sitemap generation;
+- shared localized page components with typed, structurally complete message dictionaries;
+- baseline metadata, robots, and sitemap required by the public site.
 
 Deferred to phase two:
 

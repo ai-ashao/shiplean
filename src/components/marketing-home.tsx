@@ -19,82 +19,20 @@ import {
 } from 'lucide-react'
 import { AgentWorkflow } from '@/components/agent-workflow'
 import { Button } from '@/components/ui/button'
+import type { Locale } from '@/i18n/config'
+import { marketingHomeMessages } from '@/i18n/home-messages'
 import { sandboxUiAvailable } from '@/lib/config/runtime'
 
-type Locale = 'en' | 'zh-CN'
 const workflowId = 'workflow'
 
-const copy = {
-  en: {
-    kicker: 'TanStack Start · Cloudflare-first',
-    title: 'The small-product scaffold your coding agent can actually understand.',
-    lede: 'Start from explicit architecture, honest product boundaries, and one complete verification command—not a pile of integrations you have to remove.',
-    primary: 'Explore the workflow',
-    secondary: 'Read the guides',
-    noticeTitle: 'A focused starter, ready for your first product task',
-    noticeBody: 'The scaffold runs without a database, payment provider, or external secret.',
-    metrics: [
-      ['Framework', 'TanStack Start', 'One supported app runtime'],
-      ['Deploy target', 'Cloudflare', 'First-class configuration'],
-      ['Verification', '1 command', 'Format through fresh-server E2E'],
-      ['External secrets', '0 required', 'For the downloaded starter'],
-      ['Agent workflow', 'Bundled', 'Skill and project contracts'],
-    ],
-    overview: 'Repository overview',
-    overviewBody: 'A starter with enough context to change safely.',
-    status: 'Ready for adaptation',
-    coverage: 'Included contracts',
-    coverageHint: 'The files your agent reads before it edits.',
-    workflow: 'From download to review',
-    workflowTitle: 'A short path with a visible finish line.',
-    boundary: 'Product boundaries',
-    boundaryTitle: 'Nothing pretends to be production-ready.',
-    boundaryBody:
-      'The local demo is useful, but visually and technically separate from real auth, payments, storage, and customer data.',
-    finalTitle: 'Give one focused idea a dependable starting point.',
-    finalBody:
-      'Open the scaffold in your coding agent, describe the first user, and let the repository contracts guide the work.',
-  },
-  'zh-CN': {
-    kicker: 'TanStack Start · Cloudflare 优先',
-    title: '一个真正能让编程 Agent 读懂的小产品脚手架。',
-    lede: '从明确架构、诚实边界和一条完整验收命令开始，而不是先拆掉一堆用不到的集成。',
-    primary: '查看使用流程',
-    secondary: '阅读指南',
-    noticeTitle: '聚焦的起点，已经准备好承接第一个产品任务',
-    noticeBody: '无需数据库、支付服务商或外部密钥，下载后即可运行。',
-    metrics: [
-      ['应用框架', 'TanStack Start', '只支持一个可靠运行时'],
-      ['部署目标', 'Cloudflare', '提供一等配置'],
-      ['完整验收', '1 条命令', '从格式到全新服务 E2E'],
-      ['外部密钥', '无需配置', '脚手架本地启动要求'],
-      ['Agent 工作流', '已内置', 'Skill 与项目合同'],
-    ],
-    overview: '仓库概览',
-    overviewBody: '给 Agent 足够上下文，才能安全修改。',
-    status: '等待产品化',
-    coverage: '内置项目合同',
-    coverageHint: 'Agent 修改代码之前会先读取这些文件。',
-    workflow: '从下载到验收',
-    workflowTitle: '路径够短，完成标准也清晰可见。',
-    boundary: '产品真实性边界',
-    boundaryTitle: '没有任何能力伪装成已经生产可用。',
-    boundaryBody:
-      '本地演示足够验证应用外壳，但与真实认证、支付、存储和客户数据在视觉与技术上保持分离。',
-    finalTitle: '给一个明确想法，一个可靠起点。',
-    finalBody: '用编程 Agent 打开脚手架，描述第一个用户，让仓库合同引导接下来的工作。',
-  },
-} as const
-
 const contracts = [
-  { icon: ShieldCheck, name: 'AGENTS.md', label: 'Product and engineering rules' },
-  { icon: FolderTree, name: 'ARCHITECTURE.md', label: 'Runtime and module boundaries' },
-  { icon: FileCheck2, name: 'pnpm verify', label: 'Repository acceptance contract' },
+  { icon: ShieldCheck, name: 'AGENTS.md' },
+  { icon: FolderTree, name: 'ARCHITECTURE.md' },
+  { icon: FileCheck2, name: 'pnpm verify' },
 ]
 
 export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
-  const c = copy[locale]
-  const zh = locale === 'zh-CN'
+  const c = marketingHomeMessages[locale]
 
   return (
     <div className="marketing-shell mx-auto max-w-[1180px] px-4 sm:px-6">
@@ -126,11 +64,7 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
             </Button>
           </div>
           <div className="starter-hero-trust mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[11px] text-muted-foreground">
-            {[
-              zh ? '无需数据库' : 'No database required',
-              zh ? '内置 Agent Skill' : 'Bundled Agent Skill',
-              'pnpm verify',
-            ].map((item) => (
+            {c.trust.map((item) => (
               <span className="flex items-center gap-1.5" key={item}>
                 <Check className="size-3 text-[#22a06b]" />
                 {item}
@@ -155,7 +89,7 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
           className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-foreground sm:mt-0"
           to="/guides"
         >
-          {zh ? '查看配置边界' : 'Review the boundaries'} <ChevronRight className="size-3.5" />
+          {c.boundaryLink} <ChevronRight className="size-3.5" />
         </Link>
       </section>
 
@@ -205,14 +139,16 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
           </div>
           <p className="mt-2 text-xs leading-5 text-muted-foreground">{c.coverageHint}</p>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            {contracts.map(({ icon: Icon, name, label }) => (
+            {contracts.map(({ icon: Icon, name }, index) => (
               <div className="flex gap-3 rounded-lg border bg-background p-4" key={name}>
                 <span className="grid size-8 shrink-0 place-items-center rounded-md border bg-background">
                   <Icon className="size-4" />
                 </span>
                 <div>
                   <code className="text-xs font-medium text-foreground">{name}</code>
-                  <p className="mb-0 mt-1 text-[11px] leading-4 text-muted-foreground">{label}</p>
+                  <p className="mb-0 mt-1 text-[11px] leading-4 text-muted-foreground">
+                    {c.contractLabels[index]}
+                  </p>
                 </div>
               </div>
             ))}
@@ -237,22 +173,14 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
           <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground">{c.boundaryBody}</p>
         </div>
         <div className="grid grid-cols-2 gap-px border-t bg-border p-px lg:grid-cols-4">
-          {[
-            [Database, zh ? '数据库' : 'Database'],
-            [LockKeyhole, zh ? '生产认证' : 'Production auth'],
-            [Cloud, zh ? '支付服务' : 'Payments'],
-            [Terminal, zh ? '本地演示可用' : 'Local demo ready'],
-          ].map(([Icon, label], index) => {
-            const BoundaryIcon = Icon as typeof Database
+          {[Database, LockKeyhole, Cloud, Terminal].map((BoundaryIcon, index) => {
+            const [label, status] = c.boundaryItems[index]
             return (
-              <div
-                className="flex min-h-36 flex-col justify-between bg-background p-5"
-                key={label as string}
-              >
+              <div className="flex min-h-36 flex-col justify-between bg-background p-5" key={label}>
                 <BoundaryIcon className="size-5 text-muted-foreground" />
-                <span className="text-sm font-medium">{label as string}</span>
+                <span className="text-sm font-medium">{label}</span>
                 <small className={index === 3 ? 'text-[#4f8b60]' : 'text-[#c6533b]'}>
-                  {index === 3 ? 'Connected' : 'Not configured'}
+                  {status}
                 </small>
               </div>
             )
@@ -268,13 +196,7 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
         <Button asChild size="lg" className="mt-8 px-7">
           <Link to={sandboxUiAvailable ? '/login' : '/pricing'}>
             <Play />
-            {sandboxUiAvailable
-              ? zh
-                ? '打开本地演示'
-                : 'Open the local demo'
-              : zh
-                ? '查看授权'
-                : 'View the license'}
+            {sandboxUiAvailable ? c.finalDemo : c.finalLicense}
           </Link>
         </Button>
       </section>
@@ -283,10 +205,10 @@ export function MarketingHome({ locale }: Readonly<{ locale: Locale }>) {
 }
 
 function QuickStartPanel({ locale }: Readonly<{ locale: Locale }>) {
-  const zh = locale === 'zh-CN'
+  const c = marketingHomeMessages[locale]
   return (
     <section
-      aria-label={zh ? '核心快速启动工作台' : 'Core quick-start workbench'}
+      aria-label={c.quickStartAria}
       className="quick-start-panel overflow-hidden rounded-xl border bg-card"
       data-core-workbench
     >
@@ -299,15 +221,11 @@ function QuickStartPanel({ locale }: Readonly<{ locale: Locale }>) {
         </span>
       </div>
       <div className="bg-[#0f172a] p-5 font-mono text-xs leading-7 text-[#e2e8f0]">
-        <p className="text-[#64748b]">
-          # {zh ? '在编程 Agent 中调用' : 'invoke in your coding agent'}
-        </p>
+        <p className="text-[#64748b]"># {c.quickStartComment}</p>
         <p className="mt-3 text-white">
           <span className="text-[#a99df8]">$</span> shiplean-quick-start
         </p>
-        <p className="mt-5 text-[#94a3b8]">
-          {zh ? '把这个模板改成我的产品：……' : 'Turn this template into my product: …'}
-        </p>
+        <p className="mt-5 text-[#94a3b8]">{c.quickStartPrompt}</p>
       </div>
       <div className="grid grid-cols-3 divide-x border-t text-center text-[10px] text-muted-foreground">
         <span className="py-3">READ</span>
