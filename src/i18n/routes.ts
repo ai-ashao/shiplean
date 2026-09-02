@@ -1,7 +1,15 @@
 import { type GuideSlug, guides } from '@/lib/guides'
 import { defaultLocale, type Locale, localeConfig, supportedLocales } from './config'
 
-export type PublicPageId = 'home' | 'pricing' | 'guides' | `guide:${GuideSlug}`
+export type PublicPageId =
+  | 'home'
+  | 'pricing'
+  | 'guides'
+  | 'about'
+  | 'contact'
+  | 'privacy'
+  | 'terms'
+  | `guide:${GuideSlug}`
 export type LocalizedPaths = Partial<Record<Locale, string>>
 
 export type PublicPageRoute = {
@@ -25,6 +33,26 @@ const staticPages: PublicPageRoute[] = [
     id: 'guides',
     indexable: true,
     paths: { en: '/guides' },
+  },
+  {
+    id: 'about',
+    indexable: true,
+    paths: { en: '/about' },
+  },
+  {
+    id: 'contact',
+    indexable: true,
+    paths: { en: '/contact' },
+  },
+  {
+    id: 'privacy',
+    indexable: true,
+    paths: { en: '/privacy-policy' },
+  },
+  {
+    id: 'terms',
+    indexable: true,
+    paths: { en: '/terms-of-service' },
   },
 ]
 

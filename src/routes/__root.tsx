@@ -1,12 +1,11 @@
 import {
   createRootRoute,
   HeadContent,
-  Link,
   Outlet,
   Scripts,
   useRouterState,
 } from '@tanstack/react-router'
-import { MonitorPlay } from 'lucide-react'
+import { ChevronDown, Globe2 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { PrivacyControls } from '@/components/privacy-controls'
 import { Button } from '@/components/ui/button'
@@ -60,28 +59,26 @@ function RootComponent() {
             ))}
           </nav>
           <div className="ship-header-actions">
-            <span className="preview-pill">
-              <span /> {copy.previewMode}
-            </span>
-            {localeAlternates.map((alternate) => (
-              <a
-                aria-label={
-                  locale === 'zh-CN' ? `切换到${alternate.label}` : `Switch to ${alternate.label}`
-                }
-                className="locale-switch"
-                data-locale-switch
-                href={alternate.path}
-                hrefLang={alternate.locale}
-                key={alternate.locale}
-                lang={alternate.locale}
-              >
-                {alternate.shortLabel}
-              </a>
-            ))}
-            <Link className="demo-link" to="/login" aria-label={copy.openDemoLabel}>
-              <MonitorPlay />
-              <span>{copy.openDemo}</span>
-            </Link>
+            <nav className="ship-language-menu" aria-label={copy.languageSwitcher}>
+              <Globe2 aria-hidden="true" />
+              <span className="ship-language-current">{localeConfig[locale].label}</span>
+              {localeAlternates.length > 0 && <ChevronDown aria-hidden="true" />}
+              {localeAlternates.map((alternate) => (
+                <a
+                  aria-label={
+                    locale === 'zh-CN' ? `切换到${alternate.label}` : `Switch to ${alternate.label}`
+                  }
+                  className="locale-switch"
+                  data-locale-switch
+                  href={alternate.path}
+                  hrefLang={alternate.locale}
+                  key={alternate.locale}
+                  lang={alternate.locale}
+                >
+                  {alternate.shortLabel}
+                </a>
+              ))}
+            </nav>
           </div>
         </div>
       </header>
@@ -96,14 +93,14 @@ function RootComponent() {
       </main>
       <footer className="ship-footer">
         <div className="ship-footer-inner">
-          <div>
-            <Brand locale={locale} />
-            <p>© ShipLean · Build small. Keep control.</p>
-          </div>
+          <p className="ship-footer-copyright">© 2026 ShipLean. All rights reserved.</p>
           <div className="ship-footer-links">
             <a href={localizedPathOrDefault('guides', locale)}>{copy.footer.guides}</a>
-            <a href={localizedPathOrDefault('pricing', locale)}>{copy.footer.license}</a>
-            <span>TanStack Start · Cloudflare</span>
+            <a href={localizedPathOrDefault('pricing', locale)}>{copy.footer.pricing}</a>
+            <a href={localizedPathOrDefault('about', locale)}>{copy.footer.about}</a>
+            <a href={localizedPathOrDefault('contact', locale)}>{copy.footer.contact}</a>
+            <a href={localizedPathOrDefault('privacy', locale)}>{copy.footer.privacy}</a>
+            <a href={localizedPathOrDefault('terms', locale)}>{copy.footer.terms}</a>
             <PrivacyControls locale={locale} />
           </div>
         </div>

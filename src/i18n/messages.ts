@@ -12,9 +12,14 @@ type ShellMessages = {
   previewNotice: string
   openDemo: string
   openDemoLabel: string
+  languageSwitcher: string
   footer: {
     guides: string
-    license: string
+    pricing: string
+    about: string
+    contact: string
+    privacy: string
+    terms: string
   }
   notFound: {
     kicker: string
@@ -37,9 +42,14 @@ export const shellMessages = {
       'Preview environment enabled · No payment, database, or production auth service is connected',
     openDemo: 'Open demo',
     openDemoLabel: 'Open starter demo',
+    languageSwitcher: 'Language switcher',
     footer: {
       guides: 'Guides',
-      license: 'License',
+      pricing: 'Pricing',
+      about: 'About Us',
+      contact: 'Contact',
+      privacy: 'Privacy Policy',
+      terms: 'Terms of Service',
     },
     notFound: {
       kicker: '404 / Not found',
@@ -59,9 +69,14 @@ export const shellMessages = {
     previewNotice: '预览环境已启用 · 不会连接付款、数据库或生产认证服务',
     openDemo: '打开演示',
     openDemoLabel: '打开模板演示',
+    languageSwitcher: '语言切换',
     footer: {
       guides: '指南',
-      license: '授权',
+      pricing: '定价',
+      about: '关于我们',
+      contact: '联系',
+      privacy: '隐私政策',
+      terms: '服务条款',
     },
     notFound: {
       kicker: '404 / 页面不存在',
