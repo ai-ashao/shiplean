@@ -1,0 +1,22 @@
+{
+  "name": "ShipLean Tool Landing v0.1",
+  "target_branch": "dev",
+  "base_commit_seen": "8cac600e90a1165ea53a5c2c6040580e0adcdfa7",
+  "purpose": "Manual copy package because GitHub integration write operations returned 403.",
+  "files": [
+    ".agents/skills/shiplean-quick-start/SKILL.md",
+    "INSTALL.md",
+    "docs/tool-landing-v0.1-implementation.md",
+    "src/components/tool-landing/index.ts",
+    "src/components/tool-landing/structured-data.tsx",
+    "src/components/tool-landing/tool-landing-page.tsx",
+    "src/components/tool-landing/types.ts",
+    "src/components/tool-landing/value-signals.tsx",
+    "src/lib/tool-messaging.ts",
+    "src/lib/tool-registry.ts",
+    "src/lib/tool-structured-data.ts",
+    "tests/tool-messaging.test.ts",
+    "tests/tool-registry.test.ts",
+    "tests/tool-structured-data.test.ts"
+  ]
+}
