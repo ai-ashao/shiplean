@@ -11,7 +11,7 @@ import { toolPageHead } from '@/lib/tool-seo'
 import { buildToolStructuredData } from '@/lib/tool-structured-data'
 
 const config = {
-  version: '0.1',
+  version: '0.2',
   preset: 'tool-default',
   toolId: 'tool-reference',
   seo: {
@@ -33,12 +33,57 @@ const config = {
     signupRequired: false,
     processing: 'local',
   },
+  constraints: {
+    other: ['Plain text input'],
+  },
+  completion: {
+    highlights: ['Character count', 'Word count', 'Instant local result'],
+  },
+  capabilities: {
+    title: 'Capabilities',
+    items: [
+      {
+        id: 'characters',
+        title: 'Count characters',
+        description: 'Measure the exact number of characters in the current text.',
+      },
+      {
+        id: 'words',
+        title: 'Count words',
+        description: 'Count whitespace-separated words without sending the text to a server.',
+      },
+      {
+        id: 'local',
+        title: 'Keep text local',
+        description: 'The reference interaction uses browser state and does not submit the text.',
+      },
+    ],
+  },
   valueLabels: {
     localProcessing: 'Data stays in your browser',
   },
   breadcrumbs: [
     { label: 'Home', href: '/' },
     { label: 'Tool Reference', href: '/tool-reference' },
+  ],
+  helpfulGuidance: [
+    {
+      heading: 'How the reference counter treats words',
+      summary:
+        'The counter trims surrounding whitespace and treats groups of non-whitespace characters as words.',
+      items: [
+        {
+          label: 'Characters',
+          title: 'Every typed character counts',
+          description: 'Spaces and punctuation are included in the character total.',
+        },
+        {
+          label: 'Words',
+          title: 'Whitespace separates words',
+          description: 'Multiple adjacent spaces do not create additional words.',
+        },
+      ],
+    },
   ],
   faq: {
     title: 'Reference FAQ',
@@ -99,7 +144,7 @@ function TextLengthChecker() {
   return (
     <section
       aria-labelledby={headingId}
-      className="mx-auto max-w-3xl rounded-2xl border bg-card p-4 shadow-sm sm:p-5"
+      className="mx-auto max-w-3xl rounded-2xl border bg-card p-4 shadow-sm"
       data-reference-tool
     >
       <div className="flex flex-wrap items-end justify-between gap-2">
@@ -116,18 +161,18 @@ function TextLengthChecker() {
         </p>
       </div>
 
-      <label className="mt-3 block text-sm font-medium" htmlFor={textId}>
+      <label className="mt-2 block text-sm font-medium" htmlFor={textId}>
         Text
       </label>
       <textarea
-        className="mt-1 min-h-24 w-full resize-y rounded-lg border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="mt-1 min-h-20 w-full resize-y rounded-lg border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
         id={textId}
         onChange={(event) => setText(event.target.value)}
         placeholder="Type or paste text here"
         value={text}
       />
 
-      <div className="mt-3 flex items-center justify-between gap-3">
+      <div className="mt-2 flex items-center justify-between gap-3">
         <p className="text-xs text-muted-foreground">Everything runs in this browser tab.</p>
         <Button data-tool-primary-action onClick={countText} type="button">
           Count text

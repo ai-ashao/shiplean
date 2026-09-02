@@ -16,7 +16,7 @@ const localFreeTool = {
 }
 
 describe('tool messaging', () => {
-  it('puts the four primary value signals first', () => {
+  it('puts the four primary access signals first', () => {
     const signals = deriveToolValueSignals(localFreeTool)
 
     expect(signals.slice(0, 4).map((signal) => signal.key)).toEqual([
@@ -45,6 +45,15 @@ describe('tool messaging', () => {
 
     expect(signals.map((signal) => signal.key)).toContain('localProcessing')
     expect(signals.map((signal) => signal.key)).not.toContain('browserBased')
+  })
+
+  it('does not claim no watermark when the product does not guarantee it', () => {
+    const signals = deriveToolValueSignals({
+      ...localFreeTool,
+      noWatermark: false,
+    })
+
+    expect(signals.map((signal) => signal.key)).not.toContain('noWatermark')
   })
 
   it('builds free-online SEO intent copy', () => {

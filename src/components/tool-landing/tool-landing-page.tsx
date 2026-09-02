@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react'
 import { resolveRelatedTools, type ToolRegistryItem } from '@/lib/tool-registry'
-import type { ToolLandingConfig, ToolSectionItem } from './types'
+import { ToolCompletionSummary } from './completion-summary'
+import { ToolConstraintsSummary } from './constraints'
+import { HelpfulGuidance } from './helpful-guidance'
+import type { ToolCapability, ToolLandingConfig, ToolSectionItem } from './types'
 import { ToolValueSignals } from './value-signals'
 
 export function ToolLandingPage({
@@ -22,16 +25,29 @@ export function ToolLandingPage({
         })
       : []
 
+  const capabilitySection =
+    config.capabilities ??
+    (config.features
+      ? {
+          title: config.features.title,
+          items: config.features.items.map((item, index) => ({
+            id: `legacy-feature-${index + 1}`,
+            title: item.title,
+            description: item.description,
+          })),
+        }
+      : undefined)
+
   return (
     <article className="pb-16 sm:pb-20" data-tool-landing-version={config.version}>
       <section
-        className="mx-auto w-full max-w-5xl px-4 pb-8 pt-6 sm:px-6 sm:pt-8"
+        className="mx-auto w-full max-w-5xl px-4 pb-7 pt-5 sm:px-6 sm:pt-7"
         data-tool-first-viewport
       >
         {breadcrumbs.length > 1 ? (
           <nav
             aria-label={config.a11y?.breadcrumbLabel ?? 'Breadcrumb'}
-            className="mb-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"
+            className="mb-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"
           >
             {breadcrumbs.map((item, index) => {
               const isCurrent = index === breadcrumbs.length - 1
@@ -72,17 +88,27 @@ export function ToolLandingPage({
           >
             {config.hero.description}
           </p>
-
-          <ToolValueSignals
-            ariaLabel={config.a11y?.valueSignalsLabel}
-            experience={config.experience}
-            labels={config.valueLabels}
-          />
         </div>
 
-        <div className="mt-5 scroll-mt-20" data-tool-primary-region>
+        <div className="mt-4 scroll-mt-20" data-tool-primary-region>
           {tool}
         </div>
+
+        <ToolConstraintsSummary
+          ariaLabel={config.a11y?.constraintsLabel}
+          constraints={config.constraints}
+        />
+
+        <ToolValueSignals
+          ariaLabel={config.a11y?.valueSignalsLabel}
+          experience={config.experience}
+          labels={config.valueLabels}
+        />
+
+        <ToolCompletionSummary
+          ariaLabel={config.a11y?.completionLabel}
+          completion={config.completion}
+        />
       </section>
 
       {related.length > 0 && config.relatedTools ? (
@@ -106,9 +132,13 @@ export function ToolLandingPage({
       ) : null}
 
       <ItemSection section={config.benefits} />
+
+      <CapabilitySection section={capabilitySection} />
+
       <ItemSection section={config.howItWorks} itemsKey="steps" numbered />
-      <ItemSection section={config.features} />
       <ItemSection section={config.useCases} />
+
+      <HelpfulGuidance blocks={config.helpfulGuidance} />
 
       {config.faq?.items.length ? (
         <section className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6">
@@ -156,6 +186,31 @@ export function ToolLandingPage({
         </section>
       ) : null}
     </article>
+  )
+}
+
+function CapabilitySection({
+  section,
+}: Readonly<{
+  section?: {
+    title: string
+    items: ReadonlyArray<ToolCapability>
+  }
+}>) {
+  if (!section?.items.length) return null
+
+  return (
+    <section className="mx-auto w-full max-w-5xl px-4 py-9 sm:px-6" data-tool-capabilities>
+      <h2 className="text-2xl font-semibold tracking-tight">{section.title}</h2>
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {section.items.map((item) => (
+          <article className="rounded-xl border bg-card p-4" key={item.id}>
+            <h3 className="font-medium">{item.title}</h3>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">{item.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
   )
 }
 

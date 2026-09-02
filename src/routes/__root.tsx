@@ -7,13 +7,14 @@ import {
 } from '@tanstack/react-router'
 import { ChevronDown, Globe2 } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { PrivacyControls } from '@/components/privacy-controls'
+import { SiteFooter } from '@/components/site-footer'
 import { Button } from '@/components/ui/button'
 import { type Locale, localeConfig, localeFromPathname } from '@/i18n/config'
 import { shellMessages } from '@/i18n/messages'
 import { localeAlternatesForPath, localizedPathOrDefault } from '@/i18n/routes'
 import { publicEnv } from '@/lib/config/env'
 import { site } from '@/lib/site'
+import { type HeaderLinkId, localizedNavigationValue, siteNavigation } from '@/lib/site-navigation'
 import styles from '@/styles.css?url'
 
 export const Route = createRootRoute({
@@ -37,23 +38,23 @@ function RootComponent() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
   const locale = localeFromPathname(pathname)
   const copy = shellMessages[locale]
-  const homePath = localizedPathOrDefault('home', locale)
-  const nav = [
-    { label: copy.nav.home, href: homePath },
-    { label: copy.nav.workflow, href: `${homePath}#workflow` },
-    { label: copy.nav.guides, href: localizedPathOrDefault('guides', locale) },
-    { label: copy.nav.pricing, href: localizedPathOrDefault('pricing', locale) },
-  ]
   const localeAlternates = localeAlternatesForPath(pathname)
+
+  const nav = siteNavigation.header.links.flatMap((linkId) => {
+    if (linkId === 'guides' && siteNavigation.guidesPlacement !== 'header') return []
+
+    const resolved = resolveHeaderLink(linkId, locale)
+    return resolved ? [resolved] : []
+  })
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="ship-header">
+      <header className="ship-header" data-site-header>
         <div className="ship-header-inner">
           <Brand locale={locale} />
           <nav className="ship-main-nav" aria-label={copy.primaryNavigation}>
-            {nav.map(({ label, href }) => (
-              <a href={href} key={label}>
+            {nav.map(({ id, label, href }) => (
+              <a href={href} key={id}>
                 {label}
               </a>
             ))}
@@ -91,22 +92,43 @@ function RootComponent() {
       <main>
         <Outlet />
       </main>
-      <footer className="ship-footer">
-        <div className="ship-footer-inner">
-          <p className="ship-footer-copyright">© 2026 ShipLean. All rights reserved.</p>
-          <div className="ship-footer-links">
-            <a href={localizedPathOrDefault('guides', locale)}>{copy.footer.guides}</a>
-            <a href={localizedPathOrDefault('pricing', locale)}>{copy.footer.pricing}</a>
-            <a href={localizedPathOrDefault('about', locale)}>{copy.footer.about}</a>
-            <a href={localizedPathOrDefault('contact', locale)}>{copy.footer.contact}</a>
-            <a href={localizedPathOrDefault('privacy', locale)}>{copy.footer.privacy}</a>
-            <a href={localizedPathOrDefault('terms', locale)}>{copy.footer.terms}</a>
-            <PrivacyControls locale={locale} />
-          </div>
-        </div>
-      </footer>
+
+      <SiteFooter locale={locale} />
     </div>
   )
+}
+
+function resolveHeaderLink(
+  linkId: HeaderLinkId,
+  locale: Locale,
+): { id: HeaderLinkId; label: string; href: string } | undefined {
+  const copy = shellMessages[locale]
+  const homePath = localizedPathOrDefault('home', locale)
+
+  switch (linkId) {
+    case 'home':
+      return { id: linkId, label: copy.nav.home, href: homePath }
+    case 'workflow':
+      return { id: linkId, label: copy.nav.workflow, href: `${homePath}#workflow` }
+    case 'guides':
+      return {
+        id: linkId,
+        label: copy.nav.guides,
+        href: localizedPathOrDefault('guides', locale),
+      }
+    case 'pricing':
+      return {
+        id: linkId,
+        label: copy.nav.pricing,
+        href: localizedPathOrDefault('pricing', locale),
+      }
+    case 'tools': {
+      const href = siteNavigation.header.toolsHref
+        ? localizedNavigationValue(siteNavigation.header.toolsHref, locale)
+        : undefined
+      return href ? { id: linkId, label: copy.nav.tools, href } : undefined
+    }
+  }
 }
 
 function Brand({ locale }: Readonly<{ locale: Locale }>) {
@@ -115,13 +137,13 @@ function Brand({ locale }: Readonly<{ locale: Locale }>) {
     <a
       className="ship-brand"
       href={localizedPathOrDefault('home', locale)}
-      aria-label={`ShipLean ${copy.nav.home}`}
+      aria-label={`${site.name} ${copy.nav.home}`}
     >
       <span className="ship-brand-mark">
         SL
         <i />
       </span>
-      <span>ShipLean</span>
+      <span>{site.name}</span>
     </a>
   )
 }

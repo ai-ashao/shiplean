@@ -1,3 +1,11 @@
+import type { Locale } from '@/i18n/config'
+
+export type ToolRegistryLocalization = {
+  label: string
+  href: string
+  description?: string
+}
+
 export type ToolRegistryItem = {
   id: string
   label: string
@@ -5,6 +13,13 @@ export type ToolRegistryItem = {
   description?: string
   tags?: ReadonlyArray<string>
   status: 'live' | 'planned'
+  localizations?: Partial<Record<Locale, ToolRegistryLocalization>>
+}
+
+export type ResolvedToolRegistryItem = Omit<ToolRegistryItem, 'localizations'> & {
+  label: string
+  href: string
+  description?: string
 }
 
 export function assertUniqueToolRegistry(registry: ReadonlyArray<ToolRegistryItem>) {
@@ -15,6 +30,22 @@ export function assertUniqueToolRegistry(registry: ReadonlyArray<ToolRegistryIte
       throw new Error(`Duplicate tool registry id: ${tool.id}`)
     }
     seen.add(tool.id)
+  }
+}
+
+export function resolveToolPresentation(
+  tool: ToolRegistryItem,
+  locale: Locale,
+): ResolvedToolRegistryItem {
+  const localized = tool.localizations?.[locale]
+
+  return {
+    id: tool.id,
+    label: localized?.label ?? tool.label,
+    href: localized?.href ?? tool.href,
+    description: localized?.description ?? tool.description,
+    tags: tool.tags,
+    status: tool.status,
   }
 }
 

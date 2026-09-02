@@ -5,6 +5,7 @@ type ShellMessages = {
   nav: {
     home: string
     workflow: string
+    tools: string
     guides: string
     pricing: string
   }
@@ -34,6 +35,7 @@ export const shellMessages = {
     nav: {
       home: 'Home',
       workflow: 'Workflow',
+      tools: 'Tools',
       guides: 'Guides',
       pricing: 'Pricing',
     },
@@ -62,6 +64,7 @@ export const shellMessages = {
     nav: {
       home: '首页',
       workflow: '使用流程',
+      tools: '工具',
       guides: '指南',
       pricing: '定价',
     },

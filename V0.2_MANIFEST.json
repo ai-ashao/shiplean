@@ -1,0 +1,42 @@
+{
+  "package": "ShipLean Tool Landing v0.2 overlay",
+  "target_repo": "ai-ashao/shiplean",
+  "target_branch": "dev",
+  "reviewed_base_commit": "b6e853bf309cc4a047ba10f52350b02f62160394",
+  "delete": [
+    "OVERLAY_MANIFEST.json"
+  ],
+  "principles": [
+    "Layout fixed",
+    "Brand flexible",
+    "Task first",
+    "Value obvious",
+    "Capabilities explicit"
+  ],
+  "files": [
+    ".agents/skills/shiplean-quick-start/SKILL.md",
+    "APPLY.md",
+    "DELETE_THESE_FILES.txt",
+    "docs/FEATURE_STATUS.md",
+    "docs/tool-landing-standard-v0.2.md",
+    "docs/tool-landing-v0.2-implementation.md",
+    "src/components/site-footer.tsx",
+    "src/components/tool-landing/completion-summary.tsx",
+    "src/components/tool-landing/constraints.tsx",
+    "src/components/tool-landing/helpful-guidance.tsx",
+    "src/components/tool-landing/index.ts",
+    "src/components/tool-landing/tool-landing-page.tsx",
+    "src/components/tool-landing/types.ts",
+    "src/i18n/messages.ts",
+    "src/lib/site-navigation.ts",
+    "src/lib/tool-constraints.ts",
+    "src/lib/tool-registry.ts",
+    "src/modules/tool-registry.ts",
+    "src/routes/__root.tsx",
+    "src/routes/tool-reference.tsx",
+    "tests/browser-viewport.spec.ts",
+    "tests/site-navigation.test.ts",
+    "tests/tool-constraints.test.ts",
+    "tests/tool-messaging.test.ts"
+  ]
+}

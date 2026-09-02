@@ -37,6 +37,8 @@ export type ToolValueLabels = {
 export type ToolLandingA11y = {
   breadcrumbLabel?: string
   valueSignalsLabel?: string
+  constraintsLabel?: string
+  completionLabel?: string
 }
 
 export type ToolBreadcrumb = {
@@ -49,6 +51,46 @@ export type ToolSectionItem = {
   description: string
 }
 
+export type ToolCapability = {
+  id: string
+  title: string
+  description: string
+}
+
+export type ToolConstraintLabels = {
+  outputPrefix: string
+  maxFileSizePrefix: string
+  maxFilesPrefix: string
+  filesSuffix: string
+}
+
+export type ToolConstraints = {
+  acceptedFormats?: ReadonlyArray<string>
+  outputFormats?: ReadonlyArray<string>
+  maxFileSize?: string
+  maxFiles?: number
+  dimensions?: string
+  other?: ReadonlyArray<string>
+  labels?: Partial<ToolConstraintLabels>
+}
+
+export type ToolCompletionConfig = {
+  highlights: ReadonlyArray<string>
+}
+
+export type HelpfulGuidanceItem = {
+  label?: string
+  title: string
+  description: string
+}
+
+export type HelpfulGuidanceBlock = {
+  heading: string
+  summary?: string
+  items?: ReadonlyArray<HelpfulGuidanceItem>
+  paragraphs?: ReadonlyArray<string>
+}
+
 export type ToolFaqItem = {
   question: string
   answer: string
@@ -59,8 +101,16 @@ export type ToolSeoContentBlock = {
   paragraphs: ReadonlyArray<string>
 }
 
+export type ToolStructuredDataConfig = {
+  applicationCategory?: string
+  operatingSystem?: string
+  priceCurrency?: string
+  enableFaq?: boolean
+  enableBreadcrumbs?: boolean
+}
+
 export type ToolLandingConfig = {
-  version: '0.1'
+  version: '0.1' | '0.2'
   preset: 'tool-default'
   toolId: string
   seo: {
@@ -75,6 +125,12 @@ export type ToolLandingConfig = {
     description: string
   }
   experience: ToolExperience
+  constraints?: ToolConstraints
+  completion?: ToolCompletionConfig
+  capabilities?: {
+    title: string
+    items: ReadonlyArray<ToolCapability>
+  }
   valueLabels?: Partial<ToolValueLabels>
   a11y?: ToolLandingA11y
   breadcrumbs?: ReadonlyArray<ToolBreadcrumb>
@@ -90,6 +146,10 @@ export type ToolLandingConfig = {
     title: string
     steps: ReadonlyArray<ToolSectionItem>
   }
+  /**
+   * @deprecated Use `capabilities` for v0.2 tool pages.
+   * Kept temporarily so v0.1 consumers do not break during migration.
+   */
   features?: {
     title: string
     items: ReadonlyArray<ToolSectionItem>
@@ -98,6 +158,7 @@ export type ToolLandingConfig = {
     title: string
     items: ReadonlyArray<ToolSectionItem>
   }
+  helpfulGuidance?: ReadonlyArray<HelpfulGuidanceBlock>
   faq?: {
     title: string
     items: ReadonlyArray<ToolFaqItem>
@@ -109,11 +170,5 @@ export type ToolLandingConfig = {
     actionLabel: string
     href: string
   }
-  structuredData?: {
-    applicationCategory?: string
-    operatingSystem?: string
-    priceCurrency?: string
-    enableFaq?: boolean
-    enableBreadcrumbs?: boolean
-  }
+  structuredData?: ToolStructuredDataConfig
 }
