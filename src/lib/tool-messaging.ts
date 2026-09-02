@@ -30,8 +30,11 @@ export function deriveToolValueSignals(
     signals.push({ key: 'noSignup', label: copy.noSignup })
   }
 
-  if (experience.processing === 'local') {
+  if (experience.online && experience.processing === 'local') {
     signals.push({ key: 'browserBased', label: copy.browserBased })
+  }
+
+  if (experience.processing === 'local') {
     signals.push({ key: 'localProcessing', label: copy.localProcessing })
   }
 
@@ -77,8 +80,12 @@ export function buildEnglishToolSeoDescription(input: {
   if (!experience.installationRequired) details.push('No installation required.')
   if (!experience.signupRequired) details.push('No signup required.')
 
+  if (experience.online && experience.processing === 'local') {
+    details.push('Data is processed in your browser.')
+  }
+
   if (experience.processing === 'local') {
-    details.push('Files are processed in your browser and stay on your device.')
+    details.push('Your data stays on your device.')
   }
 
   if (formats.length > 0) {
@@ -144,14 +151,28 @@ export function validateEnglishToolMessaging(input: {
   if (input.experience.processing !== 'local') {
     const unsupportedLocalClaim =
       hero.includes('stay on your device') ||
+      hero.includes('stays on your device') ||
       hero.includes('processed locally') ||
       hero.includes('no upload') ||
       description.includes('stay on your device') ||
+      description.includes('stays on your device') ||
       description.includes('processed locally') ||
       description.includes('no upload')
 
     if (unsupportedLocalClaim) {
       issues.push('Local-processing claims require experience.processing === local.')
+    }
+  }
+
+  if (!input.experience.online) {
+    const unsupportedBrowserClaim =
+      hero.includes('in your browser') ||
+      hero.includes('browser-based') ||
+      description.includes('in your browser') ||
+      description.includes('browser-based')
+
+    if (unsupportedBrowserClaim) {
+      issues.push('Browser-based claims require experience.online === true.')
     }
   }
 

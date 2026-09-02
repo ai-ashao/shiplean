@@ -37,12 +37,14 @@ const config: ToolLandingConfig = {
   },
 }
 
+const site = {
+  name: 'Example',
+  url: 'https://example.com',
+}
+
 describe('tool structured data', () => {
   it('emits WebApplication, FAQPage and BreadcrumbList when visible', () => {
-    const data = buildToolStructuredData(config, {
-      name: 'Example',
-      url: 'https://example.com',
-    })
+    const data = buildToolStructuredData(config, site)
 
     expect(data.map((item) => item['@type'])).toEqual([
       'WebApplication',
@@ -56,5 +58,44 @@ describe('tool structured data', () => {
       price: '0',
       priceCurrency: 'USD',
     })
+  })
+
+  it('does not emit a free offer for a paid tool', () => {
+    const data = buildToolStructuredData(
+      {
+        ...config,
+        experience: {
+          ...config.experience,
+          free: false,
+        },
+      },
+      site,
+    )
+
+    expect(data[0]).not.toHaveProperty('offers')
+  })
+
+  it('does not emit FAQPage when no visible FAQ exists', () => {
+    const data = buildToolStructuredData(
+      {
+        ...config,
+        faq: undefined,
+      },
+      site,
+    )
+
+    expect(data.map((item) => item['@type'])).not.toContain('FAQPage')
+  })
+
+  it('does not emit BreadcrumbList when no visible breadcrumb exists', () => {
+    const data = buildToolStructuredData(
+      {
+        ...config,
+        breadcrumbs: undefined,
+      },
+      site,
+    )
+
+    expect(data.map((item) => item['@type'])).not.toContain('BreadcrumbList')
   })
 })

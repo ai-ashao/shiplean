@@ -34,6 +34,11 @@ export type ToolValueLabels = {
   noWatermark: string
 }
 
+export type ToolLandingA11y = {
+  breadcrumbLabel?: string
+  valueSignalsLabel?: string
+}
+
 export type ToolBreadcrumb = {
   label: string
   href: string
@@ -71,6 +76,7 @@ export type ToolLandingConfig = {
   }
   experience: ToolExperience
   valueLabels?: Partial<ToolValueLabels>
+  a11y?: ToolLandingA11y
   breadcrumbs?: ReadonlyArray<ToolBreadcrumb>
   relatedTools?: {
     title: string

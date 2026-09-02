@@ -5,9 +5,11 @@ import type { ToolExperience, ToolValueLabels } from './types'
 export function ToolValueSignals({
   experience,
   labels,
+  ariaLabel = 'Tool value signals',
 }: Readonly<{
   experience: ToolExperience
   labels?: Partial<ToolValueLabels>
+  ariaLabel?: string
 }>) {
   const signals = deriveToolValueSignals(experience, labels)
 
@@ -15,7 +17,7 @@ export function ToolValueSignals({
 
   return (
     <ul
-      aria-label="Tool value signals"
+      aria-label={ariaLabel}
       className="mt-4 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm font-medium text-muted-foreground"
       data-tool-value-signals
     >

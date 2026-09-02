@@ -4,6 +4,7 @@ export type {
   ToolBreadcrumb,
   ToolExperience,
   ToolFaqItem,
+  ToolLandingA11y,
   ToolLandingConfig,
   ToolProcessingMode,
   ToolSectionItem,

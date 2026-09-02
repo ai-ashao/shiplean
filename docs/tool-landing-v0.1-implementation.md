@@ -1,6 +1,6 @@
-# Tool Landing v0.1 — Implementation Contract
+# Tool Landing v0.1.1 — Implementation Contract
 
-Status: implementation package for ShipLean `dev`.
+Status: **candidate implementation** in ShipLean. The shared implementation exists, but `tool-default` is not a stable production-verified preset until browser viewport acceptance and two real product consumers have passed the contract.
 
 ## Core principles
 
@@ -52,6 +52,8 @@ Do not place these above the tool:
 - unrelated promotions;
 - a second large CTA.
 
+Browser evidence is required before claiming this contract passed. jsdom geometry is not sufficient.
+
 ## Primary value signals
 
 For tools that actually satisfy the conditions, the first four visible signals are:
@@ -64,10 +66,12 @@ For tools that actually satisfy the conditions, the first four visible signals a
 Secondary signals may include:
 
 - Browser-based
-- Files stay on your device
+- Files stay on your device / Data stays in your browser
 - No watermark
 
-`Browser-based`, `processed locally`, `files stay on your device`, and `no upload` are local-processing claims. They must only be used when the implementation proves `processing: 'local'`.
+`Browser-based` requires both `online: true` and `processing: 'local'`.
+
+`Files stay on your device`, `processed locally`, and `no upload` require `processing: 'local'`.
 
 Avoid unverifiable default claims such as:
 
@@ -107,6 +111,21 @@ No installation or signup required.
 
 Use localized equivalent wording for non-English routes.
 
+Use `toolPageHead(config)` so `ToolLandingConfig.seo` remains the single route-metadata source.
+
+## Accessibility copy
+
+Shared components may default to English accessible labels, but localized product pages can provide:
+
+```ts
+a11y: {
+  breadcrumbLabel: '...',
+  valueSignalsLabel: '...',
+}
+```
+
+This page copy remains product-owned rather than being coupled to the root shell dictionary.
+
 ## Related tools
 
 Related tools:
@@ -121,13 +140,15 @@ Use `tool-registry.ts` as the shared source of truth.
 
 ## Structured data
 
-The package can generate:
+The candidate implementation can generate:
 
 - `WebApplication`
 - `FAQPage`
 - `BreadcrumbList`
 
 Only emit FAQ schema when the same FAQ is visibly rendered. Only emit breadcrumb schema when the visible breadcrumb exists. A free `Offer` is emitted only when `experience.free === true`.
+
+Do not add AggregateRating, Review, SoftwareVersion, author, or similar claims without real evidence.
 
 ## Brand variation
 
@@ -144,79 +165,39 @@ Change product-level design tokens instead:
 - logo;
 - decorative language.
 
-This keeps UX and SEO stable while preserving product identity.
+Do not introduce a Theme DSL until at least two real consumers demonstrate a repeated abstraction need.
 
-## Route integration
+## Reference route
 
-A route should use ShipLean's existing `pageHead` helper for metadata and the shared root shell for Header/Footer.
+ShipLean ships `/tool-reference`, a noindex text counter used to exercise the candidate component boundary.
 
-Example:
+It proves that a working product-owned tool slot can be composed with:
 
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import {
-  ToolLandingPage,
-  ToolStructuredData,
-  type ToolLandingConfig,
-} from '@/components/tool-landing'
-import { pageHead } from '@/lib/seo'
-import { buildToolStructuredData } from '@/lib/tool-structured-data'
-import { site } from '@/lib/site'
-import { toolRegistry } from '@/modules/tool-registry'
+- Tool Landing layout;
+- Value Signals;
+- `toolPageHead`;
+- WebApplication / FAQ / Breadcrumb structured data;
+- accessible primary interaction.
 
-const config = {
-  version: '0.1',
-  preset: 'tool-default',
-  toolId: 'resize-image-to-kb',
-  seo: {
-    title: 'Resize Image to KB - Free Online Tool',
-    description:
-      'Free online tool to resize images to a target KB size. No installation or signup required.',
-    path: '/resize-image-to-kb',
-  },
-  hero: {
-    eyebrow: 'Free online image tool',
-    title: 'Resize Image to KB',
-    description:
-      'Resize JPG, PNG and WebP images to your target size online for free. No installation or signup required.',
-  },
-  experience: {
-    free: true,
-    online: true,
-    installationRequired: false,
-    signupRequired: false,
-    processing: 'local',
-  },
-  relatedTools: {
-    title: 'Related tools',
-    toolIds: ['compress-image-to-200kb', 'png-to-jpg'],
-  },
-} satisfies ToolLandingConfig
+It does **not** count as one of the two real product consumers required for stable promotion.
 
-export const Route = createFileRoute('/resize-image-to-kb')({
-  head: () =>
-    pageHead({
-      title: config.seo.title,
-      description: config.seo.description,
-      path: config.seo.path,
-    }),
-  component: Page,
-})
+## Promotion gate
 
-function Page() {
-  const structuredData = buildToolStructuredData(config, site)
+`tool-default` may be promoted from candidate to stable only after:
 
-  return (
-    <>
-      <ToolStructuredData items={structuredData} />
-      <ToolLandingPage
-        config={config}
-        registry={toolRegistry}
-        tool={<ProductOwnedUpload />}
-      />
-    </>
-  )
-}
+1. the reference route passes real-browser viewport acceptance at 1440×900 and 390×844;
+2. no horizontal overflow is present at 390×844;
+3. primary CTA is visible, enabled, and keyboard focusable;
+4. one real product consumer passes the same acceptance;
+5. a second materially different real product consumer passes the same API and acceptance;
+6. metadata, claims, structured data, and related-tool behavior remain truthful.
+
+Required evidence:
+
+```text
+Reference route ✅
+Real product A ✅
+Real product B ✅
 ```
 
-The actual upload/editor handoff stays in the product repository.
+Until then, keep exactly one structural preset: `tool-default`.

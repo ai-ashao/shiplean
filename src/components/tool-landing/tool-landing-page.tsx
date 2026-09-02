@@ -12,6 +12,7 @@ export function ToolLandingPage({
   tool: ReactNode
   registry?: ReadonlyArray<ToolRegistryItem>
 }>) {
+  const breadcrumbs = config.breadcrumbs ?? []
   const related =
     config.relatedTools && registry.length > 0
       ? resolveRelatedTools({
@@ -27,19 +28,27 @@ export function ToolLandingPage({
         className="mx-auto w-full max-w-5xl px-4 pb-8 pt-6 sm:px-6 sm:pt-8"
         data-tool-first-viewport
       >
-        {config.breadcrumbs && config.breadcrumbs.length > 1 ? (
+        {breadcrumbs.length > 1 ? (
           <nav
-            aria-label="Breadcrumb"
+            aria-label={config.a11y?.breadcrumbLabel ?? 'Breadcrumb'}
             className="mb-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"
           >
-            {config.breadcrumbs.map((item, index) => (
-              <span className="inline-flex items-center gap-2" key={item.href}>
-                {index > 0 ? <span aria-hidden="true">/</span> : null}
-                <a className="hover:text-foreground" href={item.href}>
-                  {item.label}
-                </a>
-              </span>
-            ))}
+            {breadcrumbs.map((item, index) => {
+              const isCurrent = index === breadcrumbs.length - 1
+
+              return (
+                <span className="inline-flex items-center gap-2" key={item.href}>
+                  {index > 0 ? <span aria-hidden="true">/</span> : null}
+                  {isCurrent ? (
+                    <span aria-current="page">{item.label}</span>
+                  ) : (
+                    <a className="hover:text-foreground" href={item.href}>
+                      {item.label}
+                    </a>
+                  )}
+                </span>
+              )
+            })}
           </nav>
         ) : null}
 
@@ -50,15 +59,25 @@ export function ToolLandingPage({
             </p>
           ) : null}
 
-          <h1 className="mt-2 text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
+          <h1
+            className="mt-2 text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl"
+            data-tool-title
+          >
             {config.hero.title}
           </h1>
 
-          <p className="mx-auto mt-3 max-w-2xl text-pretty text-sm leading-6 text-muted-foreground sm:text-base">
+          <p
+            className="mx-auto mt-3 max-w-2xl text-pretty text-sm leading-6 text-muted-foreground sm:text-base"
+            data-tool-description
+          >
             {config.hero.description}
           </p>
 
-          <ToolValueSignals experience={config.experience} labels={config.valueLabels} />
+          <ToolValueSignals
+            ariaLabel={config.a11y?.valueSignalsLabel}
+            experience={config.experience}
+            labels={config.valueLabels}
+          />
         </div>
 
         <div className="mt-5 scroll-mt-20" data-tool-primary-region>

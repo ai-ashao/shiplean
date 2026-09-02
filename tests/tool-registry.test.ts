@@ -51,4 +51,23 @@ describe('tool registry', () => {
 
     expect(related.map((tool) => tool.id)).toEqual(['png-jpg', 'compress-200'])
   })
+
+  it('omits unknown and planned requested tools', () => {
+    const related = resolveRelatedTools({
+      registry,
+      currentToolId: 'resize-kb',
+      requestedIds: ['missing', 'future', 'png-jpg'],
+    })
+
+    expect(related.map((tool) => tool.id)).toEqual(['png-jpg'])
+  })
+
+  it('rejects duplicate tool ids', () => {
+    expect(() =>
+      resolveRelatedTools({
+        registry: [...registry, { ...registry[0] }],
+        currentToolId: 'png-jpg',
+      }),
+    ).toThrow('Duplicate tool registry id: resize-kb')
+  })
 })
