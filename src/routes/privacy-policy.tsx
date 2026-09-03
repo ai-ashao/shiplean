@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { InformationPage } from '@/components/information-page'
+import { LegalDocumentPage } from '@/components/legal-document-page'
 import { localizedPageHead } from '@/lib/seo'
+import { legalProfile } from '@/modules/legal-profile'
 
 export const Route = createFileRoute('/privacy-policy')({
   head: () =>
@@ -8,27 +9,11 @@ export const Route = createFileRoute('/privacy-policy')({
       pageId: 'privacy',
       locale: 'en',
       title: 'Privacy Policy',
-      description: 'Read the privacy policy for this ShipLean-powered product.',
+      description: `Learn how ${legalProfile.productName} handles information, browser storage, analytics, service providers, and privacy requests.`,
     }),
   component: PrivacyPolicyPage,
 })
 
 function PrivacyPolicyPage() {
-  return (
-    <InformationPage
-      eyebrow="Privacy Policy"
-      title="Explain what the product collects and why."
-      description="This default page marks the place for the product's privacy policy. It must be replaced with an accurate policy before launch."
-    >
-      <p>
-        Describe the information this product processes, the purposes and legal bases for
-        processing, retention periods, service providers, user rights, and the contact method for
-        privacy requests.
-      </p>
-      <p>
-        If analytics or other optional services are enabled, document them here and keep the consent
-        controls aligned with the actual implementation.
-      </p>
-    </InformationPage>
-  )
+  return <LegalDocumentPage kind="privacy" profile={legalProfile} />
 }

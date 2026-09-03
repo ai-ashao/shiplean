@@ -63,6 +63,8 @@ wrangler secret put SECRET_NAME
 
 Do not infer deployment success from `pnpm build`. Read [Cloudflare deployment boundary](./deployment.md) for the production verification steps.
 
+`VITE_SITE_URL` also supplies the public URL in the shared Privacy / Terms profile and derives the default `support@<domain>` contact. Localhost development uses the ShipLean starter address as a non-production fallback; production release still requires an HTTPS public URL and a reviewed legal profile.
+
 ## Related source
 
 - `src/lib/config/env.ts`: public environment parsing and validation;

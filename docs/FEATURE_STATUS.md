@@ -16,7 +16,10 @@
 | Site Navigation / Registry validator | Candidate 已实现 | unknown/planned/duplicate 配置可失败 |
 | Tool reference routes | 已实现 | text + realistic upload fixtures，均 noindex |
 | First Viewport browser acceptance | 已实现 | 1440×900 与 390×844 |
+| Free local Tool Privacy / Terms template | 已实现 | 仅覆盖免费、无账号、输入本地处理的工具；`support@domain` 默认值 |
+| Legal production review gate | 已实现 | `pnpm deploy` 前置严格 Validator；starter 页面 noindex 且不进入 sitemap |
 | 顶层 Tool / SaaS Product Mode | 未实现 | 下一阶段单独设计 |
+| Subscription SaaS legal template | 未实现 | 与 SaaS Product Mode 一并在后续阶段设计 |
 | Result / Workbench monetization | 未实现 | 暂不加入 Landing |
 | 生产认证、PostgreSQL、支付、邮件、对象存储 | 未实现 | 后续阶段 |
 

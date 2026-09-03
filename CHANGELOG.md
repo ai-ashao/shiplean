@@ -10,6 +10,7 @@
 - Added real-browser first-viewport acceptance at 1440×900 and 390×844, including a realistic upload-first reference fixture.
 - Enabled GitHub verification on pushes to both `main` and `dev`.
 - Added explicit Playwright Chromium installation to the CI runner.
+- Replaced free-form Privacy and Terms placeholders with a focused `free-local-tool` legal profile, fixed concise document structures, mapped processing disclosures, default `support@domain` contact, deploy-blocking production review validation, and review-state-driven indexing. Subscription-SaaS legal modules remain deferred.
 - Upgraded Vite to `7.3.6` to remove known development-server vulnerabilities.
 - Enforced the sandbox session before rendering the dashboard and disabled caching on session responses.
 - Added `Secure` to sandbox cookies over HTTPS and fixed the native Google Tag command queue shape.

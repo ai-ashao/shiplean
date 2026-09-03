@@ -18,6 +18,11 @@ const fixtures = [
   },
 ] as const
 
+const legalDocuments = [
+  { name: 'privacy', path: '/privacy-policy', heading: 'Privacy Policy' },
+  { name: 'terms', path: '/terms-of-service', heading: 'Terms of Service' },
+] as const
+
 async function expectInsideViewport(locator: Locator, viewportHeight: number) {
   await expect(locator).toBeVisible()
   const box = await locator.boundingBox()
@@ -68,6 +73,40 @@ for (const fixture of fixtures) {
       const headerGuides = page.locator('[data-site-header] a', { hasText: 'Guides' })
       const footerGuides = page.locator('[data-site-footer] a', { hasText: 'Guides' })
       expect((await headerGuides.count()) + (await footerGuides.count())).toBe(1)
+
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+        await page.evaluate(() => window.innerWidth),
+      )
+    })
+  }
+}
+
+for (const legalFixture of legalDocuments) {
+  for (const viewport of viewports) {
+    test(`${legalFixture.name} legal template at ${viewport.name}`, async ({ page }) => {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height })
+      await page.goto(legalFixture.path)
+
+      const legalDocument = page.locator(`[data-legal-document="${legalFixture.name}"]`)
+      await expect(legalDocument.getByRole('heading', { level: 1 })).toHaveText(
+        legalFixture.heading,
+      )
+      const starterNotice = page.locator('[data-legal-review-status="starter"]')
+      const isNoindex =
+        (await page.locator('meta[name="robots"][content="noindex,nofollow"]').count()) > 0
+      if (isNoindex) {
+        await expect(starterNotice).toBeVisible()
+      } else {
+        await expect(starterNotice).toHaveCount(0)
+      }
+      await expect(legalDocument.getByRole('navigation')).toBeVisible()
+
+      const supportLink = legalDocument.locator('a[href^="mailto:"]')
+      await expect(supportLink).toBeVisible()
+
+      const firstSectionLink = legalDocument.getByRole('navigation').locator('a').first()
+      await firstSectionLink.focus()
+      await expect(firstSectionLink).toBeFocused()
 
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
         await page.evaluate(() => window.innerWidth),

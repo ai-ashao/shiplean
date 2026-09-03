@@ -28,6 +28,7 @@ public product surface → local session boundary → protected app shell
 - `src/components/ui`: local shadcn/ui primitives owned by the downloaded project;
 - `components.json` and `src/styles.css`: shadcn aliases, Tailwind entrypoint, and neutral design tokens;
 - `src/lib/auth`: visibly local identity boundary;
+- `src/lib/legal.ts` and `src/modules/legal-profile.ts`: fixed free/local/account-free Tool Privacy/Terms structure, processing disclosures, and launch-review validation;
 - `src/modules/manifests.ts`: machine-readable module ownership and acceptance;
 - `src/start.ts`: global security headers;
 - `scripts/e2e-smoke.mjs`: fresh-server acceptance path.
@@ -47,6 +48,8 @@ Productized SEO tools are also out of scope. Public routes still retain baseline
 Localized public pages are matched by stable page identity rather than by rewriting URL strings. Canonical paths, language switches, reciprocal `hreflang`, and sitemap entries come from the same registry. A missing locale path means that translation does not exist: the shell may fall back to the default-locale destination for ordinary navigation, but it must not advertise a false equivalent page.
 
 Locale route files are intentionally thin: equivalent routes render one shared page component, while user-facing copy lives in typed dictionaries under `src/i18n`. The default-locale dictionary defines the required structure, so adding a field or supported locale fails strict TypeScript until the corresponding shipped translations are complete.
+
+Privacy Policy and Terms of Service follow the same single-source rule. The current `free-local-tool` template is intentionally limited to free tools without production accounts, payments, user-content publishing, or server-side persistence of primary tool inputs. Its routes render one shared legal document component from a typed product profile whose public URL follows the canonical site configuration. The scaffold keeps that profile in `starter` review status, visibly marks it as not launch-ready, emits `noindex`, and excludes it from the sitemap. Product releases must replace operator and jurisdiction facts, align processing disclosures with the implementation, and pass the reviewed-profile gate that runs at the start of `pnpm deploy`. Subscription-SaaS legal modules are deferred and this template does not replace jurisdiction-specific legal review.
 
 ## Deployment status
 

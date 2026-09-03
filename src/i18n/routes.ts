@@ -1,5 +1,7 @@
 import { type GuideSlug, guides } from '@/lib/guides'
+import { isLegalProfileLaunchReady } from '@/lib/legal'
 import { toolLocaleAlternatesForPath, toolSitemapPaths } from '@/lib/tool-registry'
+import { legalProfile } from '@/modules/legal-profile'
 import { toolRegistry } from '@/modules/tool-registry'
 import { defaultLocale, type Locale, localeConfig, supportedLocales } from './config'
 
@@ -20,14 +22,16 @@ export type PublicPageRoute = {
   paths: LocalizedPaths
 }
 
+const legalPagesIndexable = isLegalProfileLaunchReady(legalProfile)
+
 const staticPages: PublicPageRoute[] = [
   { id: 'home', indexable: true, paths: { en: '/', 'zh-CN': '/zh' } },
   { id: 'pricing', indexable: true, paths: { en: '/pricing' } },
   { id: 'guides', indexable: true, paths: { en: '/guides' } },
   { id: 'about', indexable: true, paths: { en: '/about' } },
   { id: 'contact', indexable: true, paths: { en: '/contact' } },
-  { id: 'privacy', indexable: true, paths: { en: '/privacy-policy' } },
-  { id: 'terms', indexable: true, paths: { en: '/terms-of-service' } },
+  { id: 'privacy', indexable: legalPagesIndexable, paths: { en: '/privacy-policy' } },
+  { id: 'terms', indexable: legalPagesIndexable, paths: { en: '/terms-of-service' } },
 ]
 
 const guidePages: PublicPageRoute[] = guides.map((guide) => ({
@@ -51,6 +55,12 @@ export function guidePageId(slug: GuideSlug): `guide:${GuideSlug}` {
 
 export function localizedPath(pageId: PublicPageId, locale: Locale): string | undefined {
   return publicPageRoutes.find((page) => page.id === pageId)?.paths[locale]
+}
+
+export function isPublicPageIndexable(pageId: PublicPageId): boolean {
+  const page = publicPageRoutes.find((candidate) => candidate.id === pageId)
+  if (!page) throw new Error(`Unknown public page: ${pageId}`)
+  return page.indexable
 }
 
 export function localizedPathOrDefault(pageId: PublicPageId, locale: Locale): string {

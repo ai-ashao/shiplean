@@ -117,6 +117,36 @@ try {
     'Noindex Tool Landing reference routes must not appear in sitemap.xml.',
   )
 
+  const privacy = await request('/privacy-policy')
+  assert(privacy.response.status === 200, 'Privacy Policy route must return 200.')
+  assert(
+    privacy.text.includes('data-legal-document="privacy"'),
+    'Privacy Policy must use the shared legal document template.',
+  )
+  assert(
+    /href="mailto:[^"@]+@[^"@]+"/.test(privacy.text),
+    'Privacy Policy must expose the configured contact address.',
+  )
+
+  const terms = await request('/terms-of-service')
+  assert(terms.response.status === 200, 'Terms of Service route must return 200.')
+  assert(
+    terms.text.includes('data-legal-document="terms"'),
+    'Terms of Service must use the shared legal document template.',
+  )
+  const legalDocumentsAreStarter = terms.text.includes('data-legal-review-status="starter"')
+  const privacyIsNoindex = privacy.text.includes('noindex,nofollow')
+  const termsAreNoindex = terms.text.includes('noindex,nofollow')
+  assert(
+    privacyIsNoindex === legalDocumentsAreStarter && termsAreNoindex === legalDocumentsAreStarter,
+    'Legal page robots metadata must match the legal review state.',
+  )
+  assert(
+    sitemap.text.includes('/privacy-policy') !== legalDocumentsAreStarter &&
+      sitemap.text.includes('/terms-of-service') !== legalDocumentsAreStarter,
+    'Only launch-ready legal pages may appear in sitemap.xml.',
+  )
+
   const textReference = await request('/tool-reference')
   assert(textReference.response.status === 200, 'Text Tool Landing reference must return 200.')
   assert(
@@ -181,7 +211,7 @@ try {
   assert(loggedOut.response.status === 401, 'Logged-out session must be anonymous.')
 
   console.log(
-    'E2E smoke passed: locale-aware metadata and switching, tool references, security, and local session lifecycle.',
+    'E2E smoke passed: locale-aware metadata, legal templates, tool references, security, and local session lifecycle.',
   )
 } finally {
   server.kill('SIGTERM')

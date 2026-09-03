@@ -1,5 +1,10 @@
 import type { Locale } from '@/i18n/config'
-import { hreflangAlternates, localizedPath, type PublicPageId } from '@/i18n/routes'
+import {
+  hreflangAlternates,
+  isPublicPageIndexable,
+  localizedPath,
+  type PublicPageId,
+} from '@/i18n/routes'
 import { absoluteUrl, site } from './site'
 
 export function pageHead(input: {
@@ -7,6 +12,7 @@ export function pageHead(input: {
   description: string
   path: string
   alternates?: ReadonlyArray<{ locale: string; path: string }>
+  indexable?: boolean
 }) {
   const title = input.title === site.name ? site.name : `${input.title} · ${site.name}`
   const canonical = absoluteUrl(input.path)
@@ -20,6 +26,7 @@ export function pageHead(input: {
       { property: 'og:url', content: canonical },
       { property: 'og:type', content: 'website' },
       { name: 'twitter:card', content: 'summary_large_image' },
+      ...(input.indexable === false ? [{ name: 'robots', content: 'noindex,nofollow' }] : []),
     ],
     links: [
       { rel: 'canonical', href: canonical },
@@ -46,5 +53,6 @@ export function localizedPageHead(input: {
     description: input.description,
     path,
     alternates: hreflangAlternates(input.pageId),
+    indexable: isPublicPageIndexable(input.pageId),
   })
 }

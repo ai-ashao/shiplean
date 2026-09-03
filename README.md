@@ -73,11 +73,13 @@ Included now:
 - Tool Registry-driven localized tool routes, Related Tools, Footer discovery, hreflang, and sitemap;
 - Constraints, Value Signals, Completion Highlights, Capabilities, Helpful Guidance, and structured data;
 - Tool Landing, Tool Registry, Site Navigation, and Tool-site validators;
+- a shared, typed Privacy Policy and Terms template for free, account-free, browser-local tools, with a visible legal-review gate;
 - real-browser first-viewport acceptance.
 
 Deferred:
 
 - explicit top-level Tool/SaaS Product Modes;
+- subscription-SaaS Privacy and Terms modules;
 - production auth and PostgreSQL;
 - payments, email, and object storage;
 - Result/Workbench monetization;
@@ -90,5 +92,6 @@ Deferred:
 - [Tool Landing Standard v0.2](./docs/tool-landing-standard-v0.2.md)
 - [Tool Landing v0.2 implementation](./docs/tool-landing-v0.2-implementation.md)
 - [Tool Landing v0.2.1 hardening](./docs/tool-landing-v0.2.1-hardening.md)
+- [Legal page template](./docs/legal-pages.md)
 - [Current feature status](./docs/FEATURE_STATUS.md)
 - [MVP acceptance evidence](./docs/mvp-acceptance.md)

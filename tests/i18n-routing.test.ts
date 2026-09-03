@@ -9,6 +9,8 @@ import {
   resolvePublicPage,
   sitemapPaths,
 } from '../src/i18n/routes'
+import { isLegalProfileLaunchReady } from '../src/lib/legal'
+import { legalProfile } from '../src/modules/legal-profile'
 
 describe('locale-aware route registry', () => {
   it('detects only exact locale path prefixes', () => {
@@ -61,6 +63,12 @@ describe('locale-aware route registry', () => {
 
     expect(sitemapPaths()).toEqual(expected)
     expect(new Set(sitemapPaths()).size).toBe(sitemapPaths().length)
+
+    const legalIndexable = isLegalProfileLaunchReady(legalProfile)
+    expect(publicPageRoutes.find((page) => page.id === 'privacy')?.indexable).toBe(legalIndexable)
+    expect(publicPageRoutes.find((page) => page.id === 'terms')?.indexable).toBe(legalIndexable)
+    expect(sitemapPaths().includes('/privacy-policy')).toBe(legalIndexable)
+    expect(sitemapPaths().includes('/terms-of-service')).toBe(legalIndexable)
   })
 
   it('ships structurally complete message dictionaries for every supported locale', () => {

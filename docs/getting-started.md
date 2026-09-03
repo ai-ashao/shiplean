@@ -118,6 +118,7 @@ pnpm deploy
 ```
 
 `pnpm deploy` changes external state. Run it only after Wrangler is authenticated and `VITE_SITE_URL` and sandbox flags match the intended production environment.
+It runs the strict legal-profile check before the build, so a starter or incomplete Privacy / Terms profile cannot deploy through this command.
 
 ## Troubleshooting
 

@@ -60,11 +60,13 @@ GitHub Actions 会在 Pull Request，以及 push 到 `main` / `dev` 时自动运
 - Tool Registry 驱动的多语言工具路由、Related Tools、Footer、hreflang 与 sitemap
 - Constraints、Value Signals、Completion Highlights、Capabilities、Helpful Guidance
 - Tool Landing / Tool-site 配置 Validator
+- 面向免费、无账号、浏览器本地处理工具的 typed Privacy / Terms 固定模板与上线审查门禁
 - 1440×900 与 390×844 浏览器首屏验收
 
 暂未实现：
 
 - 顶层 `Tool | SaaS` Product Modes
+- 订阅 SaaS 的 Privacy / Terms 模块
 - 生产级 Auth / PostgreSQL / 支付 / 邮件 / 对象存储
 - Tool Result / Workbench 广告变现系统
 - Ads / Analytics 抽象
@@ -73,4 +75,5 @@ GitHub Actions 会在 Pull Request，以及 push 到 `main` / `dev` 时自动运
 
 - [Tool Landing Standard v0.2](./docs/tool-landing-standard-v0.2.md)
 - [Tool Landing v0.2.1 hardening](./docs/tool-landing-v0.2.1-hardening.md)
+- [Legal page template](./docs/legal-pages.md)
 - [Current feature status](./docs/FEATURE_STATUS.md)
