@@ -1,73 +1,95 @@
 import { describe, expect, it } from 'vitest'
-import { resolveRelatedTools } from '@/lib/tool-registry'
+import {
+  findToolRouteByPath,
+  resolveRelatedTools,
+  type ToolRegistryItem,
+  toolHreflangAlternates,
+  toolLocaleAlternatesForPath,
+  toolSitemapPaths,
+  validateToolRegistry,
+} from '@/lib/tool-registry'
 
 const registry = [
   {
-    id: 'resize-kb',
-    label: 'Resize Image to KB',
-    href: '/resize-image-to-kb',
-    tags: ['image', 'compress'],
-    status: 'live' as const,
+    id: 'current',
+    label: 'Current Tool',
+    href: '/current',
+    tags: ['image', 'resize'],
+    status: 'live',
+    localizations: {
+      'zh-CN': { label: '当前工具', href: '/zh/current' },
+    },
   },
   {
-    id: 'compress-200',
-    label: 'Compress Image to 200KB',
-    href: '/compress-image-to-200kb',
-    tags: ['image', 'compress'],
-    status: 'live' as const,
+    id: 'closest',
+    label: 'Closest Tool',
+    href: '/closest',
+    tags: ['image', 'resize'],
+    status: 'live',
+    localizations: {
+      'zh-CN': { label: '最相关工具', href: '/zh/closest' },
+    },
   },
   {
-    id: 'png-jpg',
-    label: 'PNG to JPG',
-    href: '/png-to-jpg',
-    tags: ['image', 'convert'],
-    status: 'live' as const,
+    id: 'other',
+    label: 'Other Tool',
+    href: '/other',
+    tags: ['text'],
+    status: 'live',
   },
   {
-    id: 'future',
-    label: 'Future Tool',
-    href: '/future',
-    tags: ['image'],
-    status: 'planned' as const,
+    id: 'planned',
+    label: 'Planned Tool',
+    href: '/planned',
+    tags: ['image', 'resize'],
+    status: 'planned',
   },
-]
+] satisfies ReadonlyArray<ToolRegistryItem>
 
 describe('tool registry', () => {
-  it('excludes the current tool and planned tools', () => {
+  it('resolves explicitly requested live tools in the requested locale', () => {
     const related = resolveRelatedTools({
       registry,
-      currentToolId: 'resize-kb',
+      currentToolId: 'current',
+      requestedIds: ['closest', 'planned', 'missing'],
+      locale: 'zh-CN',
     })
-
-    expect(related.map((tool) => tool.id)).toEqual(['compress-200', 'png-jpg'])
+    expect(related.map((tool) => tool.id)).toEqual(['closest'])
+    expect(related[0]?.label).toBe('最相关工具')
+    expect(related[0]?.href).toBe('/zh/closest')
   })
 
-  it('respects explicit related-tool order', () => {
-    const related = resolveRelatedTools({
-      registry,
-      currentToolId: 'resize-kb',
-      requestedIds: ['png-jpg', 'compress-200'],
-    })
-
-    expect(related.map((tool) => tool.id)).toEqual(['png-jpg', 'compress-200'])
+  it('falls back to tag relevance when explicit ids are absent', () => {
+    expect(
+      resolveRelatedTools({ registry, currentToolId: 'current' }).map((tool) => tool.id),
+    ).toEqual(['closest', 'other'])
   })
 
-  it('omits unknown and planned requested tools', () => {
-    const related = resolveRelatedTools({
-      registry,
-      currentToolId: 'resize-kb',
-      requestedIds: ['missing', 'future', 'png-jpg'],
-    })
-
-    expect(related.map((tool) => tool.id)).toEqual(['png-jpg'])
+  it('rejects duplicate registry ids', () => {
+    expect(validateToolRegistry([...registry, registry[0] as ToolRegistryItem])).toContain(
+      'Duplicate tool registry id: current',
+    )
   })
 
-  it('rejects duplicate tool ids', () => {
-    expect(() =>
-      resolveRelatedTools({
-        registry: [...registry, { ...registry[0] }],
-        currentToolId: 'png-jpg',
-      }),
-    ).toThrow('Duplicate tool registry id: resize-kb')
+  it('uses localized routes for switching, hreflang, and sitemap', () => {
+    expect(findToolRouteByPath(registry, '/zh/current')).toMatchObject({
+      locale: 'zh-CN',
+      path: '/zh/current',
+    })
+
+    expect(toolLocaleAlternatesForPath(registry, '/current')).toEqual([
+      expect.objectContaining({ locale: 'zh-CN', path: '/zh/current' }),
+    ])
+
+    expect(toolHreflangAlternates(registry, 'current')).toEqual([
+      { locale: 'en', path: '/current' },
+      { locale: 'zh-CN', path: '/zh/current' },
+      { locale: 'x-default', path: '/current' },
+    ])
+
+    expect(toolSitemapPaths(registry)).toEqual(
+      expect.arrayContaining(['/current', '/zh/current', '/closest', '/zh/closest', '/other']),
+    )
+    expect(toolSitemapPaths(registry)).not.toContain('/planned')
   })
 })

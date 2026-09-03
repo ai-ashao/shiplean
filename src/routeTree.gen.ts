@@ -20,6 +20,7 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as ToolReferenceRouteImport } from './routes/tool-reference'
+import { Route as ToolReferenceUploadRouteImport } from './routes/tool-reference-upload'
 import { Route as ApiHealthRouteImport } from './routes/api.health'
 import { Route as GuidesIndexRouteImport } from './routes/guides.index'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
@@ -81,6 +82,11 @@ const ToolReferenceRoute = ToolReferenceRouteImport.update({
   path: '/tool-reference',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolReferenceUploadRoute = ToolReferenceUploadRouteImport.update({
+  id: '/tool-reference-upload',
+  path: '/tool-reference-upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
   id: '/api/health',
   path: '/api/health',
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/tool-reference': typeof ToolReferenceRoute
+  '/tool-reference-upload': typeof ToolReferenceUploadRoute
   '/api/health': typeof ApiHealthRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides/': typeof GuidesIndexRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/tool-reference': typeof ToolReferenceRoute
+  '/tool-reference-upload': typeof ToolReferenceUploadRoute
   '/api/health': typeof ApiHealthRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides': typeof GuidesIndexRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/tool-reference': typeof ToolReferenceRoute
+  '/tool-reference-upload': typeof ToolReferenceUploadRoute
   '/api/health': typeof ApiHealthRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides/': typeof GuidesIndexRoute
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms-of-service'
     | '/tool-reference'
+    | '/tool-reference-upload'
     | '/api/health'
     | '/guides/$slug'
     | '/guides/'
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms-of-service'
     | '/tool-reference'
+    | '/tool-reference-upload'
     | '/api/health'
     | '/guides/$slug'
     | '/guides'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms-of-service'
     | '/tool-reference'
+    | '/tool-reference-upload'
     | '/api/health'
     | '/guides/$slug'
     | '/guides/'
@@ -231,6 +243,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
   ToolReferenceRoute: typeof ToolReferenceRoute
+  ToolReferenceUploadRoute: typeof ToolReferenceUploadRoute
   ApiHealthRoute: typeof ApiHealthRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
@@ -317,6 +330,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolReferenceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tool-reference-upload': {
+      id: '/tool-reference-upload'
+      path: '/tool-reference-upload'
+      fullPath: '/tool-reference-upload'
+      preLoaderRoute: typeof ToolReferenceUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/health': {
       id: '/api/health'
       path: '/api/health'
@@ -367,6 +387,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
   ToolReferenceRoute: ToolReferenceRoute,
+  ToolReferenceUploadRoute: ToolReferenceUploadRoute,
   ApiHealthRoute: ApiHealthRoute,
   GuidesSlugRoute: GuidesSlugRoute,
   GuidesIndexRoute: GuidesIndexRoute,

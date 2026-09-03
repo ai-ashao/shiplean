@@ -1,8 +1,0 @@
-Local validation performed in the artifact environment:
-
-Syntax/transpile check passed for 18 TS/TSX files.
-
-Limitations:
-- The full ShipLean repository cannot be cloned here because github.com DNS is unavailable in the execution container.
-- pnpm is not installed in this artifact environment.
-- Therefore the authoritative validation remains `pnpm verify` in the real repository after applying the overlay.

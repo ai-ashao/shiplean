@@ -1,4 +1,6 @@
 import { type GuideSlug, guides } from '@/lib/guides'
+import { toolLocaleAlternatesForPath, toolSitemapPaths } from '@/lib/tool-registry'
+import { toolRegistry } from '@/modules/tool-registry'
 import { defaultLocale, type Locale, localeConfig, supportedLocales } from './config'
 
 export type PublicPageId =
@@ -19,41 +21,13 @@ export type PublicPageRoute = {
 }
 
 const staticPages: PublicPageRoute[] = [
-  {
-    id: 'home',
-    indexable: true,
-    paths: { en: '/', 'zh-CN': '/zh' },
-  },
-  {
-    id: 'pricing',
-    indexable: true,
-    paths: { en: '/pricing' },
-  },
-  {
-    id: 'guides',
-    indexable: true,
-    paths: { en: '/guides' },
-  },
-  {
-    id: 'about',
-    indexable: true,
-    paths: { en: '/about' },
-  },
-  {
-    id: 'contact',
-    indexable: true,
-    paths: { en: '/contact' },
-  },
-  {
-    id: 'privacy',
-    indexable: true,
-    paths: { en: '/privacy-policy' },
-  },
-  {
-    id: 'terms',
-    indexable: true,
-    paths: { en: '/terms-of-service' },
-  },
+  { id: 'home', indexable: true, paths: { en: '/', 'zh-CN': '/zh' } },
+  { id: 'pricing', indexable: true, paths: { en: '/pricing' } },
+  { id: 'guides', indexable: true, paths: { en: '/guides' } },
+  { id: 'about', indexable: true, paths: { en: '/about' } },
+  { id: 'contact', indexable: true, paths: { en: '/contact' } },
+  { id: 'privacy', indexable: true, paths: { en: '/privacy-policy' } },
+  { id: 'terms', indexable: true, paths: { en: '/terms-of-service' } },
 ]
 
 const guidePages: PublicPageRoute[] = guides.map((guide) => ({
@@ -101,22 +75,26 @@ export function resolvePublicPage(
 
 export function localeAlternatesForPath(pathname: string): LocaleAlternate[] {
   const current = resolvePublicPage(pathname)
-  if (!current) return []
-  const page = publicPageRoutes.find((candidate) => candidate.id === current.pageId)
-  if (!page) return []
 
-  return supportedLocales.flatMap((locale) => {
-    const path = page.paths[locale]
-    if (!path || locale === current.locale) return []
-    return [
-      {
-        locale,
-        path,
-        label: localeConfig[locale].label,
-        shortLabel: localeConfig[locale].shortLabel,
-      },
-    ]
-  })
+  if (current) {
+    const page = publicPageRoutes.find((candidate) => candidate.id === current.pageId)
+    if (!page) return []
+
+    return supportedLocales.flatMap((locale) => {
+      const path = page.paths[locale]
+      if (!path || locale === current.locale) return []
+      return [
+        {
+          locale,
+          path,
+          label: localeConfig[locale].label,
+          shortLabel: localeConfig[locale].shortLabel,
+        },
+      ]
+    })
+  }
+
+  return toolLocaleAlternatesForPath(toolRegistry, pathname)
 }
 
 export function hreflangAlternates(pageId: PublicPageId): Array<{
@@ -137,8 +115,8 @@ export function hreflangAlternates(pageId: PublicPageId): Array<{
 
 export function sitemapPaths(): string[] {
   return Array.from(
-    new Set(
-      publicPageRoutes.flatMap((page) =>
+    new Set([
+      ...publicPageRoutes.flatMap((page) =>
         page.indexable
           ? supportedLocales.flatMap((locale) => {
               const path = page.paths[locale]
@@ -146,7 +124,8 @@ export function sitemapPaths(): string[] {
             })
           : [],
       ),
-    ),
+      ...toolSitemapPaths(toolRegistry),
+    ]),
   )
 }
 

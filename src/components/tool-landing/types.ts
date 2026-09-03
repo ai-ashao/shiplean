@@ -1,3 +1,5 @@
+import type { Locale } from '@/i18n/config'
+
 export type ToolProcessingMode = 'local' | 'server' | 'hybrid'
 
 export type ToolExperience = {
@@ -113,6 +115,7 @@ export type ToolLandingConfig = {
   version: '0.1' | '0.2'
   preset: 'tool-default'
   toolId: string
+  locale?: Locale
   seo: {
     title: string
     description: string
@@ -146,10 +149,7 @@ export type ToolLandingConfig = {
     title: string
     steps: ReadonlyArray<ToolSectionItem>
   }
-  /**
-   * @deprecated Use `capabilities` for v0.2 tool pages.
-   * Kept temporarily so v0.1 consumers do not break during migration.
-   */
+  /** @deprecated Use capabilities for v0.2 tool pages. */
   features?: {
     title: string
     items: ReadonlyArray<ToolSectionItem>

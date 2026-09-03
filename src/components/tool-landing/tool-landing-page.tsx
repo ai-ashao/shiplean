@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { defaultLocale } from '@/i18n/config'
 import { resolveRelatedTools, type ToolRegistryItem } from '@/lib/tool-registry'
 import { ToolCompletionSummary } from './completion-summary'
 import { ToolConstraintsSummary } from './constraints'
@@ -22,6 +23,7 @@ export function ToolLandingPage({
           registry,
           currentToolId: config.toolId,
           requestedIds: config.relatedTools.toolIds,
+          locale: config.locale ?? defaultLocale,
         })
       : []
 
@@ -51,7 +53,6 @@ export function ToolLandingPage({
           >
             {breadcrumbs.map((item, index) => {
               const isCurrent = index === breadcrumbs.length - 1
-
               return (
                 <span className="inline-flex items-center gap-2" key={item.href}>
                   {index > 0 ? <span aria-hidden="true">/</span> : null}
@@ -132,12 +133,9 @@ export function ToolLandingPage({
       ) : null}
 
       <ItemSection section={config.benefits} />
-
       <CapabilitySection section={capabilitySection} />
-
       <ItemSection section={config.howItWorks} itemsKey="steps" numbered />
       <ItemSection section={config.useCases} />
-
       <HelpfulGuidance blocks={config.helpfulGuidance} />
 
       {config.faq?.items.length ? (
@@ -220,14 +218,8 @@ function ItemSection({
   numbered = false,
 }: Readonly<{
   section?:
-    | {
-        title: string
-        items: ReadonlyArray<ToolSectionItem>
-      }
-    | {
-        title: string
-        steps: ReadonlyArray<ToolSectionItem>
-      }
+    | { title: string; items: ReadonlyArray<ToolSectionItem> }
+    | { title: string; steps: ReadonlyArray<ToolSectionItem> }
   itemsKey?: 'items' | 'steps'
   numbered?: boolean
 }>) {

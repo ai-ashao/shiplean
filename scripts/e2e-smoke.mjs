@@ -106,14 +106,29 @@ try {
     robots.response.status === 200 && robots.text.includes('/sitemap.xml'),
     'robots.txt is invalid.',
   )
+
   const sitemap = await request('/sitemap.xml')
   assert(
     sitemap.response.status === 200 && sitemap.text.includes('/guides/build-with-the-skill'),
     'sitemap.xml is invalid.',
   )
   assert(
-    !sitemap.text.includes('/tools/'),
-    'Deferred SEO tools must not appear in the MVP sitemap.',
+    !sitemap.text.includes('/tool-reference'),
+    'Noindex Tool Landing reference routes must not appear in sitemap.xml.',
+  )
+
+  const textReference = await request('/tool-reference')
+  assert(textReference.response.status === 200, 'Text Tool Landing reference must return 200.')
+  assert(
+    textReference.text.includes('noindex,nofollow'),
+    'Text Tool Landing reference must remain noindex.',
+  )
+
+  const uploadReference = await request('/tool-reference-upload')
+  assert(uploadReference.response.status === 200, 'Upload Tool Landing reference must return 200.')
+  assert(
+    uploadReference.text.includes('noindex,nofollow'),
+    'Upload Tool Landing reference must remain noindex.',
   )
 
   const unauthorized = await request('/api/sandbox/session')
@@ -166,7 +181,7 @@ try {
   assert(loggedOut.response.status === 401, 'Logged-out session must be anonymous.')
 
   console.log(
-    'E2E smoke passed: locale-aware metadata and switching, security, and local session lifecycle.',
+    'E2E smoke passed: locale-aware metadata and switching, tool references, security, and local session lifecycle.',
   )
 } finally {
   server.kill('SIGTERM')

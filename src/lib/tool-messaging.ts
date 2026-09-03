@@ -140,8 +140,10 @@ export function validateEnglishToolMessaging(input: {
     const mentionsNoSignup =
       hero.includes('no signup') ||
       hero.includes('no account') ||
+      hero.includes('no installation or signup required') ||
       description.includes('no signup') ||
-      description.includes('no account')
+      description.includes('no account') ||
+      description.includes('no installation or signup required')
 
     if (!mentionsNoSignup) {
       issues.push('Visible or SEO copy should explain that no signup is required.')
