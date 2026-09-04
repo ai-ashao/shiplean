@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { ToolLandingConfig } from '@/components/tool-landing'
+import { absoluteUrl } from '@/lib/site'
 import type { ToolRegistryItem } from '@/lib/tool-registry'
 import { toolPageHead } from '@/lib/tool-seo'
 
@@ -45,6 +46,8 @@ describe('toolPageHead', () => {
     expect(head.meta).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ name: 'description', content: config.seo.description }),
+        expect.objectContaining({ name: 'twitter:title' }),
+        expect.objectContaining({ name: 'twitter:description', content: config.seo.description }),
       ]),
     )
     expect(head.links).toEqual(
@@ -60,5 +63,36 @@ describe('toolPageHead', () => {
   it('does not fabricate alternates for an unregistered route', () => {
     const head = toolPageHead({ ...config, toolId: 'not-registered' }, registry)
     expect(head.links.filter((link) => link.rel === 'alternate')).toHaveLength(0)
+  })
+
+  it('emits absolute Open Graph and Twitter images only when configured', () => {
+    const withImage = toolPageHead(
+      { ...config, seo: { ...config.seo, socialImage: '/social/example-tool.png' } },
+      registry,
+    )
+
+    expect(withImage.meta).toEqual(
+      expect.arrayContaining([
+        { property: 'og:image', content: absoluteUrl('/social/example-tool.png') },
+        { name: 'twitter:image', content: absoluteUrl('/social/example-tool.png') },
+      ]),
+    )
+    expect(toolPageHead(config, registry).meta).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ property: 'og:image' }),
+        expect.objectContaining({ name: 'twitter:image' }),
+      ]),
+    )
+
+    const invalidImage = toolPageHead(
+      { ...config, seo: { ...config.seo, socialImage: 'data:image/png;base64,abc' } },
+      registry,
+    )
+    expect(invalidImage.meta).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ property: 'og:image' }),
+        expect.objectContaining({ name: 'twitter:image' }),
+      ]),
+    )
   })
 })

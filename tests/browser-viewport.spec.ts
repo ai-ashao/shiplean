@@ -68,6 +68,18 @@ for (const fixture of fixtures) {
       await primaryAction.focus()
       await expect(primaryAction).toBeFocused()
 
+      if (fixture.name === 'text') {
+        const labelBox = await page
+          .locator('[data-reference-tool] [data-slot="field-label"]')
+          .boundingBox()
+        const controlBox = await page.locator('[data-reference-tool] textarea').boundingBox()
+        expect(labelBox).not.toBeNull()
+        expect(controlBox).not.toBeNull()
+        expect(
+          labelBox && controlBox ? controlBox.y - (labelBox.y + labelBox.height) : 0,
+        ).toBeGreaterThanOrEqual(7)
+      }
+
       await expect(page.locator('[data-site-header] [data-header-cta]')).toHaveCount(0)
 
       const headerGuides = page.locator('[data-site-header] a', { hasText: 'Guides' })

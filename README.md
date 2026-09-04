@@ -69,6 +69,7 @@ Included now:
 - local HttpOnly identity demo;
 - Cloudflare-first build path;
 - canonical, hreflang, robots, sitemap, and locale-aware public routing;
+- structured SEO metadata audits plus sitemap-wide SSR metadata acceptance;
 - Tool Landing v0.2 task-first composition;
 - Tool Registry-driven localized tool routes, Related Tools, Footer discovery, hreflang, and sitemap;
 - Constraints, Value Signals, Completion Highlights, Capabilities, Helpful Guidance, and structured data;
@@ -92,6 +93,8 @@ Deferred:
 - [Tool Landing Standard v0.2](./docs/tool-landing-standard-v0.2.md)
 - [Tool Landing v0.2 implementation](./docs/tool-landing-v0.2-implementation.md)
 - [Tool Landing v0.2.1 hardening](./docs/tool-landing-v0.2.1-hardening.md)
+- [SEO Metadata Contract v0.1](./docs/seo-metadata-standard.md)
+- [UI control spacing contract](./docs/ui-control-spacing.md)
 - [Legal page template](./docs/legal-pages.md)
 - [Current feature status](./docs/FEATURE_STATUS.md)
 - [MVP acceptance evidence](./docs/mvp-acceptance.md)

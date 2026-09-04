@@ -6,6 +6,7 @@ export const toolReferenceConfig = {
   toolId: 'tool-reference',
   locale: 'en',
   seo: {
+    primaryKeyword: 'text length checker',
     title: 'Text Length Checker - Free Online Tool',
     description:
       'Free online text length checker for counting characters and words. No installation or signup required.',
@@ -94,6 +95,7 @@ export const toolReferenceUploadConfig = {
   toolId: 'tool-reference-upload',
   locale: 'en',
   seo: {
+    primaryKeyword: 'image upload reference',
     title: 'Image Upload Reference - Free Online Tool',
     description:
       'Free online image upload reference for validating a realistic Tool Landing viewport. No installation or signup required.',

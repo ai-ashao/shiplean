@@ -13,12 +13,14 @@ ShipLean is a TanStack Start–only, Cloudflare-first product starter. Do not in
 - Sandbox behavior must remain visually and technically distinguishable from real payment/auth.
 - File-based tool-site landing pages must use a vertical first-viewport structure and fully show the upload area. After valid files are selected, navigate to a separate editor/workbench route; do not place the editor workbench on the landing page.
 - New public routes need title, description, canonical, and sitemap consideration.
+- Public metadata must use the shared helpers and SEO audit contract. Treat structural failures as errors and editorial length or keyword guidance as warnings.
 - Register localized public routes by stable page identity. Only real translated equivalents may produce a language switch or `hreflang`; derive sitemap entries from the same registry.
 - Localized variants of one page must render the same shared page component. Keep user-facing copy in typed locale dictionaries; do not duplicate substantial JSX across locale route files.
 - Privacy and Terms routes for free, account-free, browser-local tools must use the shared `free-local-tool` legal template and `src/modules/legal-profile.ts`; do not replace them with free-form route copy. Keep `reviewStatus: starter` until product facts and appropriate legal review are complete.
 - Default product contact and support email is `support@<public-domain>` unless the user specifies another address.
 - Product deployment must pass `pnpm legal:check`; `starter` legal pages must remain `noindex` and outside the sitemap.
 - Preserve keyboard focus, narrow-screen layout, and reduced-motion behavior.
+- Use the shared Field, Select, and Button spacing contract: labels must not touch controls, dropdown text/arrows need explicit trailing space, and adjacent controls need horizontal and wrapped vertical gaps.
 
 ## Completion command
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { ToolLandingConfig } from '@/components/tool-landing'
-import { validateToolLandingConfig } from '@/lib/tool-landing-validation'
+import { auditToolLandingConfig, validateToolLandingConfig } from '@/lib/tool-landing-validation'
 import type { ToolRegistryItem } from '@/lib/tool-registry'
 
 const registry = [
@@ -108,6 +108,29 @@ describe('Tool Landing validation', () => {
         'Duplicate Related Tool id: related',
         'Related Tool planned is not live.',
         'Unknown Related Tool id: missing',
+      ]),
+    )
+  })
+
+  it('keeps SEO guidance as warnings without breaking the legacy validator', () => {
+    const config = validConfig()
+    config.seo.primaryKeyword = 'invoice generator'
+
+    const audit = auditToolLandingConfig(config, registry)
+    expect(audit.errors).toEqual([])
+    expect(audit.warnings.map((issue) => issue.code)).toContain('seo.primary-keyword.title')
+    expect(validateToolLandingConfig(config, registry)).toEqual([])
+  })
+
+  it('returns hard SEO metadata failures through the legacy validator', () => {
+    const config = validConfig()
+    config.seo = { ...config.seo, title: '', description: '', path: 'current?preview=1' }
+
+    expect(validateToolLandingConfig(config, registry)).toEqual(
+      expect.arrayContaining([
+        'SEO title is required.',
+        'SEO description is required.',
+        'Tool SEO path must be an absolute site path starting with "/".',
       ]),
     )
   })

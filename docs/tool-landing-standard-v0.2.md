@@ -155,6 +155,8 @@ Do not satisfy this by using hidden overflow or shrinking controls below practic
 
 When space is tight, reduce decorative whitespace before removing task information.
 
+Tool inputs also follow the shared [UI Control Spacing Contract](./ui-control-spacing.md). Labels must not touch inputs or selects, dropdown text and arrows must retain trailing space, and adjacent actions must keep both horizontal and wrapped vertical gaps.
+
 ## Task Access
 
 `experience` answers whether the user can begin immediately:

@@ -117,10 +117,12 @@ export type ToolLandingConfig = {
   toolId: string
   locale?: Locale
   seo: {
+    primaryKeyword?: string
     title: string
     description: string
     path: string
     applicationCategory?: string
+    socialImage?: string
   }
   hero: {
     eyebrow?: string

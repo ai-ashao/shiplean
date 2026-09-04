@@ -29,6 +29,7 @@ public product surface → local session boundary → protected app shell
 - `components.json` and `src/styles.css`: shadcn aliases, Tailwind entrypoint, and neutral design tokens;
 - `src/lib/auth`: visibly local identity boundary;
 - `src/lib/legal.ts` and `src/modules/legal-profile.ts`: fixed free/local/account-free Tool Privacy/Terms structure, processing disclosures, and launch-review validation;
+- `src/lib/seo.ts` and `src/lib/seo-validation.ts`: shared public metadata generation plus structured blocking and advisory diagnostics;
 - `src/modules/manifests.ts`: machine-readable module ownership and acceptance;
 - `src/start.ts`: global security headers;
 - `scripts/e2e-smoke.mjs`: fresh-server acceptance path.
@@ -44,6 +45,8 @@ When a real MVP needs accounts, replace the server adapter while keeping provide
 Payments, orders, provider webhooks, entitlements, and credits are not part of the current MVP. When introduced, provider signatures must be verified before domain events are accepted, and credits must use an append-only ledger rather than a mutable balance as the source of truth.
 
 Productized SEO tools are also out of scope. Public routes still retain baseline title, description, canonical, hreflang, robots, and sitemap behavior because those are website infrastructure rather than a product feature.
+
+Metadata authoring has two explicit layers. The generic audit checks structural requirements and reports non-blocking editorial guidance. Tool Landing adds its typed experience and truthful-messaging checks while preserving the original string-based validator for existing consumers. The HTTP acceptance path independently crawls every same-origin sitemap URL and verifies the final server-rendered metadata, so valid configuration alone is not treated as proof of correct output.
 
 Localized public pages are matched by stable page identity rather than by rewriting URL strings. Canonical paths, language switches, reciprocal `hreflang`, and sitemap entries come from the same registry. A missing locale path means that translation does not exist: the shell may fall back to the default-locale destination for ordinary navigation, but it must not advertise a false equivalent page.
 

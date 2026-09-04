@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useId, useState } from 'react'
 import { ToolLandingPage, ToolStructuredData } from '@/components/tool-landing'
 import { Button } from '@/components/ui/button'
+import { Field, FieldLabel } from '@/components/ui/field'
 import { site } from '@/lib/site'
 import { toolPageHead } from '@/lib/tool-seo'
 import { buildToolStructuredData } from '@/lib/tool-structured-data'
@@ -62,16 +63,16 @@ function TextLengthChecker() {
         </p>
       </div>
 
-      <label className="mt-2 block text-sm font-medium" htmlFor={textId}>
-        Text
-      </label>
-      <textarea
-        className="mt-1 min-h-20 w-full resize-y rounded-lg border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        id={textId}
-        onChange={(event) => setText(event.target.value)}
-        placeholder="Type or paste text here"
-        value={text}
-      />
+      <Field className="mt-2">
+        <FieldLabel htmlFor={textId}>Text</FieldLabel>
+        <textarea
+          className="min-h-20 w-full resize-y rounded-lg border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          id={textId}
+          onChange={(event) => setText(event.target.value)}
+          placeholder="Type or paste text here"
+          value={text}
+        />
+      </Field>
 
       <div className="mt-2 flex items-center justify-between gap-3">
         <p className="text-xs text-muted-foreground">Everything runs in this browser tab.</p>

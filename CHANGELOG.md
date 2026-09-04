@@ -7,6 +7,8 @@
 - Added configurable Tool Directory Footer infrastructure and Header/Footer Guides placement.
 - Added localized Tool Registry routes as the shared source for Tool hreflang, language switching, sitemap entries, Related Tools, and Footer discovery.
 - Added Tool Landing, Tool Registry, Site Navigation, and Tool-site validators so invalid checked-in configuration can fail verification.
+- Added SEO Metadata Contract v0.1 with structured generic and Tool Landing audits, Twitter metadata, optional absolute social images, and sitemap-wide SSR metadata acceptance.
+- Added shared Field and Select primitives plus a UI spacing contract for label/control, dropdown-arrow, and adjacent-action separation.
 - Added real-browser first-viewport acceptance at 1440×900 and 390×844, including a realistic upload-first reference fixture.
 - Enabled GitHub verification on pushes to both `main` and `dev`.
 - Added explicit Playwright Chromium installation to the CI runner.

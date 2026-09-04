@@ -38,8 +38,64 @@ function assert(condition, message) {
   if (!condition) throw new Error(message)
 }
 
+function tags(html, name) {
+  return [...html.matchAll(new RegExp(`<${name}\\b[^>]*>`, 'gi'))].map((match) => match[0])
+}
+
+function attribute(tag, name) {
+  const match = tag.match(new RegExp(`\\b${name}=["']([^"']*)["']`, 'i'))
+  return match?.[1]
+}
+
+function tagsWithAttribute(html, tagName, attributeName, expectedValue) {
+  return tags(html, tagName).filter(
+    (tag) => attribute(tag, attributeName)?.toLowerCase() === expectedValue.toLowerCase(),
+  )
+}
+
+function assertSeoHead(html, { url, indexable }) {
+  const titleMatches = [...html.matchAll(/<title>([^<]*)<\/title>/gi)]
+  assert(titleMatches.length === 1, `${url} must render exactly one title.`)
+  assert(titleMatches[0][1].trim().length > 0, `${url} must render a non-empty title.`)
+
+  const descriptions = tagsWithAttribute(html, 'meta', 'name', 'description')
+  assert(descriptions.length === 1, `${url} must render exactly one meta description.`)
+  assert(attribute(descriptions[0], 'content')?.trim(), `${url} description must not be empty.`)
+
+  const canonicals = tagsWithAttribute(html, 'link', 'rel', 'canonical')
+  assert(canonicals.length === 1, `${url} must render exactly one canonical link.`)
+  assert(attribute(canonicals[0], 'href') === url, `${url} canonical must match its public URL.`)
+
+  for (const property of ['og:title', 'og:description', 'og:url', 'og:type']) {
+    const matches = tagsWithAttribute(html, 'meta', 'property', property)
+    assert(matches.length === 1, `${url} must render exactly one ${property} tag.`)
+    assert(attribute(matches[0], 'content')?.trim(), `${url} ${property} must not be empty.`)
+  }
+  const openGraphUrls = tagsWithAttribute(html, 'meta', 'property', 'og:url')
+  assert(attribute(openGraphUrls[0], 'content') === url, `${url} og:url must match its public URL.`)
+
+  for (const name of ['twitter:card', 'twitter:title', 'twitter:description']) {
+    const matches = tagsWithAttribute(html, 'meta', 'name', name)
+    assert(matches.length === 1, `${url} must render exactly one ${name} tag.`)
+    assert(attribute(matches[0], 'content')?.trim(), `${url} ${name} must not be empty.`)
+  }
+
+  const robots = tagsWithAttribute(html, 'meta', 'name', 'robots')
+  const hasNoindex = robots.some((tag) =>
+    attribute(tag, 'content')?.toLowerCase().includes('noindex'),
+  )
+  assert(
+    indexable ? !hasNoindex : hasNoindex,
+    `${url} robots metadata must match its indexability contract.`,
+  )
+}
+
+function sitemapUrls(xml) {
+  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1].trim())
+}
+
 async function waitForServer() {
-  const deadline = Date.now() + 15_000
+  const deadline = Date.now() + 30_000
   while (Date.now() < deadline) {
     try {
       const response = await fetch(`${baseUrl}/api/health`)
@@ -62,7 +118,7 @@ try {
 
   const home = await request('/')
   assert(home.response.status === 200, 'Home route must return 200.')
-  assert(home.text.includes(`rel="canonical" href="${baseUrl}/"`), 'Home canonical is missing.')
+  assertSeoHead(home.text, { url: `${baseUrl}/`, indexable: true })
   assert(home.text.includes('application/ld+json'), 'Home JSON-LD is missing.')
   assert(/hrefLang="en"/i.test(home.text), 'English hreflang is missing.')
   assert(/hrefLang="zh-CN"/i.test(home.text), 'Chinese hreflang is missing.')
@@ -116,6 +172,19 @@ try {
     !sitemap.text.includes('/tool-reference'),
     'Noindex Tool Landing reference routes must not appear in sitemap.xml.',
   )
+  const indexedUrls = sitemapUrls(sitemap.text)
+  assert(indexedUrls.length > 0, 'sitemap.xml must contain at least one public URL.')
+  assert(
+    new Set(indexedUrls).size === indexedUrls.length,
+    'sitemap.xml must not contain duplicates.',
+  )
+  for (const indexedUrl of indexedUrls) {
+    const url = new URL(indexedUrl)
+    assert(url.origin === baseUrl, `Sitemap URL must use the configured site origin: ${indexedUrl}`)
+    const page = await request(`${url.pathname}${url.search}`)
+    assert(page.response.status === 200, `Sitemap URL must return 200: ${indexedUrl}`)
+    assertSeoHead(page.text, { url: indexedUrl, indexable: true })
+  }
 
   const privacy = await request('/privacy-policy')
   assert(privacy.response.status === 200, 'Privacy Policy route must return 200.')
@@ -146,6 +215,14 @@ try {
       sitemap.text.includes('/terms-of-service') !== legalDocumentsAreStarter,
     'Only launch-ready legal pages may appear in sitemap.xml.',
   )
+  assertSeoHead(privacy.text, {
+    url: `${baseUrl}/privacy-policy`,
+    indexable: !legalDocumentsAreStarter,
+  })
+  assertSeoHead(terms.text, {
+    url: `${baseUrl}/terms-of-service`,
+    indexable: !legalDocumentsAreStarter,
+  })
 
   const textReference = await request('/tool-reference')
   assert(textReference.response.status === 200, 'Text Tool Landing reference must return 200.')
@@ -153,6 +230,7 @@ try {
     textReference.text.includes('noindex,nofollow'),
     'Text Tool Landing reference must remain noindex.',
   )
+  assertSeoHead(textReference.text, { url: `${baseUrl}/tool-reference`, indexable: false })
 
   const uploadReference = await request('/tool-reference-upload')
   assert(uploadReference.response.status === 200, 'Upload Tool Landing reference must return 200.')
@@ -160,6 +238,10 @@ try {
     uploadReference.text.includes('noindex,nofollow'),
     'Upload Tool Landing reference must remain noindex.',
   )
+  assertSeoHead(uploadReference.text, {
+    url: `${baseUrl}/tool-reference-upload`,
+    indexable: false,
+  })
 
   const unauthorized = await request('/api/sandbox/session')
   assert(unauthorized.response.status === 401, 'Session API must reject an anonymous request.')
@@ -211,7 +293,7 @@ try {
   assert(loggedOut.response.status === 401, 'Logged-out session must be anonymous.')
 
   console.log(
-    'E2E smoke passed: locale-aware metadata, legal templates, tool references, security, and local session lifecycle.',
+    'E2E smoke passed: sitemap-wide SEO metadata, legal templates, tool references, security, and local session lifecycle.',
   )
 } finally {
   server.kill('SIGTERM')

@@ -56,6 +56,7 @@ GitHub Actions 会在 Pull Request，以及 push 到 `main` / `dev` 时自动运
 - `shiplean-quick-start` Agent Skill
 - Cloudflare-first 构建路径
 - canonical / hreflang / robots / sitemap 基线
+- 结构化 SEO metadata 审计与 sitemap 全量 SSR metadata 验收
 - Tool Landing v0.2 task-first 结构
 - Tool Registry 驱动的多语言工具路由、Related Tools、Footer、hreflang 与 sitemap
 - Constraints、Value Signals、Completion Highlights、Capabilities、Helpful Guidance
@@ -75,5 +76,7 @@ GitHub Actions 会在 Pull Request，以及 push 到 `main` / `dev` 时自动运
 
 - [Tool Landing Standard v0.2](./docs/tool-landing-standard-v0.2.md)
 - [Tool Landing v0.2.1 hardening](./docs/tool-landing-v0.2.1-hardening.md)
+- [SEO Metadata Contract v0.1](./docs/seo-metadata-standard.md)
+- [UI 控件间距规范](./docs/ui-control-spacing.md)
 - [Legal page template](./docs/legal-pages.md)
 - [Current feature status](./docs/FEATURE_STATUS.md)

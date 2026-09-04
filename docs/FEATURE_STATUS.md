@@ -1,6 +1,6 @@
 # ShipLean 当前功能状态
 
-最后语义核对：2026-09-03。
+最后语义核对：2026-09-04。
 
 | 能力 | 当前状态 | 证据或边界 |
 |---|---|---|
@@ -9,6 +9,7 @@
 | `shiplean-quick-start` Skill | 已实现 | 同时允许 SaaS 与 Tool 项目 |
 | `pnpm verify` 一键门禁 | 已实现 | 格式、测试、构建、类型、HTTP smoke、browser viewport |
 | GitHub CI on main/dev | 已实现 | Runner 显式安装 Chromium |
+| SEO Metadata Contract v0.1 | 已实现 | 通用结构化 audit、Tool Landing 兼容接入、sitemap 全量 SSR metadata 门禁 |
 | Tool Landing v0.2 task-first fields | Candidate 已实现 | Constraints / Completion / Capabilities / Helpful Guidance |
 | Tool localized-route source of truth | Candidate 已实现 | Registry 驱动 Tool hreflang / switch / sitemap / Related / Footer |
 | Tool Directory Footer | Candidate 已实现 | site navigation + live Tool Registry |
