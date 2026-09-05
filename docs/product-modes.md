@@ -28,6 +28,33 @@ productConfig.brand.description
 
 The checked-in brand is intentionally generic (`Starter Product`). A coding Agent must replace it with the real product identity during adaptation.
 
+## Optional product surfaces
+
+Pricing and the local App shell are mode-aware:
+
+```text
+SaaS default
+Pricing = enabled
+App = enabled
+
+Tool default
+Pricing = disabled
+App = disabled
+```
+
+Disabled Pricing is unavailable and excluded from the sitemap. Disabled App hides `/login`, `/dashboard`, and the sandbox-session API.
+
+A real product may explicitly override one surface when required:
+
+```ts
+surfaces: {
+  pricing: true,
+  app: false,
+}
+```
+
+This is useful for a paid Tool product that needs Pricing without turning the product into SaaS. Explicit overrides should reflect real shipped behavior, not starter convenience.
+
 ## SaaS mode
 
 Default shell:
@@ -85,11 +112,13 @@ Both modes share:
 - `pnpm verify`;
 - Agent Skill and repository contracts.
 
-Product mode changes **composition and navigation**, not the underlying engineering contract.
+Product mode changes **composition, navigation, route exposure, and indexability**, not the underlying engineering contract.
 
-## QA routes
+## QA contract
 
-`/tool-reference` and `/tool-reference-upload` are Tool-mode QA surfaces even when the checked-in starter defaults to SaaS mode. This lets the repository verify Tool shell behavior without changing the active product mode.
+`pnpm verify` is mode-aware. The browser test reads the active homepage mode rather than assuming SaaS. The HTTP smoke independently checks whether Pricing and App surfaces are enabled and verifies sitemap, route availability, robots metadata, and session behavior against that active configuration.
+
+`/tool-reference` and `/tool-reference-upload` remain Tool-mode QA surfaces even when the checked-in starter defaults to SaaS mode. This lets the repository verify Tool shell behavior without changing the active product mode.
 
 ## Custom layouts
 

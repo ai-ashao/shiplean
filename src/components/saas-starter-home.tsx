@@ -4,13 +4,15 @@ import type { Locale } from '@/i18n/config'
 import { productHomeMessages } from '@/i18n/product-home-messages'
 import { localizedPathOrDefault } from '@/i18n/routes'
 import { sandboxUiAvailable } from '@/lib/config/runtime'
+import { productSurfaceEnabled } from '@/lib/product-config'
 
 const workflowSectionId = 'workflow'
 
 export function SaasStarterHome({ locale }: Readonly<{ locale: Locale }>) {
   const copy = productHomeMessages[locale].saas
   const homePath = localizedPathOrDefault('home', locale)
-  const primaryHref = sandboxUiAvailable ? '/login' : `${homePath}#workflow`
+  const appAvailable = sandboxUiAvailable && productSurfaceEnabled('app')
+  const primaryHref = appAvailable ? '/login' : `${homePath}#workflow`
 
   return (
     <div data-product-mode-home="saas">
@@ -93,22 +95,24 @@ export function SaasStarterHome({ locale }: Readonly<{ locale: Locale }>) {
         </ol>
       </section>
 
-      <section className="mx-auto w-full max-w-[1180px] px-4 pb-16 sm:px-6 sm:pb-24">
-        <div className="grid gap-6 rounded-2xl border bg-card p-6 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center">
-          <div>
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              {copy.pricingEyebrow}
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight">{copy.pricingTitle}</h2>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-              {copy.pricingBody}
-            </p>
+      {productSurfaceEnabled('pricing') ? (
+        <section className="mx-auto w-full max-w-[1180px] px-4 pb-16 sm:px-6 sm:pb-24">
+          <div className="grid gap-6 rounded-2xl border bg-card p-6 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                {copy.pricingEyebrow}
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight">{copy.pricingTitle}</h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+                {copy.pricingBody}
+              </p>
+            </div>
+            <Button asChild variant="outline">
+              <a href={localizedPathOrDefault('pricing', locale)}>{copy.pricingAction}</a>
+            </Button>
           </div>
-          <Button asChild variant="outline">
-            <a href={localizedPathOrDefault('pricing', locale)}>{copy.pricingAction}</a>
-          </Button>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <section className="mx-auto w-full max-w-3xl px-4 pb-16 sm:px-6 sm:pb-24">
         <h2 className="text-3xl font-semibold tracking-[-0.035em]">{copy.faqTitle}</h2>

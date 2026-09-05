@@ -1,5 +1,6 @@
 import { type GuideSlug, guides } from '@/lib/guides'
 import { isLegalProfileLaunchReady } from '@/lib/legal'
+import { productSurfaceEnabled } from '@/lib/product-config'
 import { toolLocaleAlternatesForPath, toolSitemapPaths } from '@/lib/tool-registry'
 import { legalProfile } from '@/modules/legal-profile'
 import { toolRegistry } from '@/modules/tool-registry'
@@ -23,10 +24,11 @@ export type PublicPageRoute = {
 }
 
 const legalPagesIndexable = isLegalProfileLaunchReady(legalProfile)
+const pricingIndexable = productSurfaceEnabled('pricing')
 
 const staticPages: PublicPageRoute[] = [
   { id: 'home', indexable: true, paths: { en: '/', 'zh-CN': '/zh' } },
-  { id: 'pricing', indexable: true, paths: { en: '/pricing' } },
+  { id: 'pricing', indexable: pricingIndexable, paths: { en: '/pricing' } },
   { id: 'guides', indexable: true, paths: { en: '/guides' } },
   { id: 'about', indexable: true, paths: { en: '/about' } },
   { id: 'contact', indexable: true, paths: { en: '/contact' } },

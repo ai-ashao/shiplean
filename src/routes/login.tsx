@@ -8,9 +8,9 @@ export const Route = createFileRoute('/login')({
   head: () =>
     pageHead({
       title: 'Starter Demo Login',
-      description:
-        'Open the local ShipLean SaaS starter dashboard without external auth configuration.',
+      description: 'Open the local SaaS starter dashboard without external auth configuration.',
       path: '/login',
+      indexable: false,
     }),
   component: LoginPage,
 })

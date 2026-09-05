@@ -1,4 +1,5 @@
 export type ProductMode = 'saas' | 'tool'
+export type ProductSurface = 'pricing' | 'app'
 
 export type ProductConfig = {
   mode: ProductMode
@@ -10,6 +11,14 @@ export type ProductConfig = {
   starter: {
     showPreviewBanner: boolean
   }
+  /**
+   * Optional surface overrides.
+   *
+   * By default SaaS enables Pricing + App, while Tool disables both.
+   * Use an explicit override only when the real product requires a different boundary,
+   * such as a paid Tool site that needs a Pricing page.
+   */
+  surfaces?: Partial<Record<ProductSurface, boolean>>
 }
 
 /**
@@ -27,6 +36,13 @@ export const productConfig: ProductConfig = {
   starter: {
     showPreviewBanner: true,
   },
+}
+
+export function productSurfaceEnabled(
+  surface: ProductSurface,
+  config: ProductConfig = productConfig,
+): boolean {
+  return config.surfaces?.[surface] ?? config.mode === 'saas'
 }
 
 export function validateProductConfig(config: ProductConfig): ReadonlyArray<string> {

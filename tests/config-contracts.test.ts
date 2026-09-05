@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { toolStarterConfig } from '@/components/tool-starter-home'
+import { isPublicPageIndexable } from '@/i18n/routes'
 import { validateLegalProfile } from '@/lib/legal'
-import { productConfig, validateProductConfig } from '@/lib/product-config'
+import { productConfig, productSurfaceEnabled, validateProductConfig } from '@/lib/product-config'
 import {
   saasSiteNavigation,
   siteNavigation,
@@ -19,6 +20,10 @@ import { toolRegistry } from '@/modules/tool-registry'
 describe('real configuration contracts', () => {
   it('keeps the checked-in product config structurally valid', () => {
     expect(validateProductConfig(productConfig)).toEqual([])
+  })
+
+  it('keeps public Pricing indexability aligned with the active product surface', () => {
+    expect(isPublicPageIndexable('pricing')).toBe(productSurfaceEnabled('pricing'))
   })
 
   it('keeps the checked-in legal profile structurally valid', () => {

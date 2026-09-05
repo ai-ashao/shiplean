@@ -4,6 +4,7 @@
 
 - Separated the product-template runtime from the ShipLean marketing website in `ai-ashao/shiplean-site`; removed vendor homepage/pricing copy from the starter runtime and switched the checked-in brand to neutral `Starter Product`.
 - Added explicit `product.mode = 'saas' | 'tool'` with mode-specific homepage composition, navigation, Header CTA rules, validation, and shared-shell routing.
+- Hardened Product Modes so `pnpm verify` follows the active mode, Pricing/App surfaces default on for SaaS and off for Tool, disabled Pricing is excluded from sitemap, disabled App hides login/dashboard/session API, and login/dashboard stay `noindex`.
 - Added Tool Landing v0.1 and evolved it into the task-first Tool Landing v0.2 candidate.
 - Added Tool Registry, Related Tools, truthful Tool Value Signals, Constraints, Completion Highlights, Capabilities, Helpful Guidance, and Tool structured data.
 - Added configurable Tool Directory Footer infrastructure and Header/Footer Guides placement.

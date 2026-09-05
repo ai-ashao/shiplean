@@ -1,5 +1,10 @@
 import type { Locale } from '@/i18n/config'
-import { type ProductMode, productConfig } from './product-config'
+import {
+  type ProductConfig,
+  type ProductMode,
+  productConfig,
+  productSurfaceEnabled,
+} from './product-config'
 import { resolveToolPresentation, type ToolRegistryItem } from './tool-registry'
 
 export type GuidesPlacement = 'header' | 'footer' | 'none'
@@ -71,8 +76,27 @@ export const toolSiteNavigation: SiteNavigationConfig = {
   },
 }
 
-export function siteNavigationForMode(mode: ProductMode): SiteNavigationConfig {
-  return mode === 'tool' ? toolSiteNavigation : saasSiteNavigation
+export function siteNavigationForMode(
+  mode: ProductMode,
+  config?: ProductConfig,
+): SiteNavigationConfig {
+  if (mode === 'tool') return toolSiteNavigation
+
+  const resolvedConfig = config ?? { ...productConfig, mode }
+  const pricingEnabled = productSurfaceEnabled('pricing', resolvedConfig)
+  const appEnabled = productSurfaceEnabled('app', resolvedConfig)
+  if (pricingEnabled && appEnabled) return saasSiteNavigation
+
+  return {
+    ...saasSiteNavigation,
+    header: {
+      ...saasSiteNavigation.header,
+      links: saasSiteNavigation.header.links.filter(
+        (linkId) => linkId !== 'pricing' || pricingEnabled,
+      ),
+      cta: appEnabled ? saasSiteNavigation.header.cta : undefined,
+    },
+  }
 }
 
 export const siteNavigation = siteNavigationForMode(productConfig.mode)

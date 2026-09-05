@@ -94,6 +94,13 @@ function sitemapUrls(xml) {
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1].trim())
 }
 
+function detectProductMode(html) {
+  const hasSaas = html.includes('data-product-mode-home="saas"')
+  const hasTool = html.includes('data-product-mode-home="tool"')
+  assert(hasSaas !== hasTool, 'Home must expose exactly one active product mode.')
+  return hasTool ? 'tool' : 'saas'
+}
+
 async function waitForServer() {
   const deadline = Date.now() + 30_000
   while (Date.now() < deadline) {
@@ -118,6 +125,7 @@ try {
 
   const home = await request('/')
   assert(home.response.status === 200, 'Home route must return 200.')
+  const activeMode = detectProductMode(home.text)
   assertSeoHead(home.text, { url: `${baseUrl}/`, indexable: true })
   assert(home.text.includes('application/ld+json'), 'Home JSON-LD is missing.')
   assert(/hrefLang="en"/i.test(home.text), 'English hreflang is missing.')
@@ -138,6 +146,10 @@ try {
 
   const zh = await request('/zh')
   assert(zh.text.includes('<html lang="zh-CN">'), 'Chinese route must set the document language.')
+  assert(
+    detectProductMode(zh.text) === activeMode,
+    'Localized home routes must use the same active product mode.',
+  )
   assert(/hrefLang="en"/i.test(zh.text), 'English reciprocal hreflang is missing.')
   assert(/hrefLang="zh-CN"/i.test(zh.text), 'Chinese hreflang is missing.')
   assert(/hrefLang="x-default"/i.test(zh.text), 'x-default hreflang is missing.')
@@ -146,16 +158,23 @@ try {
     'Chinese locale switch must target the equivalent English route.',
   )
 
-  const pricing = await request('/pricing')
-  assert(pricing.response.status === 200, 'Pricing route must return 200.')
+  const pricing = await request('/pricing', { redirect: 'manual' })
+  const pricingAvailable = pricing.response.status === 200
   assert(
-    !pricing.text.includes('data-locale-switch'),
-    'A single-locale page must not offer a false locale switch.',
+    pricingAvailable || pricing.response.status === 404,
+    'Pricing must either be an enabled public page or an unavailable product surface.',
   )
-  assert(
-    !/rel="alternate"[^>]+hrefLang=/i.test(pricing.text),
-    'A single-locale page must not publish false hreflang alternates.',
-  )
+  if (pricingAvailable) {
+    assert(
+      !pricing.text.includes('data-locale-switch'),
+      'A single-locale page must not offer a false locale switch.',
+    )
+    assert(
+      !/rel="alternate"[^>]+hrefLang=/i.test(pricing.text),
+      'A single-locale page must not publish false hreflang alternates.',
+    )
+    assertSeoHead(pricing.text, { url: `${baseUrl}/pricing`, indexable: true })
+  }
 
   const robots = await request('/robots.txt')
   assert(
@@ -172,6 +191,11 @@ try {
     !sitemap.text.includes('/tool-reference'),
     'Noindex Tool Landing reference routes must not appear in sitemap.xml.',
   )
+  assert(
+    sitemap.text.includes('/pricing') === pricingAvailable,
+    'Pricing sitemap membership must match the active product-surface contract.',
+  )
+
   const indexedUrls = sitemapUrls(sitemap.text)
   assert(indexedUrls.length > 0, 'sitemap.xml must contain at least one public URL.')
   assert(
@@ -243,57 +267,77 @@ try {
     indexable: false,
   })
 
-  const unauthorized = await request('/api/sandbox/session')
-  assert(unauthorized.response.status === 401, 'Session API must reject an anonymous request.')
-  assert(
-    unauthorized.response.headers.get('cache-control') === 'no-store',
-    'Session responses must not be cached.',
-  )
+  const sandboxProbe = await request('/api/sandbox/session')
+  const appAvailable = sandboxProbe.response.status !== 404
 
-  const anonymousDashboard = await request('/dashboard', { redirect: 'manual' })
-  assert(
-    anonymousDashboard.response.status >= 300 && anonymousDashboard.response.status < 400,
-    'Anonymous dashboard requests must redirect before rendering protected content.',
-  )
-  assert(
-    anonymousDashboard.response.headers.get('location') === '/login',
-    'Anonymous dashboard requests must redirect to the local login.',
-  )
+  if (!appAvailable) {
+    const loginRoute = await request('/login', { redirect: 'manual' })
+    const dashboardRoute = await request('/dashboard', { redirect: 'manual' })
+    assert(loginRoute.response.status === 404, 'Disabled App surface must hide /login.')
+    assert(dashboardRoute.response.status === 404, 'Disabled App surface must hide /dashboard.')
+  } else {
+    assert(
+      sandboxProbe.response.status === 401,
+      'Enabled anonymous session API must reject an anonymous request.',
+    )
+    assert(
+      sandboxProbe.response.headers.get('cache-control') === 'no-store',
+      'Session responses must not be cached.',
+    )
 
-  const login = await request('/api/sandbox/session', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ email: 'maker@shiplean.local' }),
-  })
-  assert(login.response.status === 200, 'Sandbox login failed.')
-  const cookie = login.response.headers.get('set-cookie')?.split(';')[0]
-  assert(cookie?.startsWith('shiplean_sandbox_session='), 'Sandbox session cookie is missing.')
+    const loginPage = await request('/login')
+    assert(loginPage.response.status === 200, 'Enabled App surface must expose /login.')
+    assertSeoHead(loginPage.text, { url: `${baseUrl}/login`, indexable: false })
 
-  const authenticated = await request('/api/sandbox/session', { headers: { cookie } })
-  assert(authenticated.response.status === 200, 'Authenticated session readback failed.')
-  assert(authenticated.text.includes('maker@shiplean.local'), 'Local identity is missing.')
+    const anonymousDashboard = await request('/dashboard', { redirect: 'manual' })
+    assert(
+      anonymousDashboard.response.status >= 300 && anonymousDashboard.response.status < 400,
+      'Anonymous dashboard requests must redirect before rendering protected content.',
+    )
+    assert(
+      anonymousDashboard.response.headers.get('location') === '/login',
+      'Anonymous dashboard requests must redirect to the local login.',
+    )
 
-  const dashboard = await request('/dashboard', { headers: { cookie } })
-  assert(dashboard.response.status === 200, 'Starter dashboard must return 200.')
-  assert(dashboard.text.includes('data-starter-dashboard'), 'Starter dashboard content is missing.')
-  assert(dashboard.text.includes('maker@shiplean.local'), 'Dashboard session must render on SSR.')
-  assert(dashboard.text.includes('Exit local demo'), 'Dashboard logout control is missing.')
+    const login = await request('/api/sandbox/session', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email: 'maker@shiplean.local' }),
+    })
+    assert(login.response.status === 200, 'Sandbox login failed.')
+    const cookie = login.response.headers.get('set-cookie')?.split(';')[0]
+    assert(cookie?.startsWith('shiplean_sandbox_session='), 'Sandbox session cookie is missing.')
 
-  const logout = await request('/api/sandbox/session', {
-    method: 'DELETE',
-    headers: { cookie },
-  })
-  assert(logout.response.status === 200, 'Sandbox logout failed.')
-  assert(
-    logout.response.headers.get('set-cookie')?.includes('Max-Age=0'),
-    'Sandbox logout must expire the session cookie.',
-  )
+    const authenticated = await request('/api/sandbox/session', { headers: { cookie } })
+    assert(authenticated.response.status === 200, 'Authenticated session readback failed.')
+    assert(authenticated.text.includes('maker@shiplean.local'), 'Local identity is missing.')
 
-  const loggedOut = await request('/api/sandbox/session')
-  assert(loggedOut.response.status === 401, 'Logged-out session must be anonymous.')
+    const dashboard = await request('/dashboard', { headers: { cookie } })
+    assert(dashboard.response.status === 200, 'Starter dashboard must return 200.')
+    assert(
+      dashboard.text.includes('data-starter-dashboard'),
+      'Starter dashboard content is missing.',
+    )
+    assert(dashboard.text.includes('maker@shiplean.local'), 'Dashboard session must render on SSR.')
+    assert(dashboard.text.includes('Exit local demo'), 'Dashboard logout control is missing.')
+    assertSeoHead(dashboard.text, { url: `${baseUrl}/dashboard`, indexable: false })
+
+    const logout = await request('/api/sandbox/session', {
+      method: 'DELETE',
+      headers: { cookie },
+    })
+    assert(logout.response.status === 200, 'Sandbox logout failed.')
+    assert(
+      logout.response.headers.get('set-cookie')?.includes('Max-Age=0'),
+      'Sandbox logout must expire the session cookie.',
+    )
+
+    const loggedOut = await request('/api/sandbox/session')
+    assert(loggedOut.response.status === 401, 'Logged-out session must be anonymous.')
+  }
 
   console.log(
-    'E2E smoke passed: sitemap-wide SEO metadata, legal templates, tool references, security, and local session lifecycle.',
+    `E2E smoke passed for ${activeMode} mode: mode-aware sitemap, optional surfaces, SEO metadata, legal templates, tool references, security, and local session lifecycle.`,
   )
 } finally {
   server.kill('SIGTERM')

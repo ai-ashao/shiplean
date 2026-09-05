@@ -10,8 +10,9 @@ export const Route = createFileRoute('/dashboard')({
     pageHead({
       title: 'SaaS Starter Dashboard',
       description:
-        'Preview the protected dashboard shell and Agent-first workflow included in the ShipLean SaaS scaffold.',
+        'Preview the protected SaaS dashboard shell and local starter workflow before production auth is configured.',
       path: '/dashboard',
+      indexable: false,
     }),
   component: DashboardPage,
 })

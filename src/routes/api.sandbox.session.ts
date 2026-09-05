@@ -6,6 +6,7 @@ import {
   sandboxUser,
 } from '@/lib/auth/sandbox-session'
 import { isSandboxEnabled } from '@/lib/config/runtime'
+import { productSurfaceEnabled } from '@/lib/product-config'
 
 function json(data: unknown, init: ResponseInit = {}) {
   const headers = new Headers(init.headers)
@@ -13,17 +14,21 @@ function json(data: unknown, init: ResponseInit = {}) {
   return Response.json(data, { ...init, headers })
 }
 
+function sandboxAvailable() {
+  return productSurfaceEnabled('app') && isSandboxEnabled()
+}
+
 export const Route = createFileRoute('/api/sandbox/session')({
   server: {
     handlers: {
       GET: ({ request }) =>
-        !isSandboxEnabled()
+        !sandboxAvailable()
           ? json({ error: 'Not found.' }, { status: 404 })
           : hasSandboxSession(request)
             ? json({ authenticated: true, user: sandboxUser })
             : json({ authenticated: false }, { status: 401 }),
       POST: async ({ request }) => {
-        if (!isSandboxEnabled()) return json({ error: 'Not found.' }, { status: 404 })
+        if (!sandboxAvailable()) return json({ error: 'Not found.' }, { status: 404 })
         const body = (await request.json().catch(() => ({}))) as { email?: string }
         if (body.email?.trim().toLowerCase() !== sandboxUser.email) {
           return json({ error: 'Use the fixed local sandbox identity.' }, { status: 400 })
@@ -40,7 +45,7 @@ export const Route = createFileRoute('/api/sandbox/session')({
         )
       },
       DELETE: ({ request }) =>
-        !isSandboxEnabled()
+        !sandboxAvailable()
           ? json({ error: 'Not found.' }, { status: 404 })
           : json(
               { authenticated: false },

@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { Check } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Badge } from '@/components/ui/badge'
@@ -12,9 +12,13 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { sandboxUiAvailable } from '@/lib/config/runtime'
+import { productSurfaceEnabled } from '@/lib/product-config'
 import { localizedPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/pricing')({
+  beforeLoad: () => {
+    if (!productSurfaceEnabled('pricing')) throw notFound()
+  },
   head: () =>
     localizedPageHead({
       pageId: 'pricing',
@@ -60,7 +64,7 @@ function PricingPage() {
 
       <div className="mt-10 grid gap-3 lg:grid-cols-3">
         <PriceCard name="Free" price="$0" note="example starter tier" features={freeFeatures}>
-          {sandboxUiAvailable ? (
+          {sandboxUiAvailable && productSurfaceEnabled('app') ? (
             <Button asChild variant="outline" className="w-full">
               <Link to="/login">Open starter app</Link>
             </Button>

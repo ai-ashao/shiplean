@@ -32,19 +32,36 @@ async function expectInsideViewport(locator: Locator, viewportHeight: number) {
 }
 
 for (const viewport of viewports) {
-  test(`checked-in SaaS product homepage at ${viewport.name}`, async ({ page }) => {
+  test(`active product homepage at ${viewport.name}`, async ({ page }) => {
     await page.setViewportSize({ width: viewport.width, height: viewport.height })
     await page.goto('/')
 
-    const home = page.locator('[data-product-mode-home="saas"]')
-    await expect(home).toBeVisible()
-    await expect(home.getByRole('heading', { level: 1 })).toBeVisible()
-    await expect(page.locator('[data-site-header]')).toHaveAttribute(
-      'data-product-surface-mode',
-      'saas',
-    )
-    await expect(page.locator('[data-site-header] [data-header-cta]')).toHaveCount(1)
+    const header = page.locator('[data-site-header]')
+    const mode = await header.getAttribute('data-product-surface-mode')
+
+    expect(['saas', 'tool']).toContain(mode)
     await expect(page.getByText('Ship useful products, skip the boilerplate tax')).toHaveCount(0)
+
+    if (mode === 'saas') {
+      const home = page.locator('[data-product-mode-home="saas"]')
+      await expect(home).toBeVisible()
+      await expect(home.getByRole('heading', { level: 1 })).toBeVisible()
+      await expect(page.locator('[data-site-header] [data-header-cta]')).toHaveCount(1)
+    } else {
+      const home = page.locator('[data-product-mode-home="tool"]')
+      await expect(home).toBeVisible()
+      await expectInsideViewport(page.locator('[data-tool-title]'), viewport.height)
+      await expectInsideViewport(page.locator('[data-tool-description]'), viewport.height)
+      await expectInsideViewport(page.locator('[data-tool-primary-region]'), viewport.height)
+      await expectInsideViewport(page.locator('[data-tool-constraints]'), viewport.height)
+      await expectInsideViewport(page.locator('[data-tool-value-signals]'), viewport.height)
+      await expectInsideViewport(page.locator('[data-tool-completion]'), viewport.height)
+      await expect(page.locator('[data-site-header] [data-header-cta]')).toHaveCount(0)
+
+      const primaryAction = page.locator('[data-tool-primary-action]')
+      await expect(primaryAction).toBeVisible()
+      await expect(primaryAction).toBeEnabled()
+    }
 
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       await page.evaluate(() => window.innerWidth),
