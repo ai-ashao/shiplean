@@ -2,8 +2,8 @@ import { publicEnv } from '@/lib/config/env'
 import { defaultSupportEmailForSite, defineLegalProfile, legalTemplateVersion } from '@/lib/legal'
 import { site } from '@/lib/site'
 
-const starterFallbackSiteUrl = 'https://shiplean.dev'
-const operatorName = 'ShipLean'
+const starterFallbackSiteUrl = 'https://starter.invalid'
+const operatorName = site.name
 const analytics = publicEnv.ga4Id
   ? {
       name: 'Google Analytics 4',

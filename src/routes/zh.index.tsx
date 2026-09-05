@@ -1,19 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { MarketingHome } from '@/components/marketing-home'
-import { localizedPageHead } from '@/lib/seo'
+import { ProductHome, productHomeHead } from '@/components/product-home'
 
 export const Route = createFileRoute('/zh/')({
-  head: () =>
-    localizedPageHead({
-      pageId: 'home',
-      locale: 'zh-CN',
-      title: '让独立开发者用得起的 TanStack 启动模板',
-      description:
-        '下载 ShipLean TanStack Start SaaS 脚手架，用编程 Agent 打开，并调用内置 Skill 快速做出可验证的 MVP。',
-    }),
+  head: () => productHomeHead('zh-CN'),
   component: ChineseHome,
 })
 
 function ChineseHome() {
-  return <MarketingHome locale="zh-CN" />
+  return <ProductHome locale="zh-CN" />
 }

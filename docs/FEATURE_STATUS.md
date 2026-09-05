@@ -5,23 +5,26 @@
 | 能力 | 当前状态 | 证据或边界 |
 |---|---|---|
 | TanStack Start + React + strict TypeScript scaffold | 已实现 | 当前只提供 TanStack Start |
-| SaaS-oriented starter routes | 已实现 | 首页、指南、定价、登录、Dashboard 示例 |
-| `shiplean-quick-start` Skill | 已实现 | 同时允许 SaaS 与 Tool 项目 |
+| 顶层 Tool / SaaS Product Mode | Candidate 已实现 | `src/lib/product-config.ts` 单一模式入口 |
+| ShipLean 官网 / 模板运行时分离 | 已实现 | 官网归 `ai-ashao/shiplean-site`；模板使用中性 `Starter Product` |
+| SaaS default homepage + shell | Candidate 已实现 | Hero / Product Preview / Outcomes / Workflow / Pricing Entry / FAQ / Header CTA |
+| Tool default homepage + shell | Candidate 已实现 | task-first Tool Landing；默认无 SaaS Header CTA |
+| `shiplean-quick-start` Skill | 已实现 | 先选 Product Mode 与品牌，再进入对应开发合同 |
 | `pnpm verify` 一键门禁 | 已实现 | 格式、测试、构建、类型、HTTP smoke、browser viewport |
 | GitHub CI on main/dev | 已实现 | Runner 显式安装 Chromium |
 | SEO Metadata Contract v0.1 | 已实现 | 通用结构化 audit、Tool Landing 兼容接入、sitemap 全量 SSR metadata 门禁 |
 | Tool Landing v0.2 task-first fields | Candidate 已实现 | Constraints / Completion / Capabilities / Helpful Guidance |
 | Tool localized-route source of truth | Candidate 已实现 | Registry 驱动 Tool hreflang / switch / sitemap / Related / Footer |
 | Tool Directory Footer | Candidate 已实现 | site navigation + live Tool Registry |
+| Product / SaaS / Tool navigation validators | Candidate 已实现 | mode-specific Header CTA / Tools / Workflow / Pricing 约束 |
 | Tool Landing config validator | Candidate 已实现 | Completion / Capabilities / Related / messaging / structured-data |
 | Site Navigation / Registry validator | Candidate 已实现 | unknown/planned/duplicate 配置可失败 |
-| Tool reference routes | 已实现 | text + realistic upload fixtures，均 noindex |
+| Tool reference routes | 已实现 | text + realistic upload fixtures，均强制 Tool shell 且 noindex |
 | First Viewport browser acceptance | 已实现 | 1440×900 与 390×844 |
-| Free local Tool Privacy / Terms template | 已实现 | 仅覆盖免费、无账号、输入本地处理的工具；`support@domain` 默认值 |
+| Free local Tool Privacy / Terms template | 已实现 | 仅覆盖免费、无账号、输入本地处理的工具 |
 | Legal production review gate | 已实现 | `pnpm deploy` 前置严格 Validator；starter 页面 noindex 且不进入 sitemap |
-| 顶层 Tool / SaaS Product Mode | 未实现 | 下一阶段单独设计 |
-| Subscription SaaS legal template | 未实现 | 与 SaaS Product Mode 一并在后续阶段设计 |
+| Subscription SaaS legal template | 未实现 | Product Mode 不代表 SaaS legal 已完成 |
 | Result / Workbench monetization | 未实现 | 暂不加入 Landing |
 | 生产认证、PostgreSQL、支付、邮件、对象存储 | 未实现 | 后续阶段 |
 
-v0.2 仍是 candidate。稳定晋升仍需要两个真实 Tool consumer 的证据。
+Tool Landing v0.2 与 Product Modes 当前仍是 candidate。稳定晋升需要真实产品 consumer 证据。

@@ -13,8 +13,14 @@ import { type Locale, localeConfig, localeFromPathname } from '@/i18n/config'
 import { shellMessages } from '@/i18n/messages'
 import { localeAlternatesForPath, localizedPathOrDefault } from '@/i18n/routes'
 import { publicEnv } from '@/lib/config/env'
+import { productConfig, surfaceModeForPath } from '@/lib/product-config'
 import { site } from '@/lib/site'
-import { type HeaderLinkId, localizedNavigationValue, siteNavigation } from '@/lib/site-navigation'
+import {
+  type HeaderLinkId,
+  localizedNavigationValue,
+  type SiteNavigationConfig,
+  siteNavigationForMode,
+} from '@/lib/site-navigation'
 import styles from '@/styles.css?url'
 
 export const Route = createRootRoute({
@@ -39,17 +45,26 @@ function RootComponent() {
   const locale = localeFromPathname(pathname)
   const copy = shellMessages[locale]
   const localeAlternates = localeAlternatesForPath(pathname)
+  const surfaceMode = surfaceModeForPath(pathname)
+  const navigation = siteNavigationForMode(surfaceMode)
 
-  const nav = siteNavigation.header.links.flatMap((linkId) => {
-    if (linkId === 'guides' && siteNavigation.guidesPlacement !== 'header') return []
+  const nav = navigation.header.links.flatMap((linkId) => {
+    if (linkId === 'guides' && navigation.guidesPlacement !== 'header') return []
 
-    const resolved = resolveHeaderLink(linkId, locale)
+    const resolved = resolveHeaderLink(linkId, locale, navigation)
     return resolved ? [resolved] : []
   })
 
+  const headerCta = navigation.header.cta
+    ? {
+        label: localizedNavigationValue(navigation.header.cta.label, locale),
+        href: localizedNavigationValue(navigation.header.cta.href, locale),
+      }
+    : undefined
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="ship-header" data-site-header>
+      <header className="ship-header" data-site-header data-product-surface-mode={surfaceMode}>
         <div className="ship-header-inner">
           <Brand locale={locale} />
           <nav className="ship-main-nav" aria-label={copy.primaryNavigation}>
@@ -80,20 +95,27 @@ function RootComponent() {
                 </a>
               ))}
             </nav>
+            {headerCta?.label && headerCta.href ? (
+              <Button asChild size="sm" data-header-cta>
+                <a href={headerCta.href}>{headerCta.label}</a>
+              </Button>
+            ) : null}
           </div>
         </div>
       </header>
 
-      <div className="preview-banner">
-        <span className="preview-banner-dot" />
-        <span>{copy.previewNotice}</span>
-      </div>
+      {productConfig.starter.showPreviewBanner ? (
+        <div className="preview-banner" data-starter-preview-banner>
+          <span className="preview-banner-dot" />
+          <span>{copy.previewNotice}</span>
+        </div>
+      ) : null}
 
       <main>
         <Outlet />
       </main>
 
-      <SiteFooter locale={locale} />
+      <SiteFooter locale={locale} navigation={navigation} />
     </div>
   )
 }
@@ -101,6 +123,7 @@ function RootComponent() {
 function resolveHeaderLink(
   linkId: HeaderLinkId,
   locale: Locale,
+  navigation: SiteNavigationConfig,
 ): { id: HeaderLinkId; label: string; href: string } | undefined {
   const copy = shellMessages[locale]
   const homePath = localizedPathOrDefault('home', locale)
@@ -123,8 +146,8 @@ function resolveHeaderLink(
         href: localizedPathOrDefault('pricing', locale),
       }
     case 'tools': {
-      const href = siteNavigation.header.toolsHref
-        ? localizedNavigationValue(siteNavigation.header.toolsHref, locale)
+      const href = navigation.header.toolsHref
+        ? localizedNavigationValue(navigation.header.toolsHref, locale)
         : undefined
       return href ? { id: linkId, label: copy.nav.tools, href } : undefined
     }
@@ -140,7 +163,7 @@ function Brand({ locale }: Readonly<{ locale: Locale }>) {
       aria-label={`${site.name} ${copy.nav.home}`}
     >
       <span className="ship-brand-mark">
-        SL
+        {productConfig.brand.mark}
         <i />
       </span>
       <span>{site.name}</span>

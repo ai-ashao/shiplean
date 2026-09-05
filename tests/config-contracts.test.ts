@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest'
+import { toolStarterConfig } from '@/components/tool-starter-home'
 import { validateLegalProfile } from '@/lib/legal'
+import { productConfig, validateProductConfig } from '@/lib/product-config'
 import {
+  saasSiteNavigation,
   siteNavigation,
+  toolSiteNavigation,
+  validateSaasSiteNavigation,
   validateSiteNavigation,
   validateToolSiteNavigation,
 } from '@/lib/site-navigation'
@@ -12,12 +17,18 @@ import { toolReferenceConfigs } from '@/modules/tool-reference-configs'
 import { toolRegistry } from '@/modules/tool-registry'
 
 describe('real configuration contracts', () => {
+  it('keeps the checked-in product config structurally valid', () => {
+    expect(validateProductConfig(productConfig)).toEqual([])
+  })
+
   it('keeps the checked-in legal profile structurally valid', () => {
     expect(validateLegalProfile(legalProfile)).toEqual([])
   })
 
-  it('keeps the checked-in site navigation internally valid', () => {
+  it('keeps both product-mode navigation defaults valid', () => {
     expect(validateSiteNavigation(siteNavigation, toolRegistry)).toEqual([])
+    expect(validateSaasSiteNavigation(saasSiteNavigation, toolRegistry)).toEqual([])
+    expect(validateToolSiteNavigation(toolSiteNavigation, toolRegistry)).toEqual([])
   })
 
   it('keeps the checked-in Tool Registry internally valid', () => {
@@ -30,29 +41,8 @@ describe('real configuration contracts', () => {
     }
   })
 
-  it('provides a stricter validator for Tool-site product repositories', () => {
-    expect(
-      validateToolSiteNavigation(
-        {
-          guidesPlacement: 'header',
-          header: {
-            links: ['tools', 'guides'],
-            toolsHref: { en: '/tools' },
-          },
-          footer: {
-            toolGroups: [],
-            secondaryPages: ['about', 'contact', 'privacy', 'terms'],
-          },
-        },
-        [],
-      ),
-    ).toEqual([])
-
-    expect(validateToolSiteNavigation(siteNavigation, toolRegistry)).toEqual(
-      expect.arrayContaining([
-        'Tool-site Header must include Tools.',
-        'Tool-site Header must not retain the starter Workflow link.',
-      ]),
-    )
+  it('keeps the Tool-mode homepage config valid in every shipped locale', () => {
+    expect(validateToolLandingConfig(toolStarterConfig('en'), toolRegistry)).toEqual([])
+    expect(validateToolLandingConfig(toolStarterConfig('zh-CN'), toolRegistry)).toEqual([])
   })
 })

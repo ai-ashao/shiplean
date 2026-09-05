@@ -6,20 +6,27 @@ import { site } from '@/lib/site'
 import {
   localizedNavigationValue,
   resolveFooterToolGroups,
+  type SiteNavigationConfig,
   siteNavigation,
 } from '@/lib/site-navigation'
 import { toolRegistry } from '@/modules/tool-registry'
 
-export function SiteFooter({ locale }: Readonly<{ locale: Locale }>) {
+export function SiteFooter({
+  locale,
+  navigation = siteNavigation,
+}: Readonly<{
+  locale: Locale
+  navigation?: SiteNavigationConfig
+}>) {
   const copy = shellMessages[locale]
   const toolGroups = resolveFooterToolGroups({
-    config: siteNavigation,
+    config: navigation,
     registry: toolRegistry,
     locale,
   })
 
   const standardSecondaryLinks = [
-    ...(siteNavigation.guidesPlacement === 'footer'
+    ...(navigation.guidesPlacement === 'footer'
       ? [
           {
             id: 'guides',
@@ -28,14 +35,14 @@ export function SiteFooter({ locale }: Readonly<{ locale: Locale }>) {
           },
         ]
       : []),
-    ...siteNavigation.footer.secondaryPages.map((pageId) => ({
+    ...navigation.footer.secondaryPages.map((pageId) => ({
       id: pageId,
       label: copy.footer[pageId],
       href: localizedPathOrDefault(pageId, locale),
     })),
   ]
 
-  const customLinks = (siteNavigation.footer.customLinks ?? []).flatMap((link) => {
+  const customLinks = (navigation.footer.customLinks ?? []).flatMap((link) => {
     const label = localizedNavigationValue(link.label, locale)
     const href = localizedNavigationValue(link.href, locale)
     return label && href ? [{ id: link.id, label, href }] : []

@@ -1,4 +1,5 @@
 import type { Locale } from '@/i18n/config'
+import { type ProductMode, productConfig } from './product-config'
 import { resolveToolPresentation, type ToolRegistryItem } from './tool-registry'
 
 export type GuidesPlacement = 'header' | 'footer' | 'none'
@@ -24,11 +25,17 @@ export type FooterCustomLink = {
   href: LocalizedValue
 }
 
+export type HeaderCtaConfig = {
+  label: LocalizedValue
+  href: LocalizedValue
+}
+
 export type SiteNavigationConfig = {
   guidesPlacement: GuidesPlacement
   header: {
     links: ReadonlyArray<HeaderLinkId>
     toolsHref?: LocalizedValue
+    cta?: HeaderCtaConfig
   }
   footer: {
     toolGroups: ReadonlyArray<FooterToolGroupConfig>
@@ -37,20 +44,38 @@ export type SiteNavigationConfig = {
   }
 }
 
-/**
- * The repository itself is still SaaS-capable, so the checked-in starter
- * keeps its existing marketing navigation. Tool products switch this config.
- */
-export const siteNavigation: SiteNavigationConfig = {
+export const saasSiteNavigation: SiteNavigationConfig = {
   guidesPlacement: 'header',
   header: {
     links: ['home', 'workflow', 'guides', 'pricing'],
+    cta: {
+      label: { en: 'Open app', 'zh-CN': '打开应用' },
+      href: { en: '/login', 'zh-CN': '/login' },
+    },
   },
   footer: {
     toolGroups: [],
     secondaryPages: ['about', 'contact', 'privacy', 'terms'],
   },
 }
+
+export const toolSiteNavigation: SiteNavigationConfig = {
+  guidesPlacement: 'header',
+  header: {
+    links: ['tools', 'guides'],
+    toolsHref: { en: '/#tool', 'zh-CN': '/zh#tool' },
+  },
+  footer: {
+    toolGroups: [],
+    secondaryPages: ['about', 'contact', 'privacy', 'terms'],
+  },
+}
+
+export function siteNavigationForMode(mode: ProductMode): SiteNavigationConfig {
+  return mode === 'tool' ? toolSiteNavigation : saasSiteNavigation
+}
+
+export const siteNavigation = siteNavigationForMode(productConfig.mode)
 
 export type ResolvedFooterToolGroup = {
   id: string
@@ -137,6 +162,14 @@ export function validateSiteNavigation(
   if (config.header.links.includes('tools') && !config.header.toolsHref) {
     issues.push('Header includes tools but no toolsHref is configured.')
   }
+
+  if (config.header.cta) {
+    const label = Object.values(config.header.cta.label).find(Boolean)
+    const href = Object.values(config.header.cta.href).find(Boolean)
+    if (!label) issues.push('Header CTA requires a label.')
+    if (!href) issues.push('Header CTA requires an href.')
+  }
+
   if (config.footer.toolGroups.length > 4) {
     issues.push('Footer tool directory supports at most four default groups.')
   }
@@ -184,6 +217,22 @@ export function validateToolSiteNavigation(
     issues.push(
       'Tool-site Header must not retain Pricing unless the product explicitly overrides the Tool-site default.',
     )
+  }
+  if (config.header.cta) {
+    issues.push('Default Tool-site Header must not contain a SaaS-style CTA.')
+  }
+
+  return issues
+}
+
+export function validateSaasSiteNavigation(
+  config: SiteNavigationConfig,
+  registry?: ReadonlyArray<ToolRegistryItem>,
+): ReadonlyArray<string> {
+  const issues = [...validateSiteNavigation(config, registry)]
+
+  if (!config.header.cta) {
+    issues.push('Default SaaS Header should expose one primary CTA.')
   }
 
   return issues

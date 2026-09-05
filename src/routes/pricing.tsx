@@ -21,79 +21,78 @@ export const Route = createFileRoute('/pricing')({
       locale: 'en',
       title: 'Pricing',
       description:
-        'Preview the ShipLean TanStack Start SaaS scaffold or buy the Agent-ready template once for $66 during founding.',
+        'A neutral SaaS pricing starter with example plans. Replace pricing, entitlements, and billing integration before launch.',
     }),
   component: PricingPage,
 })
 
-const core = [
-  'TanStack Start shell',
-  'Public and protected route examples',
-  'Local auth boundary demo',
-  'Agent project contracts',
-  'Cloudflare-first config',
+const freeFeatures = ['One starter workspace', 'Core product workflow', 'Local starter experience']
+
+const proFeatures = [
+  'Everything in Free',
+  'Example advanced workflow',
+  'Example usage limits',
+  'Example support tier',
 ]
-const pro = [
-  'Everything in Core',
-  'Downloadable commercial template',
-  'Bundled shiplean-quick-start Skill',
-  'Dashboard and application shell',
-  'Module task contracts',
-  'One-command verification',
-  '12 months of updates',
+
+const teamFeatures = [
+  'Everything in Pro',
+  'Example team capability',
+  'Example shared workspace',
+  'Example admin controls',
 ]
 
 function PricingPage() {
   return (
     <section className="mx-auto max-w-[1180px] px-4 py-10 sm:px-6 sm:py-16">
       <header className="max-w-3xl">
-        <Badge
-          variant="outline"
-          className="border-[#dce8d4] bg-[#f4f8f1] font-mono text-[10px] uppercase tracking-widest text-[#5d9229]"
-        >
-          Pay once · Keep building
+        <Badge variant="outline" className="font-mono text-[10px] uppercase tracking-widest">
+          SaaS pricing starter
         </Badge>
         <h1 className="mt-5 text-balance text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
-          Straightforward pricing for small-product math.
+          Replace these example plans with the economics of your product.
         </h1>
         <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-          No subscription for code you run yourself. Download the scaffold, open it in your coding
-          agent, and invoke the bundled Skill to build your MVP.
+          This page is part of the product template. It no longer contains ShipLean vendor pricing.
+          Define the real plans, entitlements, billing provider, and upgrade path before launch.
         </p>
       </header>
+
       <div className="mt-10 grid gap-3 lg:grid-cols-3">
-        <PriceCard name="Starter preview" price="$0" note="local demo access" features={core}>
+        <PriceCard name="Free" price="$0" note="example starter tier" features={freeFeatures}>
           {sandboxUiAvailable ? (
             <Button asChild variant="outline" className="w-full">
-              <Link to="/login">Open the starter demo</Link>
+              <Link to="/login">Open starter app</Link>
             </Button>
           ) : (
             <Button variant="outline" className="w-full" disabled>
-              Available after local install
+              Configure product action
             </Button>
           )}
         </PriceCard>
+
         <PriceCard
           name="Pro"
-          price="$66"
-          note="one-time commercial license"
-          features={pro}
+          price="$19"
+          note="example monthly price"
+          features={proFeatures}
           featured
         >
           <Button className="w-full" disabled>
-            Download sale opens later
+            Connect billing before launch
           </Button>
         </PriceCard>
-        <PriceCard name="Standard" price="$99" note="after founding period" features={pro}>
+
+        <PriceCard name="Team" price="$49" note="example monthly price" features={teamFeatures}>
           <Button variant="outline" className="w-full" disabled>
-            Not on sale yet
+            Connect billing before launch
           </Button>
         </PriceCard>
       </div>
+
       <p className="mt-8 max-w-3xl text-xs leading-6 text-muted-foreground">
-        Optional updates after year one: <strong>$39/year</strong>. Your existing code keeps working
-        whether you renew or not. Payment and credits modules for products built with ShipLean are
-        planned for phase two and are not included in the current MVP.
+        These numbers are placeholders for product design only. Production payments, entitlements,
+        webhooks, and credits remain unconfigured until the product explicitly implements them.
       </p>
     </section>
   )
@@ -115,12 +114,8 @@ function PriceCard({
   children: ReactNode
 }>) {
   return (
-    <Card
-      className={featured ? 'relative border-[#85b754] bg-[#fcfefb] shadow-none' : 'shadow-none'}
-    >
-      {featured ? (
-        <Badge className="absolute -top-3 left-6 bg-[#5f922c]">Founding offer</Badge>
-      ) : null}
+    <Card className={featured ? 'relative border-primary/40 bg-card shadow-none' : 'shadow-none'}>
+      {featured ? <Badge className="absolute -top-3 left-6">Example default</Badge> : null}
       <CardHeader>
         <CardDescription>{name}</CardDescription>
         <CardTitle className="text-4xl tracking-[-0.05em]">{price}</CardTitle>

@@ -4,7 +4,30 @@
 
 An Agent-ready TanStack Start product scaffold for turning a focused product idea into a verified MVP without paying for a heavyweight boilerplate.
 
-ShipLean currently provides **TanStack Start only**. ShipLean is intended to support both SaaS products and public utility/tool products. The repository still includes SaaS-oriented starter routes, while the Tool Landing system provides a separate task-first foundation for public tools.
+ShipLean provides **TanStack Start only** and supports two explicit product compositions: **SaaS** and **Tool**.
+
+The runtime in this repository is the **product template**, not the ShipLean marketing website. The public ShipLean website lives separately in `ai-ashao/shiplean-site`.
+
+## Product modes
+
+Set the active mode and product identity in:
+
+```text
+src/lib/product-config.ts
+```
+
+```ts
+productConfig.mode = 'saas'
+// or
+productConfig.mode = 'tool'
+```
+
+The checked-in runtime uses the neutral brand `Starter Product` so cloning the template does not accidentally produce a ShipLean-branded product.
+
+- **SaaS mode**: product/value/conversion homepage, product preview, workflow, pricing entry, FAQ, and one primary Header CTA by default.
+- **Tool mode**: task-first Tool Landing homepage, Constraints, Value Signals, Completion Highlights, Capabilities, and no SaaS-style Header CTA by default.
+
+See [Product Modes](./docs/product-modes.md).
 
 ## Use the downloaded template
 
@@ -28,9 +51,7 @@ Use the default Tool Landing, keep the first task anonymous, and populate the li
 
 The canonical Skill lives at `.agents/skills/shiplean-quick-start/SKILL.md`.
 
-The Skill reads `AGENTS.md` and `ARCHITECTURE.md`, scopes the first workflow, creates and binds an independent private GitHub repository, preserves the scaffold boundaries, implements the requested product, and finishes with `pnpm verify` before committing and pushing the verified result.
-
-When a Git clone still points at `ai-ashao/shiplean`, the Skill keeps that remote as a fetch-only `template` and creates the product repository as `origin`. Product-specific commits must never be pushed to the ShipLean template repository.
+The Skill reads `AGENTS.md`, `ARCHITECTURE.md`, and the Product Mode contract, creates an independent private GitHub repository, scopes the first workflow, implements the requested product, and finishes with `pnpm verify`.
 
 ## Run locally
 
@@ -63,8 +84,10 @@ GitHub Actions runs verification for pull requests and pushes to `main` and `dev
 Included now:
 
 - TanStack Start, React, and strict TypeScript;
+- explicit `product.mode = 'saas' | 'tool'`;
+- neutral mode-specific starter homepages and shell navigation;
 - shadcn/ui + Tailwind local UI foundation;
-- SaaS-oriented landing, guide, pricing, login, and protected dashboard examples;
+- guide, pricing, login, and protected dashboard examples;
 - bundled `shiplean-quick-start` Skill;
 - local HttpOnly identity demo;
 - Cloudflare-first build path;
@@ -73,13 +96,12 @@ Included now:
 - Tool Landing v0.2 task-first composition;
 - Tool Registry-driven localized tool routes, Related Tools, Footer discovery, hreflang, and sitemap;
 - Constraints, Value Signals, Completion Highlights, Capabilities, Helpful Guidance, and structured data;
-- Tool Landing, Tool Registry, Site Navigation, and Tool-site validators;
+- Tool Landing, Tool Registry, Site Navigation, Tool-site, SaaS-site, and Product Config validators;
 - a shared, typed Privacy Policy and Terms template for free, account-free, browser-local tools, with a visible legal-review gate;
-- real-browser first-viewport acceptance.
+- real-browser acceptance.
 
 Deferred:
 
-- explicit top-level Tool/SaaS Product Modes;
 - subscription-SaaS Privacy and Terms modules;
 - production auth and PostgreSQL;
 - payments, email, and object storage;
@@ -90,6 +112,7 @@ Deferred:
 
 - [Build your first ShipLean MVP](./docs/getting-started.md)
 - [Architecture](./ARCHITECTURE.md)
+- [Product Modes](./docs/product-modes.md)
 - [Tool Landing Standard v0.2](./docs/tool-landing-standard-v0.2.md)
 - [Tool Landing v0.2 implementation](./docs/tool-landing-v0.2-implementation.md)
 - [Tool Landing v0.2.1 hardening](./docs/tool-landing-v0.2.1-hardening.md)

@@ -1,10 +1,10 @@
 import { publicEnv } from './config/env'
+import { productConfig } from './product-config'
 
 export const site = {
-  name: 'ShipLean',
+  name: productConfig.brand.name,
   url: publicEnv.siteUrl,
-  description:
-    'An Agent-ready TanStack Start SaaS scaffold for turning focused product ideas into verified MVPs.',
+  description: productConfig.brand.description,
 }
 
 export function absoluteUrl(path = '/') {

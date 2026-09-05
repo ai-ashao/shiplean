@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { auditSeoMetadata } from '@/lib/seo-validation'
+import { site } from '@/lib/site'
 
 const validInput = {
   title: 'Browser Image Resizer for Fast Local Exports',
@@ -42,7 +43,7 @@ describe('SEO metadata audit', () => {
   })
 
   it('warns when pageHead would append an already present brand', () => {
-    const audit = auditSeoMetadata({ ...validInput, title: `${validInput.title} · ShipLean` })
+    const audit = auditSeoMetadata({ ...validInput, title: `${validInput.title} · ${site.name}` })
     expect(audit.warnings.map((issue) => issue.code)).toContain('seo.title.includes-brand')
   })
 

@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { InformationPage } from '@/components/information-page'
 import { localizedPageHead } from '@/lib/seo'
+import { site } from '@/lib/site'
 
 export const Route = createFileRoute('/about')({
   head: () =>
@@ -8,8 +9,7 @@ export const Route = createFileRoute('/about')({
       pageId: 'about',
       locale: 'en',
       title: 'About Us',
-      description:
-        'Learn why ShipLean keeps small-product infrastructure focused, local-first, and easy to own.',
+      description: `Learn what ${site.name} is built to help its users accomplish.`,
     }),
   component: AboutPage,
 })
@@ -17,17 +17,18 @@ export const Route = createFileRoute('/about')({
 function AboutPage() {
   return (
     <InformationPage
-      eyebrow="About ShipLean"
-      title="A smaller path from idea to a working product."
-      description="ShipLean is a focused TanStack Start and Cloudflare-first starter for building useful MVPs without unnecessary infrastructure."
+      eyebrow="About"
+      title={`Tell users why ${site.name} should exist.`}
+      description="This is neutral starter copy. Replace it with the real product story, operator details, and support commitments before launch."
     >
       <p>
-        The starter keeps the product boundary visible: public pages, a protected route example, a
-        local auth boundary, and checks that make the deployment contract easier to verify.
+        Explain the user problem, the product point of view, and the outcome your product is
+        designed to deliver. Keep the story specific enough that a visitor can understand why this
+        product is different.
       </p>
       <p>
-        Every product built from ShipLean should replace this page with its own story, team details,
-        and support commitments before launch.
+        Before launch, replace every starter statement on this page with facts about the real
+        product and the real operator.
       </p>
     </InformationPage>
   )

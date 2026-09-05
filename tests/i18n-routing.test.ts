@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { localeFromPathname, supportedLocales } from '../src/i18n/config'
 import { shellMessages } from '../src/i18n/messages'
+import { productHomeMessages } from '../src/i18n/product-home-messages'
 import {
   hreflangAlternates,
   localeAlternatesForPath,
@@ -75,17 +76,16 @@ describe('locale-aware route registry', () => {
     expect(Object.keys(shellMessages).sort()).toEqual([...supportedLocales].sort())
     expect(messageShape(shellMessages['zh-CN'])).toEqual(messageShape(shellMessages.en))
 
-    const homeMessages = readFileSync('src/i18n/home-messages.ts', 'utf8')
-    expect(homeMessages).toContain('defineMessages(')
-    expect(homeMessages).toContain("'zh-CN': {")
+    expect(Object.keys(productHomeMessages).sort()).toEqual([...supportedLocales].sort())
+    expect(messageShape(productHomeMessages['zh-CN'])).toEqual(messageShape(productHomeMessages.en))
   })
 
   it('keeps localized route files as thin wrappers around one shared page component', () => {
     const englishRoute = readFileSync('src/routes/index.tsx', 'utf8')
     const chineseRoute = readFileSync('src/routes/zh.index.tsx', 'utf8')
 
-    expect(englishRoute).toContain('<MarketingHome locale="en" />')
-    expect(chineseRoute).toContain('<MarketingHome locale="zh-CN" />')
+    expect(englishRoute).toContain('<ProductHome locale="en" />')
+    expect(chineseRoute).toContain('<ProductHome locale="zh-CN" />')
   })
 })
 

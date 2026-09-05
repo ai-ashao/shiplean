@@ -4,6 +4,19 @@
 
 ShipLean is a TanStack Start–only, Cloudflare-first product starter. Do not introduce Next.js, multi-framework abstractions, or claims that an untested provider/runtime is supported.
 
+The runtime in this repository is not the ShipLean marketing website. ShipLean's public marketing surface belongs in the separate `ai-ashao/shiplean-site` repository. Do not add ShipLean vendor pricing, sales copy, or scaffold-marketing sections to the product runtime.
+
+## Product mode
+
+- Read `src/lib/product-config.ts` before changing the public shell.
+- Set `productConfig.mode` explicitly to `saas` or `tool` based on the requested product.
+- Replace the neutral `Starter Product` brand with the real product identity during adaptation.
+- SaaS and Tool modes share Core infrastructure but use different navigation and homepage contracts.
+- SaaS mode may expose one primary Header CTA and uses a product/value/conversion homepage.
+- Tool mode has no SaaS-style Header CTA by default and uses the task-first Tool Landing contract.
+- Keep `/tool-reference` and `/tool-reference-upload` as Tool-mode QA surfaces even when the active starter mode is SaaS.
+- Read `docs/product-modes.md` for the mode boundary.
+
 ## Working rules
 
 - Keep the downloaded scaffold useful without a database, payment provider, or external secrets.

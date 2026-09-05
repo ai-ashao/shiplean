@@ -31,6 +31,27 @@ async function expectInsideViewport(locator: Locator, viewportHeight: number) {
   expect(box ? box.y + box.height : Infinity).toBeLessThanOrEqual(viewportHeight + 4)
 }
 
+for (const viewport of viewports) {
+  test(`checked-in SaaS product homepage at ${viewport.name}`, async ({ page }) => {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height })
+    await page.goto('/')
+
+    const home = page.locator('[data-product-mode-home="saas"]')
+    await expect(home).toBeVisible()
+    await expect(home.getByRole('heading', { level: 1 })).toBeVisible()
+    await expect(page.locator('[data-site-header]')).toHaveAttribute(
+      'data-product-surface-mode',
+      'saas',
+    )
+    await expect(page.locator('[data-site-header] [data-header-cta]')).toHaveCount(1)
+    await expect(page.getByText('Ship useful products, skip the boilerplate tax')).toHaveCount(0)
+
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      await page.evaluate(() => window.innerWidth),
+    )
+  })
+}
+
 for (const fixture of fixtures) {
   for (const viewport of viewports) {
     test(`${fixture.name} tool first viewport contract at ${viewport.name}`, async ({ page }) => {
@@ -80,6 +101,10 @@ for (const fixture of fixtures) {
         ).toBeGreaterThanOrEqual(7)
       }
 
+      await expect(page.locator('[data-site-header]')).toHaveAttribute(
+        'data-product-surface-mode',
+        'tool',
+      )
       await expect(page.locator('[data-site-header] [data-header-cta]')).toHaveCount(0)
 
       const headerGuides = page.locator('[data-site-header] a', { hasText: 'Guides' })
