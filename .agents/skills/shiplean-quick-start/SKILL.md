@@ -16,7 +16,8 @@ ShipLean supports both SaaS products and public utility/tool products. The runti
 3. Read `docs/product-modes.md` and inspect `src/lib/product-config.ts`.
 4. Inspect `README.md`, `package.json`, relevant routes, `git status`, current branch, and `git remote -v` when Git is present.
 5. For Tool Mode, read `docs/tool-seo-brief.md`, `docs/tool-landing-standard-v0.2.md`, `docs/tool-landing-v0.2-implementation.md`, and `docs/tool-landing-v0.2.1-hardening.md`.
-6. Translate the request into a concrete first user task, public routes, required state, and explicit non-goals.
+6. For any public homepage or acquisition-page copy work, read `docs/seo-marketing-copy-principles.md` and `docs/landing-page-copy-checklist.md`.
+7. Translate the request into a concrete first user task, public routes, required state, and explicit non-goals.
 
 ## Establish project identity
 
@@ -62,6 +63,21 @@ Do not start an indexable Tool build from product ideas alone.
 8. Keep `src/modules/tool-seo-brief.ts` synchronized when primary keyword, locale, or page-map decisions change.
 
 A Tool Mode repository with no ready SEO brief must fail the SEO-first contract.
+
+## Write public copy: SEO anchor first
+
+For homepages, Tool Landings, category pages, and other acquisition surfaces:
+
+1. Keep the verified keyword / intent mapping as the page anchor.
+2. Use direct task language in the Title and H1 unless research supports another page role.
+3. Add the marketing layer through user benefit, concrete proof, and a matching CTA rather than by replacing the searched task with brand poetry.
+4. Do not prominently expose non-essential low counts or other facts that create an unfavorable comparison frame. Required limits and material restrictions remain visible.
+5. Quantify only real advantages or decision-critical constraints.
+6. Convert feature facts into user outcomes, then retain the technical fact as proof when useful.
+7. Remove unsupported superlatives and generic AI-marketing filler.
+8. Run the editorial checks in `docs/landing-page-copy-checklist.md` before treating public copy as launch-ready.
+
+The copy contract improves value communication; it does not authorize invented claims or keyword stuffing.
 
 ## Build
 

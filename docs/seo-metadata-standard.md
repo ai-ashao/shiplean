@@ -4,6 +4,8 @@ ShipLean treats page metadata as public-site infrastructure, not as a productize
 
 For Tool Mode, metadata is downstream of the [Tool SEO Brief Contract](./tool-seo-brief.md). Keyword/SERP research stays outside ShipLean; the research handoff does not.
 
+Visible acquisition copy follows the [SEO + Marketing Copy Principles](./seo-marketing-copy-principles.md): preserve the verified page intent in Title / H1 / primary topic, then improve conversion through concrete benefit, proof, and CTA. Do not replace searcher language with vague promotional copy merely to make the page sound more branded.
+
 ## Two validation layers
 
 Layer A is the generic metadata contract in `src/lib/seo-validation.ts`. Call `auditSeoMetadata(...)` for any public page configuration. It returns structured `errors` and `warnings`.
@@ -65,6 +67,8 @@ ShipLean must never pretend its lightweight matcher replaces native-language SER
 3. Build the page map before implementing the product surface.
 4. Register the route under the correct stable page or Tool Registry identity.
 5. Write metadata from verified product behavior and search intent.
-6. Run the relevant audit and resolve every error.
-7. Review warnings in context.
-8. Run `pnpm verify` so unit, build, type, SSR sitemap, internal-link, and browser contracts execute together.
+6. Apply the shared SEO + marketing copy principles without weakening the keyword / intent mapping or inventing claims.
+7. Run the [Landing Page Copy Checklist](./landing-page-copy-checklist.md) for acquisition pages.
+8. Run the relevant audit and resolve every error.
+9. Review warnings in context.
+10. Run `pnpm verify` so unit, build, type, SSR sitemap, internal-link, and browser contracts execute together.

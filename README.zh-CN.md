@@ -101,6 +101,8 @@ GitHub Actions 会在 Pull Request，以及 push 到 `main` / `dev` 时自动运
 - [Tool Landing Standard v0.2](./docs/tool-landing-standard-v0.2.md)
 - [Tool Landing v0.2.1 hardening](./docs/tool-landing-v0.2.1-hardening.md)
 - [SEO Metadata Contract v0.1](./docs/seo-metadata-standard.md)
+- [SEO + Marketing Copy Principles](./docs/seo-marketing-copy-principles.md)
+- [Landing Page Copy Checklist](./docs/landing-page-copy-checklist.md)
 - [UI 控件间距规范](./docs/ui-control-spacing.md)
 - [Legal page template](./docs/legal-pages.md)
 - [Current feature status](./docs/FEATURE_STATUS.md)

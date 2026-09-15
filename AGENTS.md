@@ -37,6 +37,27 @@ ShipLean consumes the SEO brief. It does not own keyword-volume APIs, SERP scrap
 
 Read `docs/tool-seo-brief.md`.
 
+## SEO-preserving marketing contract
+
+Public acquisition copy must preserve verified search intent while making the product easier to understand and choose.
+
+Before changing an indexable homepage or landing page, read:
+
+- `docs/seo-marketing-copy-principles.md`;
+- `docs/landing-page-copy-checklist.md`.
+
+Rules:
+
+1. Follow `keyword / SERP evidence → intent → page → offer → copy`. Do not write catchy copy first and retrofit SEO later.
+2. Treat URL role, primary topic, Title, and H1 as low-freedom SEO anchors. Do not weaken them merely to sound more promotional.
+3. Use Hero subtitle, value signals, proof, capabilities, FAQ, and Helpful Guidance to improve marketing without changing page intent.
+4. Prefer `SEO Claim → User Benefit → Proof → CTA` for acquisition-page messaging.
+5. Do not voluntarily create negative anchors. Avoid prominently exposing low catalog counts, small feature counts, site age, or apologetic comparisons when they are not material to the user's decision.
+6. Quantify real advantages and required constraints. Do not quantify a disadvantage merely because the number is available.
+7. Translate technical features into user outcomes, then keep the implementation fact as proof when it increases credibility.
+8. Avoid vague AI-style marketing and unsupported superlatives. Every meaningful claim must be truthful and provable from visible product behavior or evidence.
+9. Marketing never overrides material restrictions, pricing, licensing, legal requirements, accessibility, or factual correctness.
+
 ## Working rules
 
 - Keep the downloaded scaffold useful without a database, payment provider, or external secrets.

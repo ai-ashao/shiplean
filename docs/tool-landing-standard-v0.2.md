@@ -10,6 +10,8 @@ Core principles:
 Layout fixed.
 Brand flexible.
 Task first.
+SEO anchored.
+Marketing concrete.
 Value obvious.
 Capabilities explicit.
 ```
@@ -156,6 +158,25 @@ Do not satisfy this by using hidden overflow or shrinking controls below practic
 When space is tight, reduce decorative whitespace before removing task information.
 
 Tool inputs also follow the shared [UI Control Spacing Contract](./ui-control-spacing.md). Labels must not touch inputs or selects, dropdown text and arrows must retain trailing space, and adjacent actions must keep both horizontal and wrapped vertical gaps.
+
+## Copy hierarchy
+
+Tool Landing copy follows the shared [SEO + Marketing Copy Principles](./seo-marketing-copy-principles.md).
+
+Preferred acquisition-page stack:
+
+```text
+SEO Claim
+→ User Benefit
+→ Proof
+→ CTA
+```
+
+Keep the searched task explicit in the Title / H1. Use the subtitle, value signals, constraints, completion highlights, capabilities, and guidance to explain why this result is useful and credible.
+
+Do not create non-essential negative anchors. For example, a small catalog count or young-site age should not be promoted merely because the data exists. Quantify real advantages and decision-critical constraints instead. Material limits must still be disclosed.
+
+Before launch, review the page with [Landing Page Copy Checklist](./landing-page-copy-checklist.md).
 
 ## Task Access
 

@@ -113,6 +113,7 @@ Both modes share:
 - TanStack Start / Cloudflare runtime;
 - typed locale routes;
 - SEO metadata contract;
+- SEO-preserving value communication via the [SEO + Marketing Copy Principles](./seo-marketing-copy-principles.md) and [Landing Page Copy Checklist](./landing-page-copy-checklist.md);
 - internal-link graph acceptance;
 - legal-review infrastructure;
 - Field / Select / Button spacing contract;
