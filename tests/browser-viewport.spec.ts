@@ -67,6 +67,11 @@ for (const viewport of viewports) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       await page.evaluate(() => window.innerWidth),
     )
+
+    const footer = page.locator('[data-site-footer]')
+    await expect(footer.getByRole('link', { name: 'Privacy Policy' })).toBeVisible()
+    await expect(footer.getByRole('link', { name: 'Terms of Service' })).toBeVisible()
+    await expect(footer.getByRole('button', { name: /Analytics:/ })).toHaveCount(0)
   })
 }
 
@@ -160,6 +165,10 @@ for (const legalFixture of legalDocuments) {
 
       const supportLink = legalDocument.locator('a[href^="mailto:"]')
       await expect(supportLink).toBeVisible()
+
+      if (legalFixture.name === 'privacy') {
+        await expect(legalDocument.getByRole('button', { name: /Analytics:/ })).toBeVisible()
+      }
 
       const firstSectionLink = legalDocument.getByRole('navigation').locator('a').first()
       await firstSectionLink.focus()

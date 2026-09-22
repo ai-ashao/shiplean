@@ -1,4 +1,3 @@
-import { PrivacyControls } from '@/components/privacy-controls'
 import type { Locale } from '@/i18n/config'
 import { shellMessages } from '@/i18n/messages'
 import { localizedPathOrDefault } from '@/i18n/routes'
@@ -104,7 +103,6 @@ export function SiteFooter({
                 {link.label}
               </a>
             ))}
-            <PrivacyControls locale={locale} />
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react'
+import { type ReactNode, useId } from 'react'
+import { PrivacyControls } from '@/components/privacy-controls'
 import { Badge } from '@/components/ui/badge'
 import { buildLegalDocument, type LegalDocument, type LegalProfile } from '@/lib/legal'
 
@@ -7,6 +8,7 @@ export function LegalDocumentPage({
   profile,
 }: Readonly<{ kind: LegalDocument['kind']; profile: LegalProfile }>) {
   const document = buildLegalDocument(kind, profile)
+  const analyticsPreferenceTitleId = useId()
 
   return (
     <section
@@ -28,8 +30,7 @@ export function LegalDocumentPage({
         <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
           {document.description}
         </p>
-        <dl className="mt-6 grid gap-3 rounded-xl border bg-muted/30 p-4 text-sm sm:grid-cols-3">
-          <Metadata label="Effective" value={profile.effectiveDate} />
+        <dl className="mt-6 grid gap-3 rounded-xl border bg-muted/30 p-4 text-sm sm:grid-cols-2">
           <Metadata label="Updated" value={profile.lastUpdated} />
           <Metadata
             label="Contact"
@@ -48,7 +49,7 @@ export function LegalDocumentPage({
           data-legal-review-status="starter"
           role="note"
         >
-          <strong>Starter legal template — not launch-ready.</strong> Update the product facts in
+          <strong>Starter legal template — check before launch.</strong> Update the product facts in
           <code className="mx-1 rounded bg-amber-100 px-1 py-0.5">
             src/modules/legal-profile.ts
           </code>
@@ -97,10 +98,28 @@ export function LegalDocumentPage({
         ))}
       </article>
 
+      {kind === 'privacy' ? (
+        <section
+          className="mt-10 rounded-xl border bg-muted/30 p-5"
+          aria-labelledby={analyticsPreferenceTitleId}
+        >
+          <h2 className="text-base font-semibold text-foreground" id={analyticsPreferenceTitleId}>
+            Analytics preference
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Optional analytics stays off unless you choose to allow it. You can change that choice
+            here at any time.
+          </p>
+          <div className="mt-4">
+            <PrivacyControls />
+          </div>
+        </section>
+      ) : null}
+
       {profile.reviewStatus === 'starter' ? (
         <p className="mt-12 border-t pt-6 text-xs leading-6 text-muted-foreground">
           This structured template is not legal advice. Product operators remain responsible for
-          adapting it to their actual practices, users, contracts, and jurisdictions.
+          keeping it accurate for their actual tools, data practices, and users.
         </p>
       ) : null}
     </section>

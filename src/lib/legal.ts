@@ -1,4 +1,4 @@
-export const legalTemplateVersion = '0.1' as const
+export const legalTemplateVersion = '0.2' as const
 
 export type LegalReviewStatus = 'starter' | 'reviewed'
 
@@ -7,19 +7,7 @@ export type LegalProvider = {
   purpose: string
 }
 
-export type LegalProcessingActivity = {
-  data: string
-  purpose: string
-  legalBasis: string
-  retention: string
-  recipients: ReadonlyArray<string>
-}
-
-export type LegalAnalyticsProfile = LegalProvider & {
-  data: string
-  legalBasis: string
-  retention: string
-}
+export type LegalAnalyticsProfile = LegalProvider
 
 export type LegalFeatureProfile = {
   analytics: false | LegalAnalyticsProfile
@@ -30,18 +18,15 @@ export type LegalProfile = {
   templateKind: 'free-local-tool'
   reviewStatus: LegalReviewStatus
   productName: string
-  operatorName: string
   siteUrl: string
   contactEmail: string
-  effectiveDate: string
   lastUpdated: string
-  governingLaw: string
   features: LegalFeatureProfile
   privacy: {
-    processingActivities: ReadonlyArray<LegalProcessingActivity>
+    localProcessing: string
+    technicalData: string
     browserStorage: ReadonlyArray<string>
     serviceProviders: ReadonlyArray<LegalProvider>
-    internationalTransfers: string
   }
 }
 
@@ -95,11 +80,10 @@ export function validateLegalProfile(
   const issues: string[] = []
   const requiredFields = {
     productName: profile.productName,
-    operatorName: profile.operatorName,
     siteUrl: profile.siteUrl,
     contactEmail: profile.contactEmail,
-    governingLaw: profile.governingLaw,
-    internationalTransfers: profile.privacy.internationalTransfers,
+    localProcessing: profile.privacy.localProcessing,
+    technicalData: profile.privacy.technicalData,
   }
 
   for (const [field, value] of Object.entries(requiredFields)) {
@@ -123,46 +107,11 @@ export function validateLegalProfile(
     issues.push('Legal profile contactEmail must be a valid email address.')
   }
 
-  for (const [field, value] of [
-    ['effectiveDate', profile.effectiveDate],
-    ['lastUpdated', profile.lastUpdated],
-  ] as const) {
-    if (!isIsoDate(value)) issues.push(`Legal profile ${field} must use a valid YYYY-MM-DD date.`)
-  }
-  if (
-    isIsoDate(profile.effectiveDate) &&
-    isIsoDate(profile.lastUpdated) &&
-    profile.lastUpdated < profile.effectiveDate
-  ) {
-    issues.push('Legal profile lastUpdated must not be earlier than effectiveDate.')
+  if (!isIsoDate(profile.lastUpdated)) {
+    issues.push('Legal profile lastUpdated must use a valid YYYY-MM-DD date.')
   }
 
-  validateList('browserStorage', profile.privacy.browserStorage, issues)
-
-  if (profile.privacy.processingActivities.length === 0) {
-    issues.push('Legal profile processingActivities must not be empty.')
-  }
-  for (const activity of profile.privacy.processingActivities) {
-    if (
-      !activity.data.trim() ||
-      !activity.purpose.trim() ||
-      !activity.legalBasis.trim() ||
-      !activity.retention.trim()
-    ) {
-      issues.push('Every processing activity requires data, purpose, legalBasis, and retention.')
-    }
-    validateList(
-      `processing activity ${activity.data || 'unknown'} recipients`,
-      activity.recipients,
-      issues,
-    )
-  }
-  const activityNames = profile.privacy.processingActivities.map((activity) =>
-    activity.data.trim().toLowerCase(),
-  )
-  if (new Set(activityNames).size !== activityNames.length) {
-    issues.push('Legal profile contains duplicate processing activity data labels.')
-  }
+  validateList('browserStorage', profile.privacy.browserStorage, issues, { allowEmpty: true })
 
   const providers = [
     ...profile.privacy.serviceProviders,
@@ -175,21 +124,14 @@ export function validateLegalProfile(
   }
   if (profile.features.analytics) {
     const analytics = profile.features.analytics
-    if (!analytics.data.trim() || !analytics.legalBasis.trim() || !analytics.retention.trim()) {
-      issues.push('Analytics requires data, legalBasis, and retention disclosures.')
+    if (!analytics.name.trim() || !analytics.purpose.trim()) {
+      issues.push('Analytics requires a provider name and purpose.')
     }
   }
 
   if (options.requireReviewed && profile.reviewStatus !== 'reviewed') {
     issues.push('Legal profile must be reviewed before production launch.')
   }
-  if (
-    options.requireReviewed &&
-    /\b(?:applicable|operator is established|operator's location)\b/i.test(profile.governingLaw)
-  ) {
-    issues.push('Reviewed legal profiles require a specific governingLaw jurisdiction.')
-  }
-
   return Array.from(new Set(issues))
 }
 
@@ -206,8 +148,8 @@ export function isLegalProfileLaunchReady(profile: LegalProfile): boolean {
 
 function buildPrivacyDocument(profile: LegalProfile): LegalDocument {
   const analyticsParagraph = profile.features.analytics
-    ? `${profile.features.analytics.name} is used only after the visitor grants analytics consent. It processes ${profile.features.analytics.data} for ${profile.features.analytics.purpose}, relies on ${profile.features.analytics.legalBasis}, and retains that information for ${profile.features.analytics.retention}.`
-    : 'The Service does not currently use optional analytics.'
+    ? `${profile.features.analytics.name} is loaded only after you choose to allow analytics and is used for ${profile.features.analytics.purpose}. Analytics is not required to use the tools.`
+    : 'Optional analytics is not currently enabled.'
   const providers = uniqueProviders([
     ...profile.privacy.serviceProviders,
     ...(profile.features.analytics ? [profile.features.analytics] : []),
@@ -216,69 +158,35 @@ function buildPrivacyDocument(profile: LegalProfile): LegalDocument {
   return {
     kind: 'privacy',
     title: 'Privacy Policy',
-    description: `This policy explains how ${profile.productName} handles information and which product capabilities affect that handling.`,
+    description: `How ${profile.productName} handles local tool inputs, basic site data, analytics choices, and support messages.`,
     sections: [
       {
-        id: 'scope',
-        title: '1. Scope and operator',
-        paragraphs: [
-          `${profile.operatorName} operates ${profile.productName} at ${profile.siteUrl}. This policy applies to the website and product experiences that link to it.`,
-          'Supported tool inputs are processed in the browser. The local tool workflow does not intentionally upload or persist those inputs on the operator’s servers.',
-        ],
+        id: 'local-processing',
+        title: '1. Local processing',
+        paragraphs: [profile.privacy.localProcessing],
       },
       {
-        id: 'processing',
-        title: '2. Information we process and why',
-        paragraphs: [
-          'Each processing activity is listed with its purpose, legal basis, retention rule, and recipients:',
-        ],
-        items: profile.privacy.processingActivities.map(formatProcessingActivity),
+        id: 'site-data',
+        title: '2. Site data and analytics',
+        paragraphs: [profile.privacy.technicalData, analyticsParagraph],
+        ...(profile.privacy.browserStorage.length > 0
+          ? { items: profile.privacy.browserStorage }
+          : {}),
       },
       {
-        id: 'browser-storage',
-        title: '3. Cookies and analytics',
+        id: 'third-parties',
+        title: '3. Third-party services',
         paragraphs: [
-          'The Service uses only the browser storage declared below. Optional analytics remains off until consent is granted.',
-          analyticsParagraph,
-        ],
-        items: profile.privacy.browserStorage,
-      },
-      {
-        id: 'providers',
-        title: '4. Service providers and international processing',
-        paragraphs: [
-          'Service providers may process limited information on behalf of the operator. The Service does not sell personal information or share it for cross-context behavioral advertising.',
-          profile.privacy.internationalTransfers,
+          'Hosting, security, and analytics providers may process limited technical information under their own terms. The site does not sell tool inputs or use them for model training.',
         ],
         items: providers.map((provider) => `${provider.name}: ${provider.purpose}`),
       },
       {
-        id: 'retention',
-        title: '5. Retention',
+        id: 'choices-contact',
+        title: '4. Your choices and contact',
         paragraphs: [
-          'Retention is stated for each processing activity above. Browser-local tool inputs are not intentionally retained by the operator.',
-        ],
-      },
-      {
-        id: 'rights',
-        title: '6. Your choices and rights',
-        paragraphs: [
-          `You may request access, correction, deletion, restriction, portability, or objection where applicable. You may withdraw optional analytics consent using the footer control. Send privacy requests to ${profile.contactEmail}.`,
-        ],
-      },
-      {
-        id: 'children',
-        title: '7. Children',
-        paragraphs: [
-          `${profile.productName} is intended for a general audience and is not directed to children. The operator does not knowingly collect children’s personal information through the local tool workflow.`,
-        ],
-      },
-      {
-        id: 'changes-contact',
-        title: '8. Changes and contact',
-        paragraphs: [
-          'Material changes will be reflected on this page by updating the date above. We will provide additional notice when required by the change or applicable law.',
-          `For privacy questions or requests, contact ${profile.operatorName} at ${profile.contactEmail}.`,
+          'You can change optional analytics consent using the control on this page or clear locally stored preferences in your browser.',
+          `This policy may be updated as the site changes. For privacy questions, email ${profile.contactEmail}.`,
         ],
       },
     ],
@@ -289,87 +197,41 @@ function buildTermsDocument(profile: LegalProfile): LegalDocument {
   return {
     kind: 'terms',
     title: 'Terms of Service',
-    description: `These terms set the rules for using ${profile.productName} and identify the product capabilities covered by the agreement.`,
+    description: `Simple terms for using the free browser-based tools available on ${profile.productName}.`,
     sections: [
       {
-        id: 'acceptance',
-        title: '1. Acceptance',
+        id: 'permitted-use',
+        title: '1. Permitted use',
         paragraphs: [
-          `By accessing or using ${profile.productName}, you agree to these terms and confirm that you can legally accept them. If you do not agree, do not use the Service.`,
+          'You may use the tools for lawful personal or commercial work. You are responsible for having the rights and permissions required for any files or information you process.',
+          'Do not disrupt, overload, probe, bypass security, distribute harmful material, or use the site to violate applicable law or another person’s rights.',
         ],
       },
       {
-        id: 'service',
-        title: '2. The service',
+        id: 'files-results',
+        title: '2. Your files and results',
         paragraphs: [
-          `${profile.operatorName} provides ${profile.productName} as a free, account-free tool at ${profile.siteUrl}. Supported tool inputs are processed locally in the browser and are not intentionally uploaded or stored by the operator.`,
-        ],
-      },
-      {
-        id: 'acceptable-use',
-        title: '3. Acceptable use',
-        paragraphs: ['You may not misuse the service. In particular, you must not:'],
-        items: [
-          'break applicable law or violate another person’s rights;',
-          'probe, disrupt, overload, or bypass security or usage controls;',
-          'introduce malware or use the service to distribute harmful material;',
-          'misrepresent affiliation with the operator or use the service for deceptive activity.',
-        ],
-      },
-      {
-        id: 'inputs-results',
-        title: '4. Your inputs and results',
-        paragraphs: [
-          'Your inputs and generated results remain yours. You are responsible for having the right to use your inputs and for reviewing results before relying on or distributing them.',
-        ],
-      },
-      {
-        id: 'intellectual-property',
-        title: '5. Intellectual property',
-        paragraphs: [
-          `${profile.productName}, its software, branding, and original content remain the property of ${profile.operatorName} or its licensors. These terms grant only a limited right to use the service as provided.`,
+          'Your files and generated results remain yours. Review results before relying on or sharing them, and keep original or backup copies of important files.',
         ],
       },
       {
         id: 'availability',
-        title: '6. Availability and changes',
+        title: '3. Availability and limitations',
         paragraphs: [
-          'The Service may be changed, suspended, restricted to prevent misuse, or discontinued. The operator will use reasonable care but does not promise uninterrupted or error-free availability.',
-        ],
-      },
-      {
-        id: 'disclaimers-liability',
-        title: '7. Disclaimers and limitation of liability',
-        paragraphs: [
-          'The Service is provided on an “as available” basis to the extent permitted by law. It is not professional, legal, financial, medical, or compliance advice, and results should be reviewed for their intended use.',
-          'To the maximum extent permitted by applicable law, the operator is not liable for indirect, incidental, special, consequential, or punitive damages arising from use of the service. Rights that cannot lawfully be limited remain unaffected.',
-        ],
-      },
-      {
-        id: 'governing-law',
-        title: '8. Governing law',
-        paragraphs: [
-          `These terms are governed by ${profile.governingLaw}, without overriding consumer protections that cannot be waived in your location.`,
+          'The site and tools are provided as available and may change, be limited, or be removed. A particular browser, format, or input may not always produce the same result.',
+          'To the extent permitted by law, no guarantee is made that the service will be uninterrupted, error-free, or suitable for a particular purpose. Rights that cannot lawfully be limited remain unaffected.',
         ],
       },
       {
         id: 'changes-contact',
-        title: '9. Changes and contact',
+        title: '4. Changes and contact',
         paragraphs: [
-          'The updated date above identifies the current version. We will provide additional notice for material changes where appropriate, and continued use after the effective date means the revised terms apply.',
+          'These terms may be updated as the site changes. The updated date on this page identifies the current version.',
           `Questions about these terms may be sent to ${profile.contactEmail}.`,
         ],
       },
     ],
   }
-}
-
-function formatProcessingActivity(activity: LegalProcessingActivity): string {
-  return `${withoutTrailingPunctuation(activity.data)} — Purpose: ${withoutTrailingPunctuation(activity.purpose)}; legal basis: ${withoutTrailingPunctuation(activity.legalBasis)}; retention: ${withoutTrailingPunctuation(activity.retention)}; recipients: ${activity.recipients.join(', ')}.`
-}
-
-function withoutTrailingPunctuation(value: string): string {
-  return value.trim().replace(/[.;:]$/, '')
 }
 
 function uniqueProviders(providers: ReadonlyArray<LegalProvider>): LegalProvider[] {
@@ -385,8 +247,15 @@ function uniqueProviders(providers: ReadonlyArray<LegalProvider>): LegalProvider
   return [...byName.values()]
 }
 
-function validateList(field: string, values: ReadonlyArray<string>, issues: string[]) {
-  if (values.length === 0) issues.push(`Legal profile ${field} must not be empty.`)
+function validateList(
+  field: string,
+  values: ReadonlyArray<string>,
+  issues: string[],
+  options: Readonly<{ allowEmpty?: boolean }> = {},
+) {
+  if (!options.allowEmpty && values.length === 0) {
+    issues.push(`Legal profile ${field} must not be empty.`)
+  }
   const normalized = values.map((value) => value.trim().toLowerCase())
   if (normalized.some((value) => !value))
     issues.push(`Legal profile ${field} contains an empty item.`)

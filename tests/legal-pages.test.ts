@@ -29,28 +29,28 @@ describe('legal page contracts', () => {
     expect(legalProfile.siteUrl).toBe(site.url)
   })
 
-  it('rejects placeholders, invalid dates, empty disclosures, and incomplete providers', () => {
+  it('rejects placeholders, invalid dates, missing facts, and incomplete providers', () => {
     const invalid = {
       ...legalProfile,
-      operatorName: 'Your Company',
-      effectiveDate: '2026-02-30',
+      productName: 'Your Product',
+      lastUpdated: '2026-02-30',
       privacy: {
         ...legalProfile.privacy,
-        processingActivities: [],
+        localProcessing: '',
       },
       features: {
         ...legalProfile.features,
-        analytics: { name: '', purpose: '', data: '', legalBasis: '', retention: '' },
+        analytics: { name: '', purpose: '' },
       },
     } satisfies LegalProfile
 
     expect(validateLegalProfile(invalid)).toEqual(
       expect.arrayContaining([
-        'Legal profile operatorName still contains placeholder copy.',
-        'Legal profile effectiveDate must use a valid YYYY-MM-DD date.',
-        'Legal profile processingActivities must not be empty.',
+        'Legal profile productName still contains placeholder copy.',
+        'Legal profile lastUpdated must use a valid YYYY-MM-DD date.',
+        'Legal profile localProcessing is required.',
         'Every declared legal provider requires a name and purpose.',
-        'Analytics requires data, legalBasis, and retention disclosures.',
+        'Analytics requires a provider name and purpose.',
       ]),
     )
   })
@@ -60,24 +60,15 @@ describe('legal page contracts', () => {
     const terms = buildLegalDocument('terms', legalProfile)
 
     expect(privacy.sections.map((section) => section.id)).toEqual([
-      'scope',
-      'processing',
-      'browser-storage',
-      'providers',
-      'retention',
-      'rights',
-      'children',
-      'changes-contact',
+      'local-processing',
+      'site-data',
+      'third-parties',
+      'choices-contact',
     ])
     expect(terms.sections.map((section) => section.id)).toEqual([
-      'acceptance',
-      'service',
-      'acceptable-use',
-      'inputs-results',
-      'intellectual-property',
+      'permitted-use',
+      'files-results',
       'availability',
-      'disclaimers-liability',
-      'governing-law',
       'changes-contact',
     ])
   })
@@ -90,9 +81,6 @@ describe('legal page contracts', () => {
         analytics: {
           name: 'Analytics Provider',
           purpose: 'measuring aggregate usage',
-          data: 'consent-based usage information',
-          legalBasis: 'the visitor’s consent',
-          retention: '30 days',
         },
       },
     } satisfies LegalProfile
@@ -101,7 +89,6 @@ describe('legal page contracts', () => {
     const privacyCopy = JSON.stringify(buildLegalDocument('privacy', configured))
     const terms = buildLegalDocument('terms', configured)
     expect(privacyCopy).toContain('Analytics Provider')
-    expect(privacyCopy).toContain('the visitor’s consent')
     expect(terms.sections.map((section) => section.id)).not.toEqual(
       expect.arrayContaining(['accounts', 'payments', 'content']),
     )
@@ -121,7 +108,6 @@ describe('legal page contracts', () => {
     const reviewed = {
       ...legalProfile,
       reviewStatus: 'reviewed',
-      governingLaw: 'the laws of the State of Delaware, United States',
     } satisfies LegalProfile
 
     const publicCopy = JSON.stringify([
