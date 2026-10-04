@@ -74,6 +74,8 @@ Rules:
 - Default product contact and support email is `support@<public-domain>` unless the user specifies another address.
 - Product deployment must pass `pnpm legal:check`; `starter` legal pages must remain `noindex` and outside the sitemap.
 - Preserve keyboard focus, narrow-screen layout, and reduced-motion behavior.
+- Follow `docs/ui-interaction-guidelines.md` for new or changed UI interactions. Preserve its link, arrow, hit-area, and accessibility guardrails while adapting the visual design to the product.
+- Follow `docs/web-product-quality.md` when composing or reviewing public pages and work surfaces. Verify task hierarchy, responsive density, real content, and empty/loading/error states in the rendered interface.
 - Use the shared Field, Select, and Button spacing contract: labels must not touch controls, dropdown text/arrows need explicit trailing space, and adjacent controls need horizontal and wrapped vertical gaps.
 
 ## Completion command

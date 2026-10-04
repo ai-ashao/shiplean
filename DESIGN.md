@@ -8,8 +8,12 @@ ShipLean uses a restrained tool-first interface rather than a conventional gloss
 - Cards use 10–12px radii, 1px borders, and light elevation only where hierarchy benefits from it.
 - Navigation lives in a compact sticky top bar. Mobile removes the secondary navigation while keeping brand, locale, and demo access visible.
 - Major homepage sections follow one top-to-bottom reading axis: explanation first, interface or evidence panel second. Small supporting cards may still use responsive grids.
-- Supporting UI stays at 10–14px. Large type is reserved for the public value proposition.
+- Compact labels and metadata may use small type; body copy, instructions, and mobile inputs must remain comfortably readable. Large type is reserved for the public value proposition or the page's primary result.
 - Inter and DM Mono remain bundled target-owned typography assets.
 - The white grid-backed hero and navy Quick Start command panel form the template's signature composition.
 
 The visual language may borrow general density and layout patterns from mature operational dashboards, but ShipLean owns all identity, copy, icons, and product states.
+
+For clickable areas, link styling, arrows, and interaction states, follow `docs/ui-interaction-guidelines.md`. The guidelines leave product-specific visual styling flexible.
+
+For page hierarchy, density, responsive composition, and complete product states, follow `docs/web-product-quality.md`.
