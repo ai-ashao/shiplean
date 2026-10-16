@@ -1,5 +1,7 @@
 # ShipLean interface language
 
+This file defines the starter preview's identity, not a mandatory palette for every product. Shared rules live in [design baseline](docs/design-baseline.md), with a [project design template](docs/templates/project-design.md) and [acceptance workflow](docs/design-acceptance.md). Product adaptations replace this identity with their own contract while retaining the shared quality baseline.
+
 ShipLean uses a restrained tool-first interface rather than a conventional glossy SaaS landing page.
 
 - Canvas and working surfaces: white; soft surfaces: `#f8fafc`; borders: `#e2e8f0`.

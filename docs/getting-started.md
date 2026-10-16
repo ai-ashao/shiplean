@@ -62,6 +62,8 @@ Read .agents/skills/shiplean-quick-start/SKILL.md completely, then follow it to 
 
 ## Step 4: Give the Agent a useful product brief
 
+Include an existing visual reference when one is available. Before changing UI, the Agent reads the [design baseline](./design-baseline.md) and replaces the starter `DESIGN.md` with the product's actual design decisions using the [project template](./templates/project-design.md). It then implements shared components and checks real page/state evidence through [design acceptance](./design-acceptance.md). This applies to custom layouts as well as default SaaS/Tool compositions.
+
 The shortest useful brief names four things:
 
 1. **First user**: who should get value first.

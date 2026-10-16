@@ -60,6 +60,8 @@ Rules:
 
 ## Working rules
 
+- Before UI work, read `docs/design-baseline.md`, the project's `DESIGN.md`, and existing shared components. A new adaptation must replace the starter design identity using `docs/templates/project-design.md`; an existing product adopts incrementally.
+- Follow `docs/design-acceptance.md` for rendered visual and interaction evidence. `pnpm verify` is required but does not alone prove visual quality. Keep product-specific design decisions in the product repository.
 - Keep the downloaded scaffold useful without a database, payment provider, or external secrets.
 - When phase-two payment modules are introduced, keep provider payloads out of domain rules.
 - A future payment event must be verified by its adapter before applying entitlements in production.

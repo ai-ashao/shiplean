@@ -18,6 +18,7 @@ ShipLean supports both SaaS products and public utility/tool products. The runti
 5. For Tool Mode, read `docs/tool-seo-brief.md`, `docs/tool-landing-standard-v0.2.md`, `docs/tool-landing-v0.2-implementation.md`, and `docs/tool-landing-v0.2.1-hardening.md`.
 6. For any public homepage or acquisition-page copy work, read `docs/seo-marketing-copy-principles.md` and `docs/landing-page-copy-checklist.md`.
 7. Translate the request into a concrete first user task, public routes, required state, and explicit non-goals.
+8. Before UI work, read `docs/design-baseline.md`, `DESIGN.md`, and `docs/design-acceptance.md`. For a new product, replace the starter identity with a product-specific `DESIGN.md` using `docs/templates/project-design.md`. Inspect and reuse existing shared components before introducing new patterns.
 
 ## Establish project identity
 
@@ -168,3 +169,4 @@ Treat Better Auth, PostgreSQL/Drizzle, Stripe, Resend, R2, and account-backed Cl
 12. Before production deployment, run `pnpm legal:check`.
 13. Recheck Git status, branch, remotes, and target repository before commit/push.
 14. Report changed files, verification evidence, viewport results, SEO-brief status, and any remaining production boundary.
+15. Complete `docs/design-acceptance.md`: inspect representative page templates in the browser, record theme/state/viewport evidence and actual export checks where relevant, and update the product's `DESIGN.md` when design decisions change. Never equate a build, unit tests, or no-overflow assertions with visual acceptance.

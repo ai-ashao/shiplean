@@ -33,6 +33,8 @@ Use this guide when designing or reviewing a ShipLean adaptation. It describes t
 
 ## How to apply this guide
 
+Start from [design baseline](./design-baseline.md) and the project's `DESIGN.md`. Finish with [design acceptance](./design-acceptance.md), including representative rendered pages, actual states and explicit delivery evidence. The principles below complement those steps; they do not replace the product contract or visual inspection.
+
 Use `DESIGN.md` for the current starter visual language, `docs/ui-interaction-guidelines.md` for links and hit areas, and `docs/ui-control-spacing.md` for form spacing. If a product reference or user request calls for a different aesthetic, preserve the quality principles here while adapting its shapes, color, type, imagery, and layout. Do not copy another product's brand or assets.
 
 Research basis: [Vercel Web Interface Guidelines](https://vercel.com/design/guidelines) (living guidance on interaction, layout, and content states); [Linear's 2026 interface refresh](https://linear.app/now/behind-the-latest-design-refresh) (first-party account of information hierarchy and visual noise); and [web.dev on interaction responsiveness](https://web.dev/articles/inp) (updated September 2025). These sources inform the review questions, not ShipLean's visual identity.

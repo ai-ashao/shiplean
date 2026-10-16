@@ -64,6 +64,8 @@ No external secret is required. `/login` and `/dashboard` form a visibly labeled
 
 ## Verify
 
+Before adapting the UI, read the [shared design baseline](./docs/design-baseline.md), establish a product-owned `DESIGN.md` from the [template](./docs/templates/project-design.md), and use the [design acceptance workflow](./docs/design-acceptance.md). ShipLean supplies quality rules; the product owns its visual identity. Existing products adopt changes incrementally.
+
 ```bash
 pnpm verify
 ```
